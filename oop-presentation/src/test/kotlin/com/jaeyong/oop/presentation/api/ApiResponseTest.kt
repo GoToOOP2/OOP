@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 
 class ApiResponseTest {
 
+    //branch test 로 인한 주석 추가
     @Test
     @DisplayName("성공 응답을 생성하면 success가 true이고 데이터가 포함된다")
     fun testSuccessResponse() {
