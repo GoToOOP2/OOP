@@ -8,6 +8,7 @@ dependencies {
     "implementation"(project(":oop-infrastructure"))
     "implementation"(project(":oop-presentation"))
     "implementation"("org.springframework.boot:spring-boot-starter-web")
+    "implementation"("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
