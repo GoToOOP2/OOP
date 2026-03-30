@@ -8,7 +8,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/oop_db
     username: dev_user
     password: dev_password
-    driver-class-name: org. those.Driver
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
