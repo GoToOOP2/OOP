@@ -1,0 +1,15 @@
+# ── 자동 생성 파일: PR Size 계산에서 제외 ──
+# 아래 파일들은 사람이 리뷰할 필요가 없으므로 변경량에서 제외됩니다.
+
+# Gradle Wrapper (빌드 도구 자체 파일)
+gradle/wrapper/gradle-wrapper.jar linguist-generated=true
+gradlew linguist-generated=true
+gradlew.bat linguist-generated=true
+
+# Gradle 버전 카탈로그 lock 파일
+gradle.lockfile linguist-generated=true
+buildSrc/gradle.lockfile linguist-generated=true
+
+# 빌드 출력물
+*.jar linguist-generated=true
+
