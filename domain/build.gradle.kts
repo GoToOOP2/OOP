@@ -1,1 +1,4 @@
-// domain은 다른 모듈에 의존하지 않는다
+// domain은 common만 의존한다
+dependencies {
+    implementation(project(":common"))
+}

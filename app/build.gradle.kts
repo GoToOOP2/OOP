@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":application"))
     implementation(project(":domain"))
+    implementation(project(":common"))
     runtimeOnly(project(":infrastructure"))
 
     // @SpringBootApplication, runApplication 컴파일 타임에 필요
