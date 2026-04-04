@@ -29,3 +29,10 @@ postgresql                   = { group = "org.postgresql",               name = 
 # Test
 junit-platform-launcher      = { group = "org.junit.platform",           name = "junit-platform-launcher" }
 mockk                        = { group = "io.mockk",                     name = "mockk-jvm",              version.ref = "mockk" }
+
+# 번들로 묶은 라이브러리 그룹
+[bundles]
+spring-web  = ["spring-boot-starter-web", "spring-boot-starter-validation"]
+spring-data = ["spring-boot-starter-data-jpa", "postgresql"]
+test        = ["spring-boot-starter-test", "kotlin-test-junit5", "junit-platform-launcher"]
+test-mock   = ["mockk"]
