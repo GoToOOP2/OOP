@@ -2,13 +2,12 @@ plugins {
     alias(libs.plugins.kotlin.spring)
 }
 
-// presentation은 application과 common만 의존한다
+// Application의 UseCase를 호출하는 Inbound Adapter이다
 dependencies {
     implementation(project(":application"))
     implementation(project(":common"))
 
-    implementation(libs.spring.boot.starter.web)
-    implementation(libs.spring.boot.starter.validation)
+    implementation(libs.bundles.spring.web)
 
-    testImplementation(libs.mockk)
+    testImplementation(libs.bundles.test.mock)
 }

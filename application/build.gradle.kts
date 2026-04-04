@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.spring)
 }
 
-// application은 domain과 common만 의존한다 (infrastructure, presentation은 볼 수 없다)
+// Domain의 Inbound Port를 구현하며, Outbound Port를 사용한다
 dependencies {
     implementation(project(":domain"))
     implementation(project(":common"))
