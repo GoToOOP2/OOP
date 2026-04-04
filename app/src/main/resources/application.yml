@@ -1,22 +1,3 @@
 spring:
   application:
     name: oop
-
-  # ── PostgreSQL 연결 설정 (compose.yaml 값과 일치해야 함) ──
-  datasource:
-    url: jdbc:postgresql://localhost:5432/oop
-    username: oop
-    password: oop1234
-    driver-class-name: org.postgresql.Driver
-
-  # ── JPA 설정 ──
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
-
-
