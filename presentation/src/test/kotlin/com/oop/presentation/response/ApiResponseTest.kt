@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus
 class ApiResponseTest {
 
     @Test
-    @DisplayName("success - 기본값: status=200, code=SUCCESS, message=성공, data 존재")
+    @DisplayName("success - 기본값: status=200, code=SUCCESS, data 존재")
     fun `success 기본값 호출 시 status 200과 code SUCCESS와 data를 반환한다`() {
         // Given
         val data = "hello"
@@ -22,7 +22,6 @@ class ApiResponseTest {
         assertEquals(HttpStatus.OK, result.statusCode)
         assertNotNull(result.body)
         assertEquals("SUCCESS", result.body!!.code)
-        assertEquals("성공", result.body!!.message)
         assertEquals("hello", result.body!!.data)
     }
 
@@ -43,63 +42,19 @@ class ApiResponseTest {
     }
 
     @Test
-    @DisplayName("success - 커스텀 message: 전달한 메시지 반영")
-    fun `success 호출 시 커스텀 message가 반영된다`() {
-        // Given
-        val data = "hello"
-        val message = "완료되었습니다"
-
-        // When
-        val result = ApiResponse.success(data = data, message = message)
-
-        // Then
-        assertEquals("완료되었습니다", result.body!!.message)
-        assertEquals("SUCCESS", result.body!!.code)
-        assertEquals("hello", result.body!!.data)
-    }
-
-    @Test
-    @DisplayName("fail - data 없음: status, code, message 반영, data=null")
-    fun `fail 호출 시 data 없이 status와 code와 message만 반환한다`() {
+    @DisplayName("fail - status, code 반영, data=null")
+    fun `fail 호출 시 status와 code 반환하고 data는 null이다`() {
         // Given
         val status = HttpStatus.BAD_REQUEST
         val code = "D001"
-        val message = "리소스를 찾을 수 없습니다"
 
         // When
-        val result = ApiResponse.fail(status = status, code = code, message = message)
+        val result = ApiResponse.fail(status = status, code = code)
 
         // Then
         assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
         assertNotNull(result.body)
         assertEquals("D001", result.body!!.code)
-        assertEquals("리소스를 찾을 수 없습니다", result.body!!.message)
         assertNull(result.body!!.data)
-    }
-
-    @Test
-    @DisplayName("fail - data 포함: ValidationErrorData가 정상적으로 포함")
-    fun `fail 호출 시 ValidationErrorData가 data에 포함된다`() {
-        // Given
-        val errors = listOf(FieldError("name", "필수 입력값입니다"))
-        val validationData = ValidationErrorData(errors)
-
-        // When
-        val result = ApiResponse.fail(
-            status = HttpStatus.BAD_REQUEST,
-            code = "C001",
-            message = "입력값 검증에 실패했습니다",
-            data = validationData
-        )
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
-        assertNotNull(result.body)
-        assertEquals("C001", result.body!!.code)
-        assertEquals("입력값 검증에 실패했습니다", result.body!!.message)
-        assertNotNull(result.body!!.data)
-        assertEquals(1, result.body!!.data!!.errors.size)
-        assertEquals("name", result.body!!.data!!.errors[0].field)
-        assertEquals("필수 입력값입니다", result.body!!.data!!.errors[0].reason)
     }
 }
