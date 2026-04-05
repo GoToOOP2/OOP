@@ -16,6 +16,7 @@ val testBundle = libs.bundles.test
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "jacoco")
 
     repositories {
         mavenCentral()
@@ -40,6 +41,16 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+        finalizedBy("jacocoTestReport")
+    }
+
+    tasks.withType<org.gradle.testing.jacoco.tasks.JacocoReport> {
+        dependsOn(tasks.withType<Test>())
+        reports {
+            html.required.set(true)
+            xml.required.set(false)
+            csv.required.set(false)
+        }
     }
 
     // 모든 모듈 공통 의존성 (버전은 BOM이 관리하므로 문자열로 선언)
