@@ -1,6 +1,5 @@
 dependencies {
     "implementation"(project(":oop-domain"))
-    "implementation"("org.springframework:spring-tx")
-    "implementation"("org.springframework:spring-context")
+    "implementation"(libs.spring.tx)
+    "implementation"(libs.spring.context)
 }
-

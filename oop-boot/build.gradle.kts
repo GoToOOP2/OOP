@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot")
+    alias(libs.plugins.spring.boot)
 }
 
 dependencies {
@@ -7,8 +7,8 @@ dependencies {
     "implementation"(project(":oop-application"))
     "implementation"(project(":oop-infrastructure"))
     "implementation"(project(":oop-presentation"))
-    "implementation"("org.springframework.boot:spring-boot-starter-web")
-    "implementation"("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    "implementation"(libs.spring.boot.web)
+    "implementation"(libs.springdoc.openapi)
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {

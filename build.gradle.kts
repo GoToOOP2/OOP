@@ -1,12 +1,8 @@
 plugins {
-    val kotlinVersion = "1.9.24"
-    val springBootVersion = "3.2.3"
-    val dependencyManagementVersion = "1.1.4"
-
-    kotlin("jvm") version kotlinVersion apply false
-    kotlin("plugin.spring") version kotlinVersion apply false
-    id("org.springframework.boot") version springBootVersion apply false
-    id("io.spring.dependency-management") version dependencyManagementVersion apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.spring) apply false
+    alias(libs.plugins.spring.boot) apply false
+    alias(libs.plugins.dependency.management) apply false
     jacoco
 }
 
@@ -19,6 +15,13 @@ allprojects {
     }
 }
 
+// Spring Boot 의존성 버전 관리 및 공통 라이브러리 추출
+val springBootVersion = libs.versions.spring.boot.get()
+val libKotlinReflect = libs.kotlin.reflect
+val libKotlinStdlib = libs.kotlin.stdlib
+val libJacksonKotlin = libs.jackson.kotlin
+val libSpringBootTest = libs.spring.boot.test
+
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
@@ -28,16 +31,15 @@ subprojects {
     // Spring Boot 의존성 버전 관리
     configure<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension> {
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:3.2.3")
+            mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         }
     }
 
     dependencies {
-        // 'add'를 사용하여 설정 이름을 명시적으로 지정 (IntelliJ 인식률 향상)
-        add("implementation", "org.jetbrains.kotlin:kotlin-reflect")
-        add("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-        add("implementation", "com.fasterxml.jackson.module:jackson-module-kotlin")
-        add("testImplementation", "org.springframework.boot:spring-boot-starter-test")
+        add("implementation", libKotlinReflect)
+        add("implementation", libKotlinStdlib)
+        add("implementation", libJacksonKotlin)
+        add("testImplementation", libSpringBootTest)
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -61,12 +63,12 @@ tasks.register<JacocoReport>("jacocoRootReport") {
     val subprojects = subprojects.filter { it.name != "oop-boot" }
 
     dependsOn(subprojects.map { it.tasks.withType<Test>() })
-    
+
     // 각 모듈의 실행 데이터 수집
-    executionData.setFrom(files(subprojects.map { 
-        File(it.layout.buildDirectory.get().asFile, "jacoco/test.exec") 
+    executionData.setFrom(files(subprojects.map {
+        File(it.layout.buildDirectory.get().asFile, "jacoco/test.exec")
     }))
-    
+
     // 각 모듈의 클래스 파일과 소스 코드 수집
     subprojects.forEach { subproject ->
         subproject.plugins.withType<org.gradle.api.plugins.JavaPlugin> {

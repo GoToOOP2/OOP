@@ -1,5 +1,5 @@
 dependencies {
     "implementation"(project(":oop-domain"))
     "implementation"(project(":oop-application"))
-    "implementation"("org.springframework.boot:spring-boot-starter-web")
+    "implementation"(libs.spring.boot.web)
 }
