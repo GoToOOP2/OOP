@@ -8,6 +8,5 @@ package com.oop.common.exception
  */
 open class BaseException(
     val errorCode: ErrorCode,
-    override val message: String = errorCode.defaultMessage,
     cause: Throwable? = null
-) : RuntimeException(message, cause)
+) : RuntimeException(errorCode.code, cause)
