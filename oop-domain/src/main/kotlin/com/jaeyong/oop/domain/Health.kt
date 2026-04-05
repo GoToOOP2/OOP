@@ -14,6 +14,6 @@ data class Health(
 /**
  * Outbound Port (도메인 레이어에서 정의한 저장 인터페이스)
  */
-interface HealthRepository {
+interface HealthOutputPort {
     fun save(health: Health): Health
 }
