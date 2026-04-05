@@ -1,19 +1,8 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: oop-project
-  datasource:
-    url: jdbc:postgresql://localhost:5432/oop_db
-    username: dev_user
-    password: dev_password
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+  profiles:
+    active: local # 기본값으로 local 실행
+
+server:
+  port: 8080
