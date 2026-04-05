@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":common"))
 
     implementation(libs.bundles.spring.web)
+    implementation(libs.springdoc.openapi.starter.webmvc.ui)
 
     testImplementation(libs.bundles.test.mock)
 }

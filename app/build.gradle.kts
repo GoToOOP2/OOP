@@ -13,4 +13,5 @@ dependencies {
 
     // @SpringBootApplication, runApplication 컴파일 타임에 필요
     implementation(libs.spring.boot.starter)
+    implementation(libs.spring.boot.starter.actuator)
 }
