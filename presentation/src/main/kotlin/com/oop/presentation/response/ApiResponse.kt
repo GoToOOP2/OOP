@@ -11,38 +11,27 @@ import org.springframework.http.ResponseEntity
  */
 data class ApiResponse<T>(
     val code: String,
-    val message: String,
     val data: T?
 ) {
     companion object {
 
         private const val SUCCESS_CODE = "SUCCESS"
-        private const val SUCCESS_MESSAGE = "성공"
 
         // ── 성공 응답 ──
 
         fun <T> success(
             data: T,
-            status: HttpStatus = HttpStatus.OK,
-            message: String = SUCCESS_MESSAGE
+            status: HttpStatus = HttpStatus.OK
         ): ResponseEntity<ApiResponse<T>> =
             ResponseEntity.status(status)
-                .body(ApiResponse(SUCCESS_CODE, message, data))
+                .body(ApiResponse(SUCCESS_CODE, data))
 
         // ── 실패 응답 ──
 
         fun fail(
-            status: HttpStatus, code: String, message: String
+            status: HttpStatus, code: String
         ): ResponseEntity<ApiResponse<Nothing>> =
             ResponseEntity.status(status)
-                .body(ApiResponse(code, message, null))
-
-        // ── 실패 응답 (data 포함 — Validation 에러 등) ──
-
-        fun <T> fail(
-            status: HttpStatus, code: String, message: String, data: T
-        ): ResponseEntity<ApiResponse<T>> =
-            ResponseEntity.status(status)
-                .body(ApiResponse(code, message, data))
+                .body(ApiResponse(code, null))
     }
 }
