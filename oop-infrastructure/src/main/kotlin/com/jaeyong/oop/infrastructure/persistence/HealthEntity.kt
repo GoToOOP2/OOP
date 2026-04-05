@@ -12,7 +12,11 @@ import java.time.LocalDateTime
 class HealthEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
+
+    @Column(name = "status", nullable = false, length = 50)
     val status: String,
+
+    @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime
 ) {
     // 도메인 모델 <-> DB 엔티티 변환 메서드
