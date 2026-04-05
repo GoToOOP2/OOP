@@ -1,0 +1,205 @@
+name: PR Size Labeler
+
+# PR이 새로 열리거나, 새로운 커밋이 푸시(동기화)되거나, 다시 열릴 때 실행됩니다.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  label-pr-size:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # PR에 라벨을 달기 위한 쓰기 권한
+      issues: write        # 라벨 자체를 생성하기 위한 권한
+      contents: read       # .gitattributes 파일 읽기 및 파일 목록 조회
+
+    steps:
+      - name: Checkout repository (for .gitattributes)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .gitattributes
+          sparse-checkout-cone-mode: false
+
+      - name: Calculate and Add Size Label
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // ── 1. .gitattributes에서 제외할 패턴 파싱 ──
+            const excludePatterns = [];
+            const gitattributesPath = path.join(process.env.GITHUB_WORKSPACE, '.gitattributes');
+            if (fs.existsSync(gitattributesPath)) {
+              const content = fs.readFileSync(gitattributesPath, 'utf8');
+              for (const line of content.split('\n')) {
+                if (line.includes('linguist-generated=true')) {
+                  const pattern = line.split(/\s+/)[0];
+                  if (pattern) excludePatterns.push(pattern);
+                }
+              }
+              console.log(`제외 패턴: ${JSON.stringify(excludePatterns)}`);
+            } else {
+              console.log('.gitattributes 파일이 없습니다. 모든 파일을 계산에 포함합니다.');
+            }
+
+            // ── 2. PR의 변경 파일 목록 가져오기 ──
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              per_page: 100
+            });
+
+            // glob 스타일 패턴을 간단한 정규식으로 변환하는 헬퍼
+            function matchesPattern(filename, pattern) {
+              // "*.ext" → 확장자 매칭
+              if (pattern.startsWith('*.')) {
+                return filename.endsWith(pattern.slice(1));
+              }
+              // "dir/**" → 디렉토리 매칭
+              if (pattern.endsWith('/**')) {
+                return filename.startsWith(pattern.slice(0, -3));
+              }
+              // 정확한 파일명 매칭
+              return filename === pattern;
+            }
+
+            // ── 3. 제외 파일을 빼고 순수 변경량 계산 ──
+            let totalChanges = 0;
+            let excludedChanges = 0;
+            for (const file of files) {
+              const fileChanges = file.additions + file.deletions;
+              const isExcluded = excludePatterns.some(p => matchesPattern(file.filename, p));
+              if (isExcluded) {
+                excludedChanges += fileChanges;
+                console.log(`  [제외] ${file.filename} (${fileChanges}줄)`);
+              } else {
+                totalChanges += fileChanges;
+              }
+            }
+
+            console.log(`순수 변경 줄 수: ${totalChanges} (제외된 줄 수: ${excludedChanges})`);
+
+            // ── 4. 크기 기준(Threshold) 설정 ──
+            let sizeLabel = '';
+            if (totalChanges < 10) sizeLabel = 'size/XS';
+            else if (totalChanges < 30) sizeLabel = 'size/S';
+            else if (totalChanges < 100) sizeLabel = 'size/M';
+            else if (totalChanges < 500) sizeLabel = 'size/L';
+            else if (totalChanges < 1000) sizeLabel = 'size/XL';
+            else sizeLabel = 'size/XXL';
+
+            // ── 5. 라벨 색상 설정 ──
+            const labelColors = {
+              'size/XS': '3CBF00',
+              'size/S': '5D9801',
+              'size/M': '7F7203',
+              'size/L': 'A14C05',
+              'size/XL': 'C32600',
+              'size/XXL': 'E50000'
+            };
+
+            // ── 6. 현재 PR 라벨 확인 ──
+            const { data: currentLabels } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number
+            });
+            const currentLabelNames = currentLabels.map(label => label.name);
+
+            if (currentLabelNames.includes(sizeLabel)) {
+              console.log(`이미 올바른 라벨(${sizeLabel})이 달려있습니다.`);
+              return;
+            }
+
+            // ── 7. 기존 size/ 라벨 제거 ──
+            for (const label of currentLabelNames) {
+              if (label.startsWith('size/') && label !== sizeLabel) {
+                console.log(`기존 라벨 제거: ${label}`);
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  name: label
+                });
+              }
+            }
+
+            // ── 8. 라벨이 레포지토리에 없으면 생성 ──
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: sizeLabel
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`라벨 새로 생성: ${sizeLabel}`);
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: sizeLabel,
+                  color: labelColors[sizeLabel] || 'ffffff'
+                });
+              }
+            }
+
+            // ── 9. 새 라벨 부착 ──
+            console.log(`새 라벨 추가: ${sizeLabel}`);
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: [sizeLabel]
+            });
+
+            // ── 10. PR 안내 코멘트 남기기 (기존 코멘트가 있으면 업데이트) ──
+            const sizeDescriptions = {
+              'size/XS': '아주 작은 변경입니다. 빠르게 리뷰 가능합니다! ⚡',
+              'size/S': '작은 변경입니다. 가볍게 리뷰해 주세요. ✅',
+              'size/M': '중간 크기의 변경입니다. 꼼꼼히 확인 부탁드립니다. 📋',
+              'size/L': '큰 변경입니다. 충분한 시간을 두고 리뷰해 주세요. 📦',
+              'size/XL': '매우 큰 변경입니다. PR을 나눌 수 있는지 검토해 주세요. ⚠️',
+              'size/XXL': '🚨 초대형 변경입니다! PR을 여러 개로 분리하는 것을 강력히 권장합니다.'
+            };
+
+            const COMMENT_MARKER = '<!-- pr-size-labeler-bot -->';
+            const commentBody = `${COMMENT_MARKER}\n` +
+                    `### 📏 PR Size: **${sizeLabel}**\n\n` +
+                    `| 항목 | 값 |\n|---|---|\n` +
+                    `| 순수 변경 줄 수 | **${totalChanges}줄** |\n` +
+                    `| 제외된 줄 수 | ${excludedChanges}줄 |\n` +
+                    `| 변경 파일 수 | ${files.length}개 |\n\n` +
+                    `${sizeDescriptions[sizeLabel]}`;
+
+            // 기존 봇 코멘트 찾기
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number
+            });
+            const existingComment = comments.find(c => c.body && c.body.includes(COMMENT_MARKER));
+
+            if (existingComment) {
+              // 기존 코멘트 업데이트
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+              console.log('기존 코멘트를 업데이트했습니다.');
+            } else {
+              // 새 코멘트 생성
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: commentBody
+              });
+              console.log('새 코멘트를 생성했습니다.');
+            }
+

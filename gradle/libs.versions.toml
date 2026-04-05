@@ -1,0 +1,43 @@
+[versions]
+kotlin                       = "2.2.21"
+spring-boot                  = "4.0.4"
+spring-dependency-management = "1.1.7"
+mockk                        = "1.13.17"
+springdoc                    = "2.8.6"
+
+[plugins]
+kotlin-jvm                   = { id = "org.jetbrains.kotlin.jvm",            version.ref = "kotlin" }
+kotlin-spring                = { id = "org.jetbrains.kotlin.plugin.spring",  version.ref = "kotlin" }
+kotlin-jpa                   = { id = "org.jetbrains.kotlin.plugin.jpa",     version.ref = "kotlin" }
+spring-boot                  = { id = "org.springframework.boot",             version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management",     version.ref = "spring-dependency-management" }
+
+[libraries]
+# Kotlin
+kotlin-reflect               = { group = "org.jetbrains.kotlin",         name = "kotlin-reflect" }
+kotlin-test-junit5           = { group = "org.jetbrains.kotlin",         name = "kotlin-test-junit5" }
+
+# Spring Boot
+spring-boot-starter          = { group = "org.springframework.boot",     name = "spring-boot-starter" }
+spring-boot-starter-actuator = { group = "org.springframework.boot",     name = "spring-boot-starter-actuator" }
+spring-boot-starter-web      = { group = "org.springframework.boot",     name = "spring-boot-starter-web" }
+spring-boot-starter-data-jpa = { group = "org.springframework.boot",     name = "spring-boot-starter-data-jpa" }
+spring-boot-starter-validation = { group = "org.springframework.boot",   name = "spring-boot-starter-validation" }
+spring-boot-starter-test     = { group = "org.springframework.boot",     name = "spring-boot-starter-test" }
+
+# Swagger
+springdoc-openapi-starter-webmvc-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+# Database
+postgresql                   = { group = "org.postgresql",               name = "postgresql" }
+
+# Test
+junit-platform-launcher      = { group = "org.junit.platform",           name = "junit-platform-launcher" }
+mockk                        = { group = "io.mockk",                     name = "mockk-jvm",              version.ref = "mockk" }
+
+# 번들로 묶은 라이브러리 그룹
+[bundles]
+spring-web  = ["spring-boot-starter-web", "spring-boot-starter-validation"]
+spring-data = ["spring-boot-starter-data-jpa", "postgresql"]
+test        = ["spring-boot-starter-test", "kotlin-test-junit5", "junit-platform-launcher"]
+test-mock   = ["mockk"]
