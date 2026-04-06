@@ -7,11 +7,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingPathVariableException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 /**
  * 전역 예외 처리기
@@ -34,33 +39,44 @@ class GlobalExceptionHandler {
         return ApiResponse.fail(HttpStatus.BAD_REQUEST, e.errorCode.code)
     }
 
-    // ── 2. @Valid 검증 실패 → 400 ──
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidation(e: MethodArgumentNotValidException): ResponseEntity<ApiResponse<Nothing>> {
+    // ── 2. 요청 데이터 검증 실패 → 400 ──
+    @ExceptionHandler(
+        MethodArgumentNotValidException::class,
+        HttpMessageNotReadableException::class,
+        MissingServletRequestParameterException::class,
+        MethodArgumentTypeMismatchException::class,
+        MissingPathVariableException::class
+    )
+    fun handleBadRequest(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
         log.warn("[{}]", ErrorCode.VALIDATION_ERROR.code)
         return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR.code)
     }
 
-    // ── 3. 요청 Body 파싱 실패 → 400 ──
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleNotReadable(e: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Nothing>> {
-        log.warn("[{}]", ErrorCode.VALIDATION_ERROR.code)
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR.code)
-    }
-
-    // ── 4. 잘못된 HTTP 메서드 → 405 ──
+    // ── 3. 잘못된 HTTP 메서드 → 405 ──
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
     fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
         return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED, ErrorCode.METHOD_NOT_ALLOWED.code)
     }
 
-    // ── 5. 지원하지 않는 Content-Type → 415 ──
+    // ── 4. 지원하지 않는 Content-Type → 415 ──
     @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
     fun handleUnsupportedMediaType(e: HttpMediaTypeNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
         return ApiResponse.fail(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ErrorCode.UNSUPPORTED_MEDIA_TYPE.code)
     }
 
-    // ── 6. 그 외 모든 예외 → 500 ──
+    // ── 5. Accept 헤더 불일치 → 406 ──
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException::class)
+    fun handleNotAcceptable(e: HttpMediaTypeNotAcceptableException): ResponseEntity<ApiResponse<Nothing>> {
+        return ApiResponse.fail(HttpStatus.NOT_ACCEPTABLE, ErrorCode.NOT_ACCEPTABLE.code)
+    }
+
+    // ── 6. 존재하지 않는 리소스 → 404 ──
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFound(e: NoResourceFoundException): ResponseEntity<ApiResponse<Nothing>> {
+        return ApiResponse.fail(HttpStatus.NOT_FOUND, ErrorCode.RESOURCE_NOT_FOUND.code)
+    }
+
+    // ── 7. 그 외 모든 예외 → 500 ──
     @ExceptionHandler(Exception::class)
     fun handleUnexpected(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
         log.error("[UNEXPECTED]", e)

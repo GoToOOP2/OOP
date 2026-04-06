@@ -26,6 +26,8 @@ enum class ErrorCode(
     VALIDATION_ERROR("C001"),
     METHOD_NOT_ALLOWED("C002"),
     UNSUPPORTED_MEDIA_TYPE("C003"),
+    NOT_ACCEPTABLE("C004"),
+    RESOURCE_NOT_FOUND("C005"),
 
     // ── 시스템 에러 (S-XXX) ──
     INTERNAL_SERVER_ERROR("S001"),
