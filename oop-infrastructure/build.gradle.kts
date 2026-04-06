@@ -4,6 +4,6 @@ plugins {
 
 dependencies {
     "implementation"(project(":oop-domain"))
-    "implementation"(libs.spring.boot.jpa)
+    "implementation"(libs.bundles.spring.infrastructure)
     "runtimeOnly"(libs.postgresql)
 }

@@ -18,9 +18,7 @@ allprojects {
 
 // Spring Boot 의존성 버전 관리 및 공통 라이브러리 추출
 val springBootVersion = libs.versions.spring.boot.get()
-val libKotlinReflect = libs.kotlin.reflect
-val libKotlinStdlib = libs.kotlin.stdlib
-val libJacksonKotlin = libs.jackson.kotlin
+val bundleKotlin = libs.bundles.kotlin
 val libSpringBootTest = libs.spring.boot.test
 
 subprojects {
@@ -43,9 +41,7 @@ subprojects {
     }
 
     dependencies {
-        add("implementation", libKotlinReflect)
-        add("implementation", libKotlinStdlib)
-        add("implementation", libJacksonKotlin)
+        add("implementation", bundleKotlin)
         add("testImplementation", libSpringBootTest)
     }
 

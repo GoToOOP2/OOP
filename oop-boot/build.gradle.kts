@@ -7,7 +7,7 @@ dependencies {
     "implementation"(project(":oop-application"))
     "implementation"(project(":oop-infrastructure"))
     "implementation"(project(":oop-presentation"))
-    "implementation"(libs.spring.boot.web)
+    "implementation"(libs.bundles.spring.web)
     "implementation"(libs.springdoc.openapi)
 }
 
