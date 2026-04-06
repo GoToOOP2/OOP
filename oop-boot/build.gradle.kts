@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    "implementation"(project(":oop-common"))
     "implementation"(project(":oop-domain"))
     "implementation"(project(":oop-application"))
     "implementation"(project(":oop-infrastructure"))
