@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: oop-project
+  profiles:
+    active: local # 기본값으로 local 실행
+
+server:
+  port: 8080
