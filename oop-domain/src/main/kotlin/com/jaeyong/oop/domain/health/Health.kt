@@ -1,4 +1,4 @@
-package com.jaeyong.oop.domain
+package com.jaeyong.oop.domain.health
 
 import java.time.LocalDateTime
 
@@ -10,10 +10,3 @@ data class Health(
     val status: String,
     val createdAt: LocalDateTime = LocalDateTime.now()
 )
-
-/**
- * Outbound Port (도메인 레이어에서 정의한 저장 인터페이스)
- */
-interface HealthOutputPort {
-    fun save(health: Health): Health
-}

@@ -1,6 +1,6 @@
 package com.jaeyong.oop.infrastructure.persistence
 
-import com.jaeyong.oop.domain.Health
+import com.jaeyong.oop.domain.health.Health
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
