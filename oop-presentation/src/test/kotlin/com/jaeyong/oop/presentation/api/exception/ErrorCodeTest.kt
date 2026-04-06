@@ -1,5 +1,6 @@
 package com.jaeyong.oop.presentation.api.exception
 
+import com.jaeyong.oop.common.exception.ErrorCode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -9,9 +10,9 @@ class ErrorCodeTest {
     @Test
     @DisplayName("ErrorCode의 각 항목은 고유한 코드를 가져야 한다")
     fun testErrorCodeProperties() {
-        val errorCode = ErrorCode.USER_NOT_FOUND
+        val errorCode = ErrorCode.NOT_FOUND
 
-        assertThat(errorCode.code).isEqualTo("U001")
+        assertThat(errorCode.code).isEqualTo("D001")
     }
 
     @Test

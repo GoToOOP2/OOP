@@ -1,20 +1,37 @@
 package com.jaeyong.oop.presentation.api
 
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+
 /**
- * [사용자 요청 반영]
- * HTTP 상태 코드가 이미 성공/실패 여부를 알려주므로, 
- * 중복된 'success: Boolean' 필드를 제거했습니다.
- * 
- * @param message 에러 발생 시의 설명 (성공 시 null)
- * @param data 성공 시의 실제 응답 데이터 (에러 시 null)
+ * 공통응답 포멧
+ *
+ * 모든 API 응답은 이 클래스를 통해 동일한 구조로 반환된다.
+ * HTTP 상태 코드는 헤더에서 확인하므로 Body에 포함하지 않는다.
  */
 data class ApiResponse<T>(
-    val code: String? = null,
-    val data: T? = null
+    val code: String,
+    val data: T?
 ) {
     companion object {
-        fun <T> success(data: T?): ApiResponse<T> = ApiResponse(data = data)
 
-        fun <T> error(code: String): ApiResponse<T> = ApiResponse(code = code)
+        private const val SUCCESS_CODE = "SUCCESS"
+
+        // ── 성공 응답 ──
+
+        fun <T> success(
+            data: T,
+            status: HttpStatus = HttpStatus.OK
+        ): ResponseEntity<ApiResponse<T>> =
+            ResponseEntity.status(status)
+                .body(ApiResponse(SUCCESS_CODE, data))
+
+        // ── 실패 응답 ──
+
+        fun fail(
+            status: HttpStatus, code: String
+        ): ResponseEntity<ApiResponse<Nothing>> =
+            ResponseEntity.status(status)
+                .body(ApiResponse(code, null))
     }
 }

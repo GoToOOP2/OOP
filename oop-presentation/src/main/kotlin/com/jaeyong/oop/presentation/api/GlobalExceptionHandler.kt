@@ -1,73 +1,68 @@
 package com.jaeyong.oop.presentation.api
 
-import com.jaeyong.oop.domain.exception.Domain1Exception
-import com.jaeyong.oop.domain.exception.Domain1ErrorType
-import com.jaeyong.oop.domain.exception.Domain2Exception
-import com.jaeyong.oop.domain.exception.Domain2ErrorType
-import com.jaeyong.oop.presentation.api.exception.ErrorCode
+import com.jaeyong.oop.common.exception.BaseException
+import com.jaeyong.oop.common.exception.ErrorCode
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
-import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
-import org.springframework.web.servlet.resource.NoResourceFoundException
 
+/**
+ * 전역 예외 처리기
+ *
+ * 모든 예외를 ApiResponse 포멧으로 변환하여 일관된 응답 구조를 보장한다.
+ *
+ * HTTP 상태 코드와 에러코드는 별개의 관심사이다.
+ *   - HTTP 상태: 프로토콜 수준의 응답 분류 (헤더)
+ *   - 에러코드: "이 코드면 이런 문제" 라는 우리의 약속 (Body)
+ */
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler(Domain1Exception::class)
-    fun handleDomain1Exception(e: Domain1Exception): ResponseEntity<ApiResponse<Nothing>> {
-        val errorCode = when (e.type) {
-            Domain1ErrorType.USER_NOT_FOUND -> ErrorCode.USER_NOT_FOUND
-            Domain1ErrorType.ALREADY_EXISTS -> ErrorCode.INVALID_INPUT_VALUE
-        }
-        return ResponseEntity(ApiResponse.error(errorCode.code), HttpStatus.NOT_FOUND)
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    // ── 1. 비즈니스 예외 (BaseException 하위) → 400 ──
+    @ExceptionHandler(BaseException::class)
+    fun handleBaseException(e: BaseException): ResponseEntity<ApiResponse<Nothing>> {
+        log.warn("[{}]", e.errorCode.code)
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST, e.errorCode.code)
     }
 
-    @ExceptionHandler(Domain2Exception::class)
-    fun handleDomain2Exception(e: Domain2Exception): ResponseEntity<ApiResponse<Nothing>> {
-        val errorCode = when (e.type) {
-            Domain2ErrorType.INSUFFICIENT_FUNDS -> ErrorCode.INVALID_BALANCE
-            Domain2ErrorType.LIMIT_EXCEEDED -> ErrorCode.INVALID_INPUT_VALUE
-        }
-        return ResponseEntity(ApiResponse.error(errorCode.code), HttpStatus.BAD_REQUEST)
+    // ── 2. @Valid 검증 실패 → 400 ──
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidation(e: MethodArgumentNotValidException): ResponseEntity<ApiResponse<Nothing>> {
+        log.warn("[{}]", ErrorCode.VALIDATION_ERROR.code)
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR.code)
     }
 
-    /**
-     * Spring Framework가 던지는 예외 처리
-     */
-    @ExceptionHandler(
-        MethodArgumentNotValidException::class,
-        HttpMessageNotReadableException::class,
-        MissingServletRequestParameterException::class,
-        MethodArgumentTypeMismatchException::class
-    )
-    fun handleBadRequestException(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
-        return ResponseEntity(ApiResponse.error(ErrorCode.INVALID_INPUT_VALUE.code), HttpStatus.BAD_REQUEST)
+    // ── 3. 요청 Body 파싱 실패 → 400 ──
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleNotReadable(e: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Nothing>> {
+        log.warn("[{}]", ErrorCode.VALIDATION_ERROR.code)
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.VALIDATION_ERROR.code)
     }
 
+    // ── 4. 잘못된 HTTP 메서드 → 405 ──
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
-    fun handleMethodNotSupportedException(e: HttpRequestMethodNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
-        return ResponseEntity(ApiResponse.error(ErrorCode.METHOD_NOT_ALLOWED.code), HttpStatus.METHOD_NOT_ALLOWED)
+    fun handleMethodNotAllowed(e: HttpRequestMethodNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
+        return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED, ErrorCode.METHOD_NOT_ALLOWED.code)
     }
 
+    // ── 5. 지원하지 않는 Content-Type → 415 ──
     @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
-    fun handleMediaTypeNotSupportedException(e: HttpMediaTypeNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
-        return ResponseEntity(ApiResponse.error(ErrorCode.UNSUPPORTED_MEDIA_TYPE.code), HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    fun handleUnsupportedMediaType(e: HttpMediaTypeNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
+        return ApiResponse.fail(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ErrorCode.UNSUPPORTED_MEDIA_TYPE.code)
     }
 
-    @ExceptionHandler(NoResourceFoundException::class)
-    fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ApiResponse<Nothing>> {
-        return ResponseEntity(ApiResponse.error(ErrorCode.RESOURCE_NOT_FOUND.code), HttpStatus.NOT_FOUND)
-    }
-
+    // ── 6. 그 외 모든 예외 → 500 ──
     @ExceptionHandler(Exception::class)
-    fun handleException(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
-        return ResponseEntity(ApiResponse.error(ErrorCode.INTERNAL_SERVER_ERROR.code), HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleUnexpected(e: Exception): ResponseEntity<ApiResponse<Nothing>> {
+        log.error("[UNEXPECTED]", e)
+        return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.code)
     }
 }
