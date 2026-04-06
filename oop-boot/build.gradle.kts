@@ -6,7 +6,7 @@ dependencies {
     "implementation"(project(":oop-common"))
     "implementation"(project(":oop-domain"))
     "implementation"(project(":oop-application"))
-    "implementation"(project(":oop-infrastructure"))
+    "runtimeOnly"(project(":oop-infrastructure"))
     "implementation"(project(":oop-presentation"))
     "implementation"(libs.bundles.spring.web)
     "implementation"(libs.springdoc.openapi)
