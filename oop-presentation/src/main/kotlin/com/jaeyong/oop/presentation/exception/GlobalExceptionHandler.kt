@@ -1,7 +1,8 @@
-package com.jaeyong.oop.presentation.api
+package com.jaeyong.oop.presentation.exception
 
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
+import com.jaeyong.oop.presentation.response.ApiResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

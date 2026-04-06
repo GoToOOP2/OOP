@@ -1,4 +1,4 @@
-package com.jaeyong.oop.presentation.api
+package com.jaeyong.oop.presentation.response
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
