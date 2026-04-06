@@ -45,6 +45,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
+    common["common"]
     app["app"]
     presentation["presentation"]
     application["application"]
@@ -54,10 +55,13 @@ flowchart LR
     app -->|implementation| presentation
     app -->|implementation| application
     app -->|implementation| domain
+    app -->|implementation| common
     app -.->|runtimeOnly| infrastructure
 
     presentation -->|implementation| application
+    presentation -->|implementation| common
     application  -->|implementation| domain
+    domain -->|implementation| common
     infrastructure -->|implementation| domain
 ```
 
