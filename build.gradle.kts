@@ -29,6 +29,12 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "jacoco")
 
+    configure<JavaPluginExtension> {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
     // Spring Boot 의존성 버전 관리
     configure<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension> {
         imports {
