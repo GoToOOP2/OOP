@@ -1,4 +1,5 @@
 dependencies {
+    "implementation"(project(":oop-common"))
     "implementation"(project(":oop-domain"))
     "implementation"(libs.bundles.spring.application)
 }

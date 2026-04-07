@@ -6,4 +6,5 @@ dependencies {
     "implementation"(project(":oop-domain"))
     "implementation"(libs.bundles.spring.infrastructure)
     "runtimeOnly"(libs.postgresql)
+    "implementation"(libs.spring.security.crypto)
 }
