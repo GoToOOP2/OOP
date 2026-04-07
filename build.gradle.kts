@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.jpa) apply false
     alias(libs.plugins.spring.boot) apply false
     alias(libs.plugins.dependency.management) apply false
+    alias(libs.plugins.ktlint) apply false
     jacoco
 }
 
@@ -26,6 +27,7 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "jacoco")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     configure<JavaPluginExtension> {
         toolchain {
