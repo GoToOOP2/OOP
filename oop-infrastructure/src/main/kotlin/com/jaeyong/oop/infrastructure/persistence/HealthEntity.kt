@@ -1,7 +1,12 @@
 package com.jaeyong.oop.infrastructure.persistence
 
 import com.jaeyong.oop.domain.health.Health
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 /**
@@ -12,18 +17,15 @@ import java.time.LocalDateTime
 class HealthEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     @Column(name = "status", nullable = false, length = 50)
     val status: String,
-
     @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
 ) {
     // 도메인 모델 <-> DB 엔티티 변환 메서드
     fun toDomain(): Health = Health(id, status, createdAt)
-    
+
     companion object {
-        fun fromDomain(health: Health): HealthEntity = 
-            HealthEntity(health.id, health.status, health.createdAt)
+        fun fromDomain(health: Health): HealthEntity = HealthEntity(health.id, health.status, health.createdAt)
     }
 }
