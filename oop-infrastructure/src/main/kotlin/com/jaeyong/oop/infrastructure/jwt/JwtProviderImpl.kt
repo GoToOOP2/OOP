@@ -35,14 +35,12 @@ class JwtProviderImpl(
             .subject
 
     override fun isValid(token: String): Boolean =
-        runCatching {
-            Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
+        try {
+            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
             true
-        }.getOrElse { e ->
-            if (e is JwtException || e is IllegalArgumentException) false
-            else throw e
+        } catch (e: JwtException) {
+            false
+        } catch (e: IllegalArgumentException) {
+            false
         }
 }
