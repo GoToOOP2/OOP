@@ -29,14 +29,21 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
  */
 @RestControllerAdvice
 class GlobalExceptionHandler {
-
     private val log = LoggerFactory.getLogger(javaClass)
 
-    // ── 1. 비즈니스 예외 (BaseException 하위) → 400 ──
+    // ── 1. 비즈니스 예외 (BaseException 하위) ──
     @ExceptionHandler(BaseException::class)
     fun handleBaseException(e: BaseException): ResponseEntity<ApiResponse<Nothing>> {
         log.warn("[{}]", e.errorCode.code)
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST, e.errorCode.code)
+        val status =
+            when (e.errorCode) {
+                ErrorCode.UNAUTHORIZED,
+                ErrorCode.INVALID_TOKEN,
+                ErrorCode.EXPIRED_TOKEN,
+                -> HttpStatus.UNAUTHORIZED
+                else -> HttpStatus.BAD_REQUEST
+            }
+        return ApiResponse.fail(status, e.errorCode.code)
     }
 
     // ── 2. @Valid 검증 실패 → 400 ──

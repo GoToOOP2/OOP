@@ -10,7 +10,7 @@ package com.jaeyong.oop.common.exception
  *   S-XXX : 시스템 에러
  */
 enum class ErrorCode(
-    val code: String
+    val code: String,
 ) {
     // ── 도메인 비즈니스 에러 (D-XXX) ──
     NOT_FOUND("D001"),
@@ -21,6 +21,10 @@ enum class ErrorCode(
     // ── 애플리케이션 에러 (A-XXX) ──
     UNAUTHORIZED("A001"),
     EXTERNAL_SERVICE_FAIL("A002"),
+    LOGIN_FAILED("A003"),
+    INVALID_TOKEN("A004"),
+    EXPIRED_TOKEN("A005"),
+    DUPLICATE_EMAIL("A006"),
 
     // ── 공통 에러 (C-XXX) ──
     VALIDATION_ERROR("C001"),
