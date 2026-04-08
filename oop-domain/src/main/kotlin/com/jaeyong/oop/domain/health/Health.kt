@@ -8,5 +8,5 @@ import java.time.LocalDateTime
 data class Health(
     val id: Long? = null,
     val status: String,
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 )

@@ -9,13 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 class HealthServiceTest {
-
     @Mock
     private lateinit var healthPort: HealthPort
 
@@ -27,8 +26,8 @@ class HealthServiceTest {
     fun `checkHealth should save health and return success`() {
         // given
         val health = Health(status = "OK")
-        
-        // 이론적 해결책: Mockito.any()가 null을 반환하여 발생하는 NPE를 피하기 위해 
+
+        // 이론적 해결책: Mockito.any()가 null을 반환하여 발생하는 NPE를 피하기 위해
         // 헬퍼 함수 anyNonNull()을 사용합니다.
         `when`(healthPort.save(anyNonNull())).thenReturn(health)
 

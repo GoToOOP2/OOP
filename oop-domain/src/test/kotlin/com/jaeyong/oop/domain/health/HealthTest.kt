@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class HealthTest {
-
     @Test
     @DisplayName("Health 도메인 객체를 생성할 때 기본값이 올바르게 설정되어야 한다")
     fun `should create health entity with default values`() {

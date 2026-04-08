@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class BaseExceptionTest {
-
     @Test
     @DisplayName("BaseException 생성 시 설정한 ErrorCode와 메시지가 올바르게 저장되어야 한다")
     fun `should have correct error code when created`() {

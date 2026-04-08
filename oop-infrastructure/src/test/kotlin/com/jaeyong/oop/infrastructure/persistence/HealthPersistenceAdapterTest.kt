@@ -5,16 +5,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.ArgumentMatchers.any
 import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
 class HealthPersistenceAdapterTest {
-
     @Mock
     private lateinit var healthJpaRepository: HealthJpaRepository
 

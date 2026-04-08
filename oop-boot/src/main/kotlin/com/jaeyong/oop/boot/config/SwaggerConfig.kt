@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class SwaggerConfig {
-
     @Bean
     fun openAPI(): OpenAPI {
         return OpenAPI()
@@ -15,7 +14,7 @@ class SwaggerConfig {
                 Info()
                     .title("OOP Project API")
                     .description("객체 지향 프로그래밍 프로젝트 API 문서")
-                    .version("1.0.0")
+                    .version("1.0.0"),
             )
     }
 }

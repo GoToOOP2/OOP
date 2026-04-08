@@ -8,5 +8,5 @@ package com.jaeyong.oop.common.exception
  */
 open class BaseException(
     val errorCode: ErrorCode,
-    cause: Throwable? = null
+    cause: Throwable? = null,
 ) : RuntimeException(errorCode.code, cause)

@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(HealthController::class)
 class HealthControllerTest {
-
     @SpringBootApplication
     class TestApplication
 
@@ -34,8 +33,10 @@ class HealthControllerTest {
         given(healthCheckUseCase.checkHealth()).willReturn(expectedResult)
 
         // when & then
-        mockMvc.perform(get("/api/health")
-            .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+            get("/api/health")
+                .contentType(MediaType.APPLICATION_JSON),
+        )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.code").value("SUCCESS"))
             .andExpect(jsonPath("$.data").value(expectedResult))

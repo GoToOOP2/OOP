@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class HealthEntityTest {
-
     @Test
     @DisplayName("1 & 2. 생성자 및 Getter 검증: 모든 필드가 정상적으로 초기화되고 값을 반환해야 한다")
     fun `constructor and getter validation`() {
@@ -92,7 +91,7 @@ class HealthEntityTest {
         // then
         assertThat(entity.id).isNull()
         assertThat(entity.status).isEqualTo(status)
-        
+
         // domain 변환 시에도 id가 null로 유지되는지 확인
         val domain = entity.toDomain()
         assertThat(domain.id).isNull()

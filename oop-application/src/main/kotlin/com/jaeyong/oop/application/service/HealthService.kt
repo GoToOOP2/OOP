@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class HealthService(
-    private val healthPort: HealthPort
+    private val healthPort: HealthPort,
 ) : HealthCheckUseCase {
     @Transactional
     override fun checkHealth(): String {

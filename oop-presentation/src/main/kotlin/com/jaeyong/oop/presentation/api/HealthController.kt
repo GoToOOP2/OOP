@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/health")
 class HealthController(
-    private val healthCheckUseCase: HealthCheckUseCase
+    private val healthCheckUseCase: HealthCheckUseCase,
 ) {
     @GetMapping
     fun healthCheck(): ResponseEntity<ApiResponse<String>> {

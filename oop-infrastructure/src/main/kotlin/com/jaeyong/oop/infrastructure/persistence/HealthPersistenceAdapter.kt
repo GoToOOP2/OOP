@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 class HealthPersistenceAdapter(
-    private val healthJpaRepository: HealthJpaRepository
+    private val healthJpaRepository: HealthJpaRepository,
 ) : HealthPort {
     override fun save(health: Health): Health {
         val entity = HealthEntity.fromDomain(health)
