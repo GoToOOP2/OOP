@@ -4,6 +4,8 @@ spring-boot = "3.2.3"
 dependency-management = "1.1.4"
 springdoc = "2.3.0"
 ktlint = "12.1.2"
+jjwt = "0.12.6"
+bcrypt = "0.10.2"
 
 [libraries]
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
@@ -15,13 +17,20 @@ spring-boot-jpa = { module = "org.springframework.boot:spring-boot-starter-data-
 spring-tx = { module = "org.springframework:spring-tx" }
 spring-context = { module = "org.springframework:spring-context" }
 postgresql = { module = "org.postgresql:postgresql" }
+h2 = { module = "com.h2database:h2" }
 springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
+spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 
 [bundles]
 kotlin = ["kotlin-reflect", "kotlin-stdlib", "jackson-kotlin"]
 spring-application = ["spring-tx", "spring-context"]
 spring-infrastructure = ["spring-boot-jpa"]
 spring-web = ["spring-boot-web"]
+jjwt = ["jjwt-api", "jjwt-impl", "jjwt-jackson"]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
