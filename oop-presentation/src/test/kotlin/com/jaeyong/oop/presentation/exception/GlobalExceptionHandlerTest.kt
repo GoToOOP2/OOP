@@ -30,7 +30,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @ExtendWith(MockitoExtension::class)
 class GlobalExceptionHandlerTest {
-
     private lateinit var mockMvc: MockMvc
 
     @Mock
@@ -38,9 +37,10 @@ class GlobalExceptionHandlerTest {
 
     @BeforeEach
     fun setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(HealthController(healthCheckUseCase))
-            .setControllerAdvice(GlobalExceptionHandler())
-            .build()
+        mockMvc =
+            MockMvcBuilders.standaloneSetup(HealthController(healthCheckUseCase))
+                .setControllerAdvice(GlobalExceptionHandler())
+                .build()
     }
 
     @Test

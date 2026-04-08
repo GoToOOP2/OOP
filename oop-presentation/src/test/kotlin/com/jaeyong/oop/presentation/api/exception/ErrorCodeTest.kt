@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class ErrorCodeTest {
-
     @Test
     @DisplayName("ErrorCode의 각 항목은 고유한 코드를 가져야 한다")
     fun testErrorCodeProperties() {

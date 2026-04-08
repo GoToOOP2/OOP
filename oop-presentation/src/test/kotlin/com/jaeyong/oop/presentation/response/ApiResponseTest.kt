@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
 class ApiResponseTest {
-
     @Test
     @DisplayName("success 응답 생성 시 SUCCESS 코드와 데이터가 포함되어야 한다")
     fun `success should create correct response`() {
@@ -37,7 +36,7 @@ class ApiResponseTest {
         assertThat(responseEntity.statusCode).isEqualTo(status)
         assertThat(responseEntity.body).isNotNull
         assertThat(responseEntity.body?.code).isEqualTo(errorCode)
-        
+
         // Use an explicit cast to avoid ambiguity with null
         val data: Any? = responseEntity.body?.data
         assertThat(data).isNull()
