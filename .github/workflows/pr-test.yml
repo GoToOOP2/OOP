@@ -1,0 +1,49 @@
+name: PR Test
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  checks: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build (테스트 제외)
+        run: ./gradlew build -x test
+
+      - name: Run tests & Generate coverage
+        run: ./gradlew test jacocoRootReport
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "**/build/test-results/test/*.xml"
+          comment_title: "테스트 결과"
+
+      - name: Publish coverage report
+        uses: Madrapps/jacoco-report@v1.6.1
+        if: always()
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "커버리지 리포트"
+          update-comment: true
