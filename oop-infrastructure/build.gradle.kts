@@ -7,4 +7,7 @@ dependencies {
     "implementation"(libs.bundles.spring.infrastructure)
     "runtimeOnly"(libs.postgresql)
     "implementation"(libs.spring.security.crypto)
+    "implementation"(libs.jjwt.api)
+    "runtimeOnly"(libs.jjwt.impl)
+    "runtimeOnly"(libs.jjwt.jackson)
 }

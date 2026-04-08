@@ -9,4 +9,6 @@ class BCryptPasswordEncryptor : PasswordEncryptor {
     private val encoder = BCryptPasswordEncoder()
 
     override fun encrypt(raw: String): String = encoder.encode(raw)
+
+    override fun matches(raw: String, encoded: String): Boolean = encoder.matches(raw, encoded)
 }

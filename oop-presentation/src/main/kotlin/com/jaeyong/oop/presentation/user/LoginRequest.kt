@@ -1,14 +1,11 @@
 package com.jaeyong.oop.presentation.user
 
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Size
 
-data class JoinRequest(
+data class LoginRequest(
     @field:NotBlank
-    @field:Size(min = 4, max = 50)
     val username: String,
 
     @field:NotBlank
-    @field:Size(min = 4)
     val password: String
 )

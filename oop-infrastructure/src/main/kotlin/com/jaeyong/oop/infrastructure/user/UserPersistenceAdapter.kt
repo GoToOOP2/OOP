@@ -14,4 +14,7 @@ class UserPersistenceAdapter(
 
     override fun existsByUsername(username: String): Boolean =
         userJpaRepository.existsByUsername(username)
+
+    override fun findByUsername(username: String): User? =
+        userJpaRepository.findByUsername(username)?.toDomain()
 }

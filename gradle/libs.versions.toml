@@ -3,6 +3,7 @@ kotlin = "1.9.24"
 spring-boot = "3.2.3"
 dependency-management = "1.1.4"
 springdoc = "2.3.0"
+jjwt = "0.12.3"
 
 [libraries]
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
@@ -17,6 +18,9 @@ postgresql = { module = "org.postgresql:postgresql" }
 spring-security-crypto = { module = "org.springframework.security:spring-security-crypto" }
 spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 [bundles]
 kotlin = ["kotlin-reflect", "kotlin-stdlib", "jackson-kotlin"]
