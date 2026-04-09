@@ -4,7 +4,7 @@ import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.User
 import com.jaeyong.oop.domain.user.port.PasswordEncryptor
-import com.jaeyong.oop.domain.user.port.UserRepository
+import com.jaeyong.oop.domain.user.port.UserOutputPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class JoinServiceTest {
 
     @Mock
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserOutputPort
 
     @Mock
     private lateinit var passwordEncryptor: PasswordEncryptor
