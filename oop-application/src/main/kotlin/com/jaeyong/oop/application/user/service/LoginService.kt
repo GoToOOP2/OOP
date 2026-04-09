@@ -5,12 +5,12 @@ import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.port.JwtProvider
 import com.jaeyong.oop.domain.user.port.PasswordEncryptor
-import com.jaeyong.oop.domain.user.port.UserRepository
+import com.jaeyong.oop.domain.user.port.UserOutputPort
 import org.springframework.stereotype.Service
 
 @Service
 class LoginService(
-    private val userRepository: UserRepository,
+    private val userRepository: UserOutputPort,
     private val passwordEncryptor: PasswordEncryptor,
     private val jwtProvider: JwtProvider
 ) : LoginUseCase {
