@@ -27,7 +27,7 @@ class JoinServiceTest {
     private lateinit var passwordEncryptor: PasswordEncryptor
 
     @InjectMocks
-    private lateinit var joinService: JoinService
+    private lateinit var sut: JoinService
 
     @Test
     @DisplayName("1. 이미 존재하는 username이면 DUPLICATE 예외를 던진다")
@@ -37,7 +37,7 @@ class JoinServiceTest {
 
         // when & then
         val exception = assertThrows<BaseException> {
-            joinService.join("jaeyong", "password123")
+            sut.join("jaeyong", "password123")
         }
         assertThat(exception.errorCode).isEqualTo(ErrorCode.DUPLICATE)
     }
@@ -51,7 +51,7 @@ class JoinServiceTest {
         given(userRepository.save(anyNonNull())).willReturn(User(id = 1L, username = "jaeyong", password = "hashed_password"))
 
         // when
-        joinService.join("jaeyong", "password123")
+        sut.join("jaeyong", "password123")
 
         // then
         verify(passwordEncryptor).encrypt("password123")

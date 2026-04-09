@@ -32,6 +32,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 class GlobalExceptionHandlerTest {
 
     private lateinit var mockMvc: MockMvc
+    private val sut = GlobalExceptionHandler()
 
     @Mock
     private lateinit var healthCheckUseCase: HealthCheckUseCase
@@ -39,7 +40,7 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     fun setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(HealthController(healthCheckUseCase))
-            .setControllerAdvice(GlobalExceptionHandler())
+            .setControllerAdvice(sut)
             .build()
     }
 

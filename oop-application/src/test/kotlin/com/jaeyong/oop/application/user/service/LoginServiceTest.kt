@@ -29,7 +29,7 @@ class LoginServiceTest {
     private lateinit var jwtProvider: JwtProvider
 
     @InjectMocks
-    private lateinit var loginService: LoginService
+    private lateinit var sut: LoginService
 
     @Test
     @DisplayName("1. 존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다")
@@ -39,7 +39,7 @@ class LoginServiceTest {
 
         // when & then
         val exception = assertThrows<BaseException> {
-            loginService.login("unknown", "password123")
+            sut.login("unknown", "password123")
         }
         assertThat(exception.errorCode).isEqualTo(ErrorCode.UNAUTHORIZED)
     }
@@ -54,7 +54,7 @@ class LoginServiceTest {
 
         // when & then
         val exception = assertThrows<BaseException> {
-            loginService.login("jaeyong", "wrongpassword")
+            sut.login("jaeyong", "wrongpassword")
         }
         assertThat(exception.errorCode).isEqualTo(ErrorCode.UNAUTHORIZED)
     }
@@ -69,7 +69,7 @@ class LoginServiceTest {
         given(jwtProvider.generateToken("jaeyong")).willReturn("jwt.token.string")
 
         // when
-        val token = loginService.login("jaeyong", "password123")
+        val token = sut.login("jaeyong", "password123")
 
         // then
         assertThat(token).isEqualTo("jwt.token.string")

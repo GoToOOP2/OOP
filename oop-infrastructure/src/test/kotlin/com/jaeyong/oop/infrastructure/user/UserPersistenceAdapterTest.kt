@@ -18,7 +18,7 @@ class UserPersistenceAdapterTest {
     private lateinit var userJpaRepository: UserJpaRepository
 
     @InjectMocks
-    private lateinit var userPersistenceAdapter: UserPersistenceAdapter
+    private lateinit var sut: UserPersistenceAdapter
 
     @Test
     @DisplayName("1. save 호출 시 저장된 도메인 객체를 반환한다")
@@ -29,7 +29,7 @@ class UserPersistenceAdapterTest {
         given(userJpaRepository.save(any(UserEntity::class.java))).willReturn(savedEntity)
 
         // when
-        val result = userPersistenceAdapter.save(user)
+        val result = sut.save(user)
 
         // then
         assertThat(result.id).isEqualTo(1L)
@@ -43,7 +43,7 @@ class UserPersistenceAdapterTest {
         given(userJpaRepository.existsByUsername("jaeyong")).willReturn(true)
 
         // when & then
-        assertThat(userPersistenceAdapter.existsByUsername("jaeyong")).isTrue()
+        assertThat(sut.existsByUsername("jaeyong")).isTrue()
     }
 
     @Test
@@ -53,7 +53,7 @@ class UserPersistenceAdapterTest {
         given(userJpaRepository.existsByUsername("unknown")).willReturn(false)
 
         // when & then
-        assertThat(userPersistenceAdapter.existsByUsername("unknown")).isFalse()
+        assertThat(sut.existsByUsername("unknown")).isFalse()
     }
 
     @Test
@@ -64,7 +64,7 @@ class UserPersistenceAdapterTest {
         given(userJpaRepository.findByUsername("jaeyong")).willReturn(entity)
 
         // when
-        val result = userPersistenceAdapter.findByUsername("jaeyong")
+        val result = sut.findByUsername("jaeyong")
 
         // then
         assertThat(result).isNotNull
@@ -78,7 +78,7 @@ class UserPersistenceAdapterTest {
         given(userJpaRepository.findByUsername("unknown")).willReturn(null)
 
         // when
-        val result = userPersistenceAdapter.findByUsername("unknown")
+        val result = sut.findByUsername("unknown")
 
         // then
         assertThat(result).isNull()

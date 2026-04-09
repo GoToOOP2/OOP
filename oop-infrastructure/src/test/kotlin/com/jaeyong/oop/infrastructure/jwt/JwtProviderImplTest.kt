@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test
 
 class JwtProviderImplTest {
 
-    private lateinit var jwtProvider: JwtProviderImpl
+    private lateinit var sut: JwtProviderImpl
 
     @BeforeEach
     fun setUp() {
-        jwtProvider = JwtProviderImpl(
+        sut = JwtProviderImpl(
             secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
             expiration = 86400000L
         )
@@ -21,10 +21,10 @@ class JwtProviderImplTest {
     @DisplayName("1. 발급한 토큰에서 username을 추출할 수 있다")
     fun `발급한 토큰에서 username을 추출할 수 있다`() {
         // given
-        val token = jwtProvider.generateToken("jaeyong")
+        val token = sut.generateToken("jaeyong")
 
         // when
-        val username = jwtProvider.extractUsername(token)
+        val username = sut.extractUsername(token)
 
         // then
         assertThat(username).isEqualTo("jaeyong")
@@ -34,17 +34,17 @@ class JwtProviderImplTest {
     @DisplayName("2. 발급한 토큰은 유효하다")
     fun `발급한 토큰은 유효하다`() {
         // given
-        val token = jwtProvider.generateToken("jaeyong")
+        val token = sut.generateToken("jaeyong")
 
         // when & then
-        assertThat(jwtProvider.isValid(token)).isTrue()
+        assertThat(sut.isValid(token)).isTrue()
     }
 
     @Test
     @DisplayName("3. 형식이 잘못된 토큰은 유효하지 않다")
     fun `형식이 잘못된 토큰은 유효하지 않다`() {
         // when & then
-        assertThat(jwtProvider.isValid("invalid.token.string")).isFalse()
+        assertThat(sut.isValid("invalid.token.string")).isFalse()
     }
 
     @Test
@@ -58,7 +58,7 @@ class JwtProviderImplTest {
         val forgedToken = forgedProvider.generateToken("jaeyong")
 
         // when & then
-        assertThat(jwtProvider.isValid(forgedToken)).isFalse()
+        assertThat(sut.isValid(forgedToken)).isFalse()
     }
 
     @Test
@@ -72,13 +72,13 @@ class JwtProviderImplTest {
         val expiredToken = expiredProvider.generateToken("jaeyong")
 
         // when & then
-        assertThat(jwtProvider.isValid(expiredToken)).isFalse()
+        assertThat(sut.isValid(expiredToken)).isFalse()
     }
 
     @Test
     @DisplayName("6. 빈 문자열 토큰은 유효하지 않다 (IllegalArgumentException)")
     fun `빈 문자열 토큰은 유효하지 않다`() {
         // when & then
-        assertThat(jwtProvider.isValid("")).isFalse()
+        assertThat(sut.isValid("")).isFalse()
     }
 }

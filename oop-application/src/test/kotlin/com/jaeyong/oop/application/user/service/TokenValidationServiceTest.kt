@@ -17,7 +17,7 @@ class TokenValidationServiceTest {
     private lateinit var jwtProvider: JwtProvider
 
     @InjectMocks
-    private lateinit var tokenValidationService: TokenValidationService
+    private lateinit var sut: TokenValidationService
 
     @Test
     @DisplayName("1. 유효한 토큰이면 username을 반환한다")
@@ -27,7 +27,7 @@ class TokenValidationServiceTest {
         given(jwtProvider.extractUsername("valid.token")).willReturn("jaeyong")
 
         // when
-        val result = tokenValidationService.validateAndExtract("valid.token")
+        val result = sut.validateAndExtract("valid.token")
 
         // then
         assertThat(result).isEqualTo("jaeyong")
@@ -40,7 +40,7 @@ class TokenValidationServiceTest {
         given(jwtProvider.isValid("invalid.token")).willReturn(false)
 
         // when
-        val result = tokenValidationService.validateAndExtract("invalid.token")
+        val result = sut.validateAndExtract("invalid.token")
 
         // then
         assertThat(result).isNull()

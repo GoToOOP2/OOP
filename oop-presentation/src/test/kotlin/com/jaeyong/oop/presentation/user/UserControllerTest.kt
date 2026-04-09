@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 class UserControllerTest {
 
     private lateinit var mockMvc: MockMvc
+    private lateinit var sut: UserController
     private val objectMapper = ObjectMapper()
 
     @Mock
@@ -36,8 +37,9 @@ class UserControllerTest {
 
     @BeforeEach
     fun setUp() {
+        sut = UserController(joinUseCase, loginUseCase)
         mockMvc = MockMvcBuilders
-            .standaloneSetup(UserController(joinUseCase, loginUseCase))
+            .standaloneSetup(sut)
             .setControllerAdvice(GlobalExceptionHandler())
             .build()
     }

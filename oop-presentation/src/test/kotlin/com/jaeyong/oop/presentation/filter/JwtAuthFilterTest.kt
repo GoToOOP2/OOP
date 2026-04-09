@@ -5,6 +5,7 @@ import com.jaeyong.oop.common.auth.AuthContext
 import jakarta.servlet.FilterChain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,6 +24,13 @@ class JwtAuthFilterTest {
     @Mock
     private lateinit var filterChain: FilterChain
 
+    private lateinit var sut: JwtAuthFilter
+
+    @BeforeEach
+    fun setUp() {
+        sut = JwtAuthFilter(tokenValidationUseCase)
+    }
+
     @AfterEach
     fun tearDown() {
         AuthContext.clear()
@@ -39,7 +47,7 @@ class JwtAuthFilterTest {
         given(tokenValidationUseCase.validateAndExtract("valid.token")).willReturn("jaeyong")
 
         // when
-        JwtAuthFilter(tokenValidationUseCase).doFilter(request, response, filterChain)
+        sut.doFilter(request, response, filterChain)
 
         // then
         org.mockito.Mockito.verify(filterChain).doFilter(request, response)
@@ -53,7 +61,7 @@ class JwtAuthFilterTest {
         val response = MockHttpServletResponse()
 
         // when
-        JwtAuthFilter(tokenValidationUseCase).doFilter(request, response, filterChain)
+        sut.doFilter(request, response, filterChain)
 
         // then
         assertThat(AuthContext.get()).isNull()
@@ -69,7 +77,7 @@ class JwtAuthFilterTest {
         given(tokenValidationUseCase.validateAndExtract("invalid.token")).willReturn(null)
 
         // when
-        JwtAuthFilter(tokenValidationUseCase).doFilter(request, MockHttpServletResponse(), filterChain)
+        sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
         assertThat(AuthContext.get()).isNull()
@@ -84,7 +92,7 @@ class JwtAuthFilterTest {
         }
 
         // when
-        JwtAuthFilter(tokenValidationUseCase).doFilter(request, MockHttpServletResponse(), filterChain)
+        sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
         assertThat(AuthContext.get()).isNull()
@@ -100,7 +108,7 @@ class JwtAuthFilterTest {
         given(tokenValidationUseCase.validateAndExtract("valid.token")).willReturn("jaeyong")
 
         // when
-        JwtAuthFilter(tokenValidationUseCase).doFilter(request, MockHttpServletResponse(), filterChain)
+        sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then — 필터 종료 후 clear() 호출로 비워져야 함
         assertThat(AuthContext.get()).isNull()

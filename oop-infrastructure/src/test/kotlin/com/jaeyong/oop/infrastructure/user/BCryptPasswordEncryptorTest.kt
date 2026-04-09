@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Test
 
 class BCryptPasswordEncryptorTest {
 
-    private lateinit var encryptor: BCryptPasswordEncryptor
+    private lateinit var sut: BCryptPasswordEncryptor
 
     @BeforeEach
     fun setUp() {
-        encryptor = BCryptPasswordEncryptor()
+        sut = BCryptPasswordEncryptor()
     }
 
     @Test
     @DisplayName("1. encrypt 호출 시 BCrypt 해시를 반환한다")
     fun `encrypt 호출 시 BCrypt 해시를 반환한다`() {
         // when
-        val encoded = encryptor.encrypt("password123")
+        val encoded = sut.encrypt("password123")
 
         // then
         assertThat(encoded).isNotBlank()
@@ -30,19 +30,19 @@ class BCryptPasswordEncryptorTest {
     @DisplayName("2. matches - 원문과 해시가 일치하면 true를 반환한다")
     fun `matches - 원문과 해시가 일치하면 true를 반환한다`() {
         // given
-        val encoded = encryptor.encrypt("password123")
+        val encoded = sut.encrypt("password123")
 
         // when & then
-        assertThat(encryptor.matches("password123", encoded)).isTrue()
+        assertThat(sut.matches("password123", encoded)).isTrue()
     }
 
     @Test
     @DisplayName("3. matches - 원문과 해시가 일치하지 않으면 false를 반환한다")
     fun `matches - 원문과 해시가 일치하지 않으면 false를 반환한다`() {
         // given
-        val encoded = encryptor.encrypt("password123")
+        val encoded = sut.encrypt("password123")
 
         // when & then
-        assertThat(encryptor.matches("wrongpassword", encoded)).isFalse()
+        assertThat(sut.matches("wrongpassword", encoded)).isFalse()
     }
 }

@@ -19,7 +19,7 @@ class HealthPersistenceAdapterTest {
     private lateinit var healthJpaRepository: HealthJpaRepository
 
     @InjectMocks
-    private lateinit var healthPersistenceAdapter: HealthPersistenceAdapter
+    private lateinit var sut: HealthPersistenceAdapter
 
     @Test
     @DisplayName("도메인 객체 Health를 저장하면 Repository를 통해 저장하고 결과를 반환해야 한다")
@@ -31,7 +31,7 @@ class HealthPersistenceAdapterTest {
         given(healthJpaRepository.save(any(HealthEntity::class.java))).willReturn(entity)
 
         // when
-        val savedHealth = healthPersistenceAdapter.save(health)
+        val savedHealth = sut.save(health)
 
         // then
         assertThat(savedHealth.id).isEqualTo(1L)

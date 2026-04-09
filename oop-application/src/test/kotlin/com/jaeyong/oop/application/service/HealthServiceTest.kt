@@ -20,7 +20,7 @@ class HealthServiceTest {
     private lateinit var healthPort: HealthPort
 
     @InjectMocks
-    private lateinit var healthService: HealthService
+    private lateinit var sut: HealthService
 
     @Test
     @DisplayName("checkHealth 호출 시 Health 도메인을 저장하고 'success'를 반환해야 한다")
@@ -33,7 +33,7 @@ class HealthServiceTest {
         `when`(healthPort.save(anyNonNull())).thenReturn(health)
 
         // when
-        val result = healthService.checkHealth()
+        val result = sut.checkHealth()
 
         // then
         assertThat(result).isEqualTo("success")
