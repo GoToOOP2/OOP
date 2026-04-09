@@ -37,13 +37,13 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const glob = require('@actions/glob');
+            const actionsGlob = require('@actions/glob');
 
             const COMMENT_MARKER = '<!-- ktlint-ci-bot -->';
             const prNumber = context.payload.pull_request.number;
 
             // ── 1. ktlint XML 리포트 파일 수집 ──
-            const globber = await glob.create('**/build/reports/ktlint/**/*.xml');
+            const globber = await actionsGlob.create('**/build/reports/ktlint/**/*.xml');
             const reportFiles = await globber.glob();
 
             // ── 2. XML 리포트 파싱 (간이 파서) ──
