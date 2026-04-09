@@ -64,7 +64,40 @@ jobs:
               .filter(d => fs.existsSync(d))
               .flatMap(d => findXmlFiles(d));
 
-            // ── 2. XML 리포트 파싱 (간이 파서) ──
+            // ── 2. 주요 ktlint 메시지 한글 매핑 ──
+            const translations = [
+              [/Imports must be ordered in lexicographic order.*/i, 'import 문을 알파벳순으로 정렬해야 합니다'],
+              [/Expected a single space/i, '공백이 하나만 있어야 합니다'],
+              [/Unnecessary long whitespace/i, '불필요한 긴 공백이 있습니다'],
+              [/A comment in a 'value_parameter_list' is only allowed when placed on a separate line.*/i, '파라미터 목록의 주석은 별도 줄에 작성해야 합니다 (자동 수정 불가)'],
+              [/A comment in a 'value_argument_list' is only allowed when placed on a separate line.*/i, '인자 목록의 주석은 별도 줄에 작성해야 합니다 (자동 수정 불가)'],
+              [/A \(block or EOL\) comment inside or on same line after a 'value_parameter' is not allowed.*/i, '파라미터 뒤 같은 줄의 주석은 허용되지 않습니다 (자동 수정 불가)'],
+              [/Class body should not start with blank line/i, '클래스 본문이 빈 줄로 시작하면 안 됩니다'],
+              [/A multiline expression should start on a new line/i, '여러 줄 표현식은 새 줄에서 시작해야 합니다'],
+              [/Unexpected indentation \((\d+)\) \(should be (\d+)\)/i, (m) => `잘못된 들여쓰기 (${m[1]}) (${m[2]}이어야 합니다)`],
+              [/File must end with a newline/i, '파일 끝에 빈 줄(\\n)이 있어야 합니다'],
+              [/Newline expected after opening parenthesis/i, '여는 괄호 뒤에 줄바꿈이 필요합니다'],
+              [/Newline expected before closing parenthesis/i, '닫는 괄호 앞에 줄바꿈이 필요합니다'],
+              [/Missing newline before "\)"/i, '닫는 괄호 앞에 줄바꿈이 필요합니다'],
+              [/Parameter should start on a newline/i, '파라미터는 새 줄에서 시작해야 합니다'],
+              [/Unnecessary trailing comma before "\)"/i, '닫는 괄호 앞의 불필요한 쉼표입니다'],
+              [/Unexpected whitespace/i, '불필요한 공백이 있습니다'],
+              [/Unexpected spacing before "\)"/i, '닫는 괄호 앞에 불필요한 공백이 있습니다'],
+              [/No blank lines in chained calls/i, '체이닝 호출 사이에 빈 줄을 넣지 마세요'],
+              [/Wildcard import/i, '와일드카드(.*) import는 허용되지 않습니다'],
+              [/No empty first line in a class body/i, '클래스 본문 첫 줄이 비어있으면 안 됩니다'],
+              [/Missing trailing comma before "\)"/i, '닫는 괄호 앞에 후행 쉼표가 필요합니다'],
+            ];
+
+            function translate(msg) {
+              for (const [pattern, replacement] of translations) {
+                const match = msg.match(pattern);
+                if (match) return typeof replacement === 'function' ? replacement(match) : replacement;
+              }
+              return msg;
+            }
+
+            // ── 3. XML 리포트 파싱 ──
             const violations = [];
             for (const file of reportFiles) {
               const content = fs.readFileSync(file, 'utf8');
@@ -81,13 +114,13 @@ jobs:
                   violations.push({
                     file: relativePath,
                     line: errorMatch[1],
-                    message: errorMatch[2]
+                    message: translate(errorMatch[2])
                   });
                 }
               }
             }
 
-            // ── 3. 기존 봇 코멘트 찾기 ──
+            // ── 4. 기존 봇 코멘트 찾기 ──
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -95,7 +128,7 @@ jobs:
             });
             const existingComment = comments.find(c => c.body && c.body.includes(COMMENT_MARKER));
 
-            // ── 4. 위반 없음 → 기존 코멘트 삭제 후 종료 ──
+            // ── 5. 위반 없음 → 기존 코멘트 삭제 후 종료 ──
             if (violations.length === 0) {
               if (existingComment) {
                 await github.rest.issues.deleteComment({
@@ -109,7 +142,7 @@ jobs:
               return;
             }
 
-            // ── 5. 위반 있음 → 코멘트 작성 ──
+            // ── 6. 위반 있음 → 코멘트 작성 ──
             const maxRows = 30;
             const truncated = violations.length > maxRows;
             const displayViolations = violations.slice(0, maxRows);
