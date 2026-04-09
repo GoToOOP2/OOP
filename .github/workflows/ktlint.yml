@@ -37,14 +37,32 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const actionsGlob = require('@actions/glob');
 
             const COMMENT_MARKER = '<!-- ktlint-ci-bot -->';
             const prNumber = context.payload.pull_request.number;
 
             // ── 1. ktlint XML 리포트 파일 수집 ──
-            const globber = await actionsGlob.create('**/build/reports/ktlint/**/*.xml');
-            const reportFiles = await globber.glob();
+            function findXmlFiles(dir) {
+              let results = [];
+              if (!fs.existsSync(dir)) return results;
+              for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+                const full = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                  results = results.concat(findXmlFiles(full));
+                } else if (entry.name.endsWith('.xml')) {
+                  results.push(full);
+                }
+              }
+              return results;
+            }
+
+            const workspace = process.env.GITHUB_WORKSPACE;
+            // 각 모듈의 build/reports/ktlint 디렉토리만 탐색
+            const reportFiles = fs.readdirSync(workspace, { withFileTypes: true })
+              .filter(d => d.isDirectory())
+              .map(d => path.join(workspace, d.name, 'build', 'reports', 'ktlint'))
+              .filter(d => fs.existsSync(d))
+              .flatMap(d => findXmlFiles(d));
 
             // ── 2. XML 리포트 파싱 (간이 파서) ──
             const violations = [];
