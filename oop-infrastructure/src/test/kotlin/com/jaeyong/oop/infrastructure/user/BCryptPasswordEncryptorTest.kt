@@ -1,18 +1,12 @@
 package com.jaeyong.oop.infrastructure.user
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class BCryptPasswordEncryptorTest {
 
-    private lateinit var sut: BCryptPasswordEncryptor
-
-    @BeforeEach
-    fun setUp() {
-        sut = BCryptPasswordEncryptor()
-    }
+    private val sut = BCryptPasswordEncryptor()
 
     @Test
     @DisplayName("1. encrypt 호출 시 BCrypt 해시를 반환한다")

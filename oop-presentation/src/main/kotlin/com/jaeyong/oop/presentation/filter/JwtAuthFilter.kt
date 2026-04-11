@@ -4,6 +4,7 @@ import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
 import org.springframework.web.filter.OncePerRequestFilter
 
 class JwtAuthFilter(
@@ -26,7 +27,7 @@ class JwtAuthFilter(
     }
 
     private fun resolveToken(request: HttpServletRequest): String? {
-        val bearer = request.getHeader("Authorization") ?: return null
+        val bearer = request.getHeader(HttpHeaders.AUTHORIZATION) ?: return null
         return if (bearer.startsWith("Bearer ")) bearer.substring(7) else null
     }
 }
