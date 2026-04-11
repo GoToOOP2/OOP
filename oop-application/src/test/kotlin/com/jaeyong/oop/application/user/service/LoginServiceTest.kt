@@ -12,9 +12,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.verify
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.argumentCaptor
 
 @ExtendWith(MockitoExtension::class)
 class LoginServiceTest {
@@ -35,7 +37,7 @@ class LoginServiceTest {
     @DisplayName("1. 존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다")
     fun `존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다`() {
         // given
-        given(userRepository.findByUsername("unknown")).willReturn(null)
+        given(userRepository.getByUsername("unknown")).willReturn(null)
 
         // when & then
         val exception = assertThrows<BaseException> {
@@ -49,7 +51,7 @@ class LoginServiceTest {
     fun `비밀번호가 일치하지 않으면 UNAUTHORIZED 예외를 던진다`() {
         // given
         val user = User(id = 1L, username = "jaeyong", password = "hashed_password")
-        given(userRepository.findByUsername("jaeyong")).willReturn(user)
+        given(userRepository.getByUsername("jaeyong")).willReturn(user)
         given(passwordEncryptor.matches("wrongpassword", "hashed_password")).willReturn(false)
 
         // when & then
@@ -64,14 +66,15 @@ class LoginServiceTest {
     fun `정상 로그인 시 JWT 토큰을 반환한다`() {
         // given
         val user = User(id = 1L, username = "jaeyong", password = "hashed_password")
-        given(userRepository.findByUsername("jaeyong")).willReturn(user)
+        given(userRepository.getByUsername("jaeyong")).willReturn(user)
         given(passwordEncryptor.matches("password123", "hashed_password")).willReturn(true)
-        given(jwtProvider.generateToken("jaeyong")).willReturn("jwt.token.string")
 
         // when
-        val token = sut.login("jaeyong", "password123")
+        sut.login("jaeyong", "password123")
 
         // then
-        assertThat(token).isEqualTo("jwt.token.string")
+        val captor = argumentCaptor<String>()
+        verify(jwtProvider).generateToken(captor.capture())
+        assertThat(captor.firstValue).isEqualTo("jaeyong")
     }
 }
