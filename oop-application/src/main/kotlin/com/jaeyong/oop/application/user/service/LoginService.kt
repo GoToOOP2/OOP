@@ -6,6 +6,7 @@ import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.port.JwtHandler
 import com.jaeyong.oop.domain.user.port.PasswordEncryptor
 import com.jaeyong.oop.domain.user.port.UserOutputPort
+
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,7 +20,7 @@ class LoginService(
         val user = userRepository.findByUsername(username)
             ?: throw BaseException(ErrorCode.UNAUTHORIZED)
 
-        if (!passwordEncryptor.matches(password, user.password)) {
+        if (!user.matchesPassword(password, passwordEncryptor)) {
             throw BaseException(ErrorCode.UNAUTHORIZED)
         }
 

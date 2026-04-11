@@ -20,7 +20,7 @@ class JoinService(
         if (userRepository.existsByUsername(command.username)) {
             throw BaseException(ErrorCode.DUPLICATE)
         }
-        val user = User(username = command.username, password = passwordEncryptor.encrypt(command.password))
+        val user = User.signUp(username = command.username, password = command.password, passwordEncryptor = passwordEncryptor)
         userRepository.save(user)
     }
 }
