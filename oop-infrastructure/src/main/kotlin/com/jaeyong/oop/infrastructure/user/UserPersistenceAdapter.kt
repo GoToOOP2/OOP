@@ -9,12 +9,12 @@ class UserPersistenceAdapter(
     private val userJpaRepository: UserJpaRepository
 ) : UserOutputPort {
 
-    override fun save(user: User): User =
+    override fun register(user: User): User =
         userJpaRepository.save(UserEntity.fromDomain(user)).toDomain()
 
-    override fun existsByUsername(username: String): Boolean =
+    override fun isUsernameTaken(username: String): Boolean =
         userJpaRepository.existsByUsername(username)
 
-    override fun findByUsername(username: String): User? =
+    override fun getByUsername(username: String): User? =
         userJpaRepository.findByUsername(username)?.toDomain()
 }

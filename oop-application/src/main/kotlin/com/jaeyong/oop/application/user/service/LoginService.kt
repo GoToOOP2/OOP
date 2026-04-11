@@ -17,7 +17,7 @@ class LoginService(
 ) : LoginUseCase {
 
     override fun login(username: String, password: String): String {
-        val user = userRepository.findByUsername(username)
+        val user = userRepository.getByUsername(username)
             ?: throw BaseException(ErrorCode.UNAUTHORIZED)
 
         if (!user.matchesPassword(password, passwordEncryptor)) {

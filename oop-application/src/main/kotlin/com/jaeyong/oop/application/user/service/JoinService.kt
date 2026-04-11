@@ -17,10 +17,10 @@ class JoinService(
 
     @Transactional
     override fun join(command: JoinCommand) {
-        if (userRepository.existsByUsername(command.username)) {
+        if (userRepository.isUsernameTaken(command.username)) {
             throw BaseException(ErrorCode.DUPLICATE)
         }
         val user = User.signUp(username = command.username, password = command.password, passwordEncryptor = passwordEncryptor)
-        userRepository.save(user)
+        userRepository.register(user)
     }
 }
