@@ -6,15 +6,15 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class UserPersistenceAdapter(
-    private val userJpaRepository: UserJpaRepository
+    private val userRepository: UserRepository
 ) : UserOutputPort {
 
     override fun register(user: User): User =
-        userJpaRepository.save(UserEntity.fromDomain(user)).toDomain()
+        userRepository.save(UserEntity.fromDomain(user)).toDomain()
 
     override fun isUsernameTaken(username: String): Boolean =
-        userJpaRepository.existsByUsername(username)
+        userRepository.existsByUsername(username)
 
     override fun getByUsername(username: String): User? =
-        userJpaRepository.findByUsername(username)?.toDomain()
+        userRepository.findByUsername(username)?.toDomain()
 }

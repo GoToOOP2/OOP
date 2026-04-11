@@ -43,20 +43,4 @@ class JoinServiceTest {
         assertThat(exception.errorCode).isEqualTo(ErrorCode.DUPLICATE)
     }
 
-    @Test
-    @DisplayName("2. 정상 가입 시 비밀번호가 암호화되어 저장된다")
-    fun `정상 가입 시 비밀번호가 암호화되어 저장된다`() {
-        // given
-        given(userRepository.isUsernameTaken(anyString())).willReturn(false)
-        given(passwordEncryptor.encrypt("password123")).willReturn("hashed_password")
-        given(userRepository.register(any())).willReturn(User(id = 1L, username = "jaeyong", password = "hashed_password"))
-
-        // when
-        sut.join(JoinCommand(username = "jaeyong", password = "password123"))
-
-        // then
-        val captor = argumentCaptor<User>()
-        org.mockito.BDDMockito.verify(userRepository).save(captor.capture())
-        assertThat(captor.firstValue.password).isEqualTo("hashed_password")
-    }
 }

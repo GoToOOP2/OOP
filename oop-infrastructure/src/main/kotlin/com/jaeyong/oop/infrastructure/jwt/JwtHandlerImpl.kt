@@ -4,25 +4,25 @@ import com.jaeyong.oop.domain.user.port.JwtHandler
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.Date
 
 @Component
+@EnableConfigurationProperties(JwtProperties::class)
 class JwtHandlerImpl(
-    @Value("\${jwt.secret}") private val secret: String,
-    @Value("\${jwt.expiration}") private val expiration: Long
+    private val jwtProperties: JwtProperties
 ) : JwtHandler {
 
     private val secretKey by lazy {
-        Keys.hmacShaKeyFor(secret.toByteArray(Charsets.UTF_8))
+        Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray(Charsets.UTF_8))
     }
 
     override fun generateToken(username: String): String =
         Jwts.builder()
             .subject(username)
             .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + expiration))
+            .expiration(Date(System.currentTimeMillis() + jwtProperties.expiration))
             .signWith(secretKey)
             .compact()
 

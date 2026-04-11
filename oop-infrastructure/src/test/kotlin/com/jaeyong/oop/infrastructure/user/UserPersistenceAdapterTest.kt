@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class UserPersistenceAdapterTest {
 
     @Mock
-    private lateinit var userJpaRepository: UserJpaRepository
+    private lateinit var userJpaRepository: UserRepository
 
     @InjectMocks
     private lateinit var sut: UserPersistenceAdapter

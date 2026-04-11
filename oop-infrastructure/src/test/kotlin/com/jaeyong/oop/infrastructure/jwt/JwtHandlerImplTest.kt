@@ -12,8 +12,10 @@ class JwtHandlerImplTest {
     @BeforeEach
     fun setUp() {
         sut = JwtHandlerImpl(
-            secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
-            expiration = 86400000L
+            JwtProperties(
+                secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
+                expiration = 86400000L
+            )
         )
     }
 
@@ -42,8 +44,10 @@ class JwtHandlerImplTest {
     fun `다른 서명키로 위변조된 토큰은 null을 반환한다`() {
         // given
         val forgedProvider = JwtHandlerImpl(
-            secret = "forged-secret-key-must-be-at-least-256-bits-long-here-pad",
-            expiration = 86400000L
+            JwtProperties(
+                secret = "forged-secret-key-must-be-at-least-256-bits-long-here-pad",
+                expiration = 86400000L
+            )
         )
         val forgedToken = forgedProvider.generateToken("jaeyong")
 
@@ -54,10 +58,12 @@ class JwtHandlerImplTest {
     @Test
     @DisplayName("4. 만료된 토큰은 null을 반환한다")
     fun `만료된 토큰은 null을 반환한다`() {
-        // given — expiration 0ms (즉시 만료)
+        // given
         val expiredProvider = JwtHandlerImpl(
-            secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
-            expiration = 0L
+            JwtProperties(
+                secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
+                expiration = 0L
+            )
         )
         val expiredToken = expiredProvider.generateToken("jaeyong")
 
