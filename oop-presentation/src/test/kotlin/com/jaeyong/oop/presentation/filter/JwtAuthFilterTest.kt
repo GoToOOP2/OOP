@@ -3,11 +3,11 @@ package com.jaeyong.oop.presentation.filter
 import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import jakarta.servlet.FilterChain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
+import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.mock.web.MockHttpServletRequest
@@ -22,12 +22,8 @@ class JwtAuthFilterTest {
     @Mock
     private lateinit var filterChain: FilterChain
 
+    @InjectMocks
     private lateinit var sut: JwtAuthFilter
-
-    @BeforeEach
-    fun setUp() {
-        sut = JwtAuthFilter(tokenValidationUseCase)
-    }
 
     @Test
     @DisplayName("1. 유효한 토큰이 있으면 filterChain이 호출된다")
