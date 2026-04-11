@@ -23,8 +23,7 @@ class TokenValidationServiceTest {
     @DisplayName("1. 유효한 토큰이면 username을 반환한다")
     fun `유효한 토큰이면 username을 반환한다`() {
         // given
-        given(jwtProvider.isValid("valid.token")).willReturn(true)
-        given(jwtProvider.extractUsername("valid.token")).willReturn("jaeyong")
+        given(jwtProvider.validateAndExtract("valid.token")).willReturn("jaeyong")
 
         // when
         val result = sut.validateAndExtract("valid.token")
@@ -37,7 +36,7 @@ class TokenValidationServiceTest {
     @DisplayName("2. 유효하지 않은 토큰이면 null을 반환한다")
     fun `유효하지 않은 토큰이면 null을 반환한다`() {
         // given
-        given(jwtProvider.isValid("invalid.token")).willReturn(false)
+        given(jwtProvider.validateAndExtract("invalid.token")).willReturn(null)
 
         // when
         val result = sut.validateAndExtract("invalid.token")

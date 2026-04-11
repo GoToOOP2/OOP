@@ -10,12 +10,13 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.ArgumentMatchers.anyString
 
 @ExtendWith(MockitoExtension::class)
 class JoinServiceTest {
@@ -33,7 +34,7 @@ class JoinServiceTest {
     @DisplayName("1. 이미 존재하는 username이면 DUPLICATE 예외를 던진다")
     fun `이미 존재하는 username이면 DUPLICATE 예외를 던진다`() {
         // given
-        given(userRepository.existsByUsername("jaeyong")).willReturn(true)
+        given(userRepository.existsByUsername(anyString())).willReturn(true)
 
         // when & then
         val exception = assertThrows<BaseException> {
@@ -46,23 +47,15 @@ class JoinServiceTest {
     @DisplayName("2. 정상 가입 시 비밀번호가 암호화되어 저장된다")
     fun `정상 가입 시 비밀번호가 암호화되어 저장된다`() {
         // given
-        given(userRepository.existsByUsername("jaeyong")).willReturn(false)
+        given(userRepository.existsByUsername(anyString())).willReturn(false)
         given(passwordEncryptor.encrypt("password123")).willReturn("hashed_password")
-        given(userRepository.save(anyNonNull())).willReturn(User(id = 1L, username = "jaeyong", password = "hashed_password"))
+        given(userRepository.save(any())).willReturn(User(id = 1L, username = "jaeyong", password = "hashed_password"))
 
         // when
         sut.join(JoinCommand(username = "jaeyong", password = "password123"))
 
         // then
         verify(passwordEncryptor).encrypt("password123")
-        verify(userRepository).save(anyNonNull())
+        verify(userRepository).save(any())
     }
-
-    private fun <T> anyNonNull(): T {
-        ArgumentMatchers.any<T>()
-        return uninitialized()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> uninitialized(): T = null as T
 }

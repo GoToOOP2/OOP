@@ -24,32 +24,22 @@ class JwtHandlerImplTest {
         val token = sut.generateToken("jaeyong")
 
         // when
-        val username = sut.extractUsername(token)
+        val username = sut.validateAndExtract(token)
 
         // then
         assertThat(username).isEqualTo("jaeyong")
     }
 
     @Test
-    @DisplayName("2. 발급한 토큰은 유효하다")
-    fun `발급한 토큰은 유효하다`() {
-        // given
-        val token = sut.generateToken("jaeyong")
-
+    @DisplayName("2. 형식이 잘못된 토큰은 null을 반환한다")
+    fun `형식이 잘못된 토큰은 null을 반환한다`() {
         // when & then
-        assertThat(sut.isValid(token)).isTrue()
+        assertThat(sut.validateAndExtract("invalid.token.string")).isNull()
     }
 
     @Test
-    @DisplayName("3. 형식이 잘못된 토큰은 유효하지 않다")
-    fun `형식이 잘못된 토큰은 유효하지 않다`() {
-        // when & then
-        assertThat(sut.isValid("invalid.token.string")).isFalse()
-    }
-
-    @Test
-    @DisplayName("4. 다른 서명키로 위변조된 토큰은 유효하지 않다")
-    fun `다른 서명키로 위변조된 토큰은 유효하지 않다`() {
+    @DisplayName("3. 다른 서명키로 위변조된 토큰은 null을 반환한다")
+    fun `다른 서명키로 위변조된 토큰은 null을 반환한다`() {
         // given
         val forgedProvider = JwtHandlerImpl(
             secret = "forged-secret-key-must-be-at-least-256-bits-long-here-pad",
@@ -58,12 +48,12 @@ class JwtHandlerImplTest {
         val forgedToken = forgedProvider.generateToken("jaeyong")
 
         // when & then
-        assertThat(sut.isValid(forgedToken)).isFalse()
+        assertThat(sut.validateAndExtract(forgedToken)).isNull()
     }
 
     @Test
-    @DisplayName("5. 만료된 토큰은 유효하지 않다")
-    fun `만료된 토큰은 유효하지 않다`() {
+    @DisplayName("4. 만료된 토큰은 null을 반환한다")
+    fun `만료된 토큰은 null을 반환한다`() {
         // given — expiration 0ms (즉시 만료)
         val expiredProvider = JwtHandlerImpl(
             secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
@@ -72,13 +62,13 @@ class JwtHandlerImplTest {
         val expiredToken = expiredProvider.generateToken("jaeyong")
 
         // when & then
-        assertThat(sut.isValid(expiredToken)).isFalse()
+        assertThat(sut.validateAndExtract(expiredToken)).isNull()
     }
 
     @Test
-    @DisplayName("6. 빈 문자열 토큰은 유효하지 않다 (IllegalArgumentException)")
-    fun `빈 문자열 토큰은 유효하지 않다`() {
+    @DisplayName("5. 빈 문자열 토큰은 null을 반환한다")
+    fun `빈 문자열 토큰은 null을 반환한다`() {
         // when & then
-        assertThat(sut.isValid("")).isFalse()
+        assertThat(sut.validateAndExtract("")).isNull()
     }
 }

@@ -26,21 +26,17 @@ class JwtHandlerImpl(
             .signWith(secretKey)
             .compact()
 
-    override fun extractUsername(token: String): String =
-        Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .payload
-            .subject
-
-    override fun isValid(token: String): Boolean =
+    override fun validateAndExtract(token: String): String? =
         try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
-            true
+            Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload
+                .subject
         } catch (e: JwtException) {
-            false
+            null
         } catch (e: IllegalArgumentException) {
-            false
+            null
         }
 }

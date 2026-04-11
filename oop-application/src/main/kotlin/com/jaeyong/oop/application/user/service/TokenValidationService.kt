@@ -10,6 +10,6 @@ class TokenValidationService(
 ) : TokenValidationUseCase {
 
     override fun validateAndExtract(token: String): String? {
-        return if (jwtProvider.isValid(token)) jwtProvider.extractUsername(token) else null
+        return jwtProvider.validateAndExtract(token)
     }
 }

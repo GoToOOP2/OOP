@@ -1,5 +1,6 @@
 [versions]
 kotlin = "1.9.24"
+mockito-kotlin = "5.2.1"
 spring-boot = "3.2.3"
 dependency-management = "1.1.4"
 springdoc = "2.3.0"
@@ -10,6 +11,7 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-tx = { module = "org.springframework:spring-tx" }
