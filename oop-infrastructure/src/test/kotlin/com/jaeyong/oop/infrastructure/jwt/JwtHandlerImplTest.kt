@@ -5,13 +5,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class JwtProviderImplTest {
+class JwtHandlerImplTest {
 
-    private lateinit var sut: JwtProviderImpl
+    private lateinit var sut: JwtHandlerImpl
 
     @BeforeEach
     fun setUp() {
-        sut = JwtProviderImpl(
+        sut = JwtHandlerImpl(
             secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
             expiration = 86400000L
         )
@@ -51,7 +51,7 @@ class JwtProviderImplTest {
     @DisplayName("4. 다른 서명키로 위변조된 토큰은 유효하지 않다")
     fun `다른 서명키로 위변조된 토큰은 유효하지 않다`() {
         // given
-        val forgedProvider = JwtProviderImpl(
+        val forgedProvider = JwtHandlerImpl(
             secret = "forged-secret-key-must-be-at-least-256-bits-long-here-pad",
             expiration = 86400000L
         )
@@ -65,7 +65,7 @@ class JwtProviderImplTest {
     @DisplayName("5. 만료된 토큰은 유효하지 않다")
     fun `만료된 토큰은 유효하지 않다`() {
         // given — expiration 0ms (즉시 만료)
-        val expiredProvider = JwtProviderImpl(
+        val expiredProvider = JwtHandlerImpl(
             secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
             expiration = 0L
         )

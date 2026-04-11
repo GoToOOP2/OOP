@@ -16,11 +16,11 @@ class JoinService(
 ) : JoinUseCase {
 
     @Transactional
-    override fun join(username: String, password: String) {
-        if (userRepository.existsByUsername(username)) {
+    override fun join(command: JoinCommand) {
+        if (userRepository.existsByUsername(command.username)) {
             throw BaseException(ErrorCode.DUPLICATE)
         }
-        val user = User(username = username, password = passwordEncryptor.encrypt(password))
+        val user = User(username = command.username, password = passwordEncryptor.encrypt(command.password))
         userRepository.save(user)
     }
 }

@@ -26,6 +26,12 @@ data class ApiResponse<T>(
             ResponseEntity.status(status)
                 .body(ApiResponse(SUCCESS_CODE, data))
 
+        fun success(
+            status: HttpStatus = HttpStatus.OK
+        ): ResponseEntity<ApiResponse<Nothing>> =
+            ResponseEntity.status(status)
+                .body(ApiResponse(SUCCESS_CODE, null))
+
         // ── 실패 응답 ──
 
         fun fail(

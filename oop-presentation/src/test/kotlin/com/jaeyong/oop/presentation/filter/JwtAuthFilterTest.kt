@@ -1,10 +1,8 @@
 package com.jaeyong.oop.presentation.filter
 
 import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
-import com.jaeyong.oop.common.auth.AuthContext
 import jakarta.servlet.FilterChain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -31,11 +29,6 @@ class JwtAuthFilterTest {
         sut = JwtAuthFilter(tokenValidationUseCase)
     }
 
-    @AfterEach
-    fun tearDown() {
-        AuthContext.clear()
-    }
-
     @Test
     @DisplayName("1. 유효한 토큰이 있으면 filterChain이 호출된다")
     fun `유효한 토큰이 있으면 filterChain이 호출된다`() {
@@ -54,22 +47,22 @@ class JwtAuthFilterTest {
     }
 
     @Test
-    @DisplayName("2. Authorization 헤더가 없으면 AuthContext가 비어있다")
-    fun `Authorization 헤더가 없으면 AuthContext가 비어있다`() {
+    @DisplayName("2. Authorization 헤더가 없으면 request attribute가 비어있다")
+    fun `Authorization 헤더가 없으면 request attribute가 비어있다`() {
         // given
-        val request = MockHttpServletRequest() // 헤더 없음
+        val request = MockHttpServletRequest()
         val response = MockHttpServletResponse()
 
         // when
         sut.doFilter(request, response, filterChain)
 
         // then
-        assertThat(AuthContext.get()).isNull()
+        assertThat(request.getAttribute("username")).isNull()
     }
 
     @Test
-    @DisplayName("3. 유효하지 않은 토큰이면 AuthContext가 비어있다")
-    fun `유효하지 않은 토큰이면 AuthContext가 비어있다`() {
+    @DisplayName("3. 유효하지 않은 토큰이면 request attribute가 비어있다")
+    fun `유효하지 않은 토큰이면 request attribute가 비어있다`() {
         // given
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer invalid.token")
@@ -80,7 +73,7 @@ class JwtAuthFilterTest {
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
-        assertThat(AuthContext.get()).isNull()
+        assertThat(request.getAttribute("username")).isNull()
     }
 
     @Test
@@ -95,12 +88,12 @@ class JwtAuthFilterTest {
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
-        assertThat(AuthContext.get()).isNull()
+        assertThat(request.getAttribute("username")).isNull()
     }
 
     @Test
-    @DisplayName("5. 요청 처리 후 AuthContext가 초기화된다")
-    fun `요청 처리 후 AuthContext가 초기화된다`() {
+    @DisplayName("5. 유효한 토큰이면 request attribute에 username이 저장된다")
+    fun `유효한 토큰이면 request attribute에 username이 저장된다`() {
         // given
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer valid.token")
@@ -110,7 +103,7 @@ class JwtAuthFilterTest {
         // when
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
-        // then — 필터 종료 후 clear() 호출로 비워져야 함
-        assertThat(AuthContext.get()).isNull()
+        // then
+        assertThat(request.getAttribute("username")).isEqualTo("jaeyong")
     }
 }

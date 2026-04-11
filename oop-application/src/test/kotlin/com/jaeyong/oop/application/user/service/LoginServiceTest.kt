@@ -3,7 +3,7 @@ package com.jaeyong.oop.application.user.service
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.User
-import com.jaeyong.oop.domain.user.port.JwtProvider
+import com.jaeyong.oop.domain.user.port.JwtHandler
 import com.jaeyong.oop.domain.user.port.PasswordEncryptor
 import com.jaeyong.oop.domain.user.port.UserOutputPort
 import org.assertj.core.api.Assertions.assertThat
@@ -26,7 +26,7 @@ class LoginServiceTest {
     private lateinit var passwordEncryptor: PasswordEncryptor
 
     @Mock
-    private lateinit var jwtProvider: JwtProvider
+    private lateinit var jwtProvider: JwtHandler
 
     @InjectMocks
     private lateinit var sut: LoginService

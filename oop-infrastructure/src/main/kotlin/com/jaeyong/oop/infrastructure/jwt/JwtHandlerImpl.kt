@@ -1,6 +1,6 @@
 package com.jaeyong.oop.infrastructure.jwt
 
-import com.jaeyong.oop.domain.user.port.JwtProvider
+import com.jaeyong.oop.domain.user.port.JwtHandler
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component
 import java.util.Date
 
 @Component
-class JwtProviderImpl(
+class JwtHandlerImpl(
     @Value("\${jwt.secret}") private val secret: String,
     @Value("\${jwt.expiration}") private val expiration: Long
-) : JwtProvider {
+) : JwtHandler {
 
     private val secretKey by lazy {
         Keys.hmacShaKeyFor(secret.toByteArray(Charsets.UTF_8))

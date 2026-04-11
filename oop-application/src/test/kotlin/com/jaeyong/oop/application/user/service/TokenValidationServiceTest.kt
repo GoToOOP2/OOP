@@ -1,6 +1,6 @@
 package com.jaeyong.oop.application.user.service
 
-import com.jaeyong.oop.domain.user.port.JwtProvider
+import com.jaeyong.oop.domain.user.port.JwtHandler
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class TokenValidationServiceTest {
 
     @Mock
-    private lateinit var jwtProvider: JwtProvider
+    private lateinit var jwtProvider: JwtHandler
 
     @InjectMocks
     private lateinit var sut: TokenValidationService

@@ -1,5 +1,6 @@
 package com.jaeyong.oop.presentation.user
 
+import com.jaeyong.oop.application.user.service.JoinCommand
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
 import com.jaeyong.oop.application.user.usecase.LoginUseCase
 import com.jaeyong.oop.presentation.response.ApiResponse
@@ -18,14 +19,14 @@ class UserController(
     private val loginUseCase: LoginUseCase
 ) {
     @PostMapping("/join")
-    fun join(@Valid @RequestBody request: JoinRequest): ResponseEntity<ApiResponse<Nothing?>> {
-        joinUseCase.join(request.username, request.password)
-        return ApiResponse.success(null, HttpStatus.CREATED)
+    fun join(@Valid @RequestBody request: JoinRequest): ResponseEntity<ApiResponse<Nothing>> {
+        joinUseCase.join(JoinCommand(username = request.username, password = request.password))
+        return ApiResponse.success(HttpStatus.CREATED)
     }
 
     @PostMapping("/login")
-    fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<ApiResponse<Map<String, String>>> {
+    fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<ApiResponse<TokenResponse>> {
         val token = loginUseCase.login(request.username, request.password)
-        return ApiResponse.success(mapOf("accessToken" to token), HttpStatus.OK)
+        return ApiResponse.success(TokenResponse(accessToken = token), HttpStatus.OK)
     }
 }
