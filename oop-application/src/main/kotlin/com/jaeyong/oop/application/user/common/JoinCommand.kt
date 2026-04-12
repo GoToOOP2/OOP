@@ -1,4 +1,4 @@
-package com.jaeyong.oop.application.user.service
+package com.jaeyong.oop.application.user.common
 
 data class JoinCommand(
     val username: String,
