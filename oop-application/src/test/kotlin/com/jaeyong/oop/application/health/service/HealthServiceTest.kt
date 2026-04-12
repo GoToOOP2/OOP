@@ -23,26 +23,21 @@ class HealthServiceTest {
     private lateinit var sut: HealthService
 
     @Test
-    @DisplayName("checkHealth 호출 시 Health 도메인을 저장하고 'success'를 반환해야 한다")
-    fun `checkHealth should save health and return success`() {
+    @DisplayName("checkHealth 호출 시 Health 도메인을 저장하고 HealthCheckResult를 반환해야 한다")
+    fun `checkHealth should save health and return HealthCheckResult`() {
         // given
         val health = Health(status = "OK")
 
-        // 이론적 해결책: Mockito.any()가 null을 반환하여 발생하는 NPE를 피하기 위해
-        // 헬퍼 함수 anyNonNull()을 사용합니다.
         `when`(healthRepository.save(anyNonNull())).thenReturn(health)
 
         // when
         val result = sut.checkHealth()
 
         // then
-        assertThat(result).isEqualTo("success")
+        assertThat(result.status).isEqualTo("success")
         verify(healthRepository).save(anyNonNull())
     }
 
-    /**
-     * Mockito.any()의 null 반환 문제를 해결하기 위한 제네릭 헬퍼 함수
-     */
     private fun <T> anyNonNull(): T {
         ArgumentMatchers.any<T>()
         return uninitialized()

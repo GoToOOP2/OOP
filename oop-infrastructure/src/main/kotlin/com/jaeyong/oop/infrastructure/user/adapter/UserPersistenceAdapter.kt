@@ -1,6 +1,7 @@
 package com.jaeyong.oop.infrastructure.user.adapter
 
 import com.jaeyong.oop.domain.user.User
+import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.UserPort
 import com.jaeyong.oop.infrastructure.user.entity.UserEntity
 import com.jaeyong.oop.infrastructure.user.repository.UserEntityRepository
@@ -14,9 +15,9 @@ class UserPersistenceAdapter(
     override fun register(user: User): User =
         userEntityRepository.save(UserEntity.fromDomain(user)).toDomain()
 
-    override fun isUsernameTaken(username: String): Boolean =
-        userEntityRepository.existsByUsername(username)
+    override fun isUsernameTaken(username: UsernameVO): Boolean =
+        userEntityRepository.existsByUsername(username.value)
 
-    override fun getByUsername(username: String): User? =
-        userEntityRepository.findByUsername(username)?.toDomain()
+    override fun getByUsername(username: UsernameVO): User? =
+        userEntityRepository.findByUsername(username.value)?.toDomain()
 }

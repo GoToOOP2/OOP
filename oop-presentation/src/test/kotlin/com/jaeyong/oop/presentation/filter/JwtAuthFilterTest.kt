@@ -1,5 +1,7 @@
 package com.jaeyong.oop.presentation.filter
 
+import com.jaeyong.oop.application.user.common.TokenValidationCommand
+import com.jaeyong.oop.application.user.result.TokenValidationResult
 import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import jakarta.servlet.FilterChain
 import org.assertj.core.api.Assertions.assertThat
@@ -33,7 +35,7 @@ class JwtAuthFilterTest {
             addHeader("Authorization", "Bearer valid.token")
         }
         val response = MockHttpServletResponse()
-        given(tokenValidationUseCase.validateAndExtract("valid.token")).willReturn("jaeyong")
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand("valid.token"))).willReturn(TokenValidationResult("jaeyong"))
 
         // when
         sut.doFilter(request, response, filterChain)
@@ -63,7 +65,7 @@ class JwtAuthFilterTest {
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer invalid.token")
         }
-        given(tokenValidationUseCase.validateAndExtract("invalid.token")).willReturn(null)
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand("invalid.token"))).willReturn(TokenValidationResult(null))
 
         // when
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
@@ -94,7 +96,7 @@ class JwtAuthFilterTest {
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer valid.token")
         }
-        given(tokenValidationUseCase.validateAndExtract("valid.token")).willReturn("jaeyong")
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand("valid.token"))).willReturn(TokenValidationResult("jaeyong"))
 
         // when
         sut.doFilter(request, MockHttpServletResponse(), filterChain)

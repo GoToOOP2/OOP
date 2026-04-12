@@ -1,6 +1,8 @@
 package com.jaeyong.oop.infrastructure.user.adapter
 
+import com.jaeyong.oop.domain.user.vo.EncodedPasswordVO
 import com.jaeyong.oop.domain.user.User
+import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.infrastructure.user.entity.UserEntity
 import com.jaeyong.oop.infrastructure.user.repository.UserEntityRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -26,7 +28,7 @@ class UserPersistenceAdapterTest {
     @DisplayName("1. register 호출 시 저장된 도메인 객체를 반환한다")
     fun `register 호출 시 저장된 도메인 객체를 반환한다`() {
         // given
-        val user = User(username = "jaeyong", password = "hashed")
+        val user = User(username = UsernameVO("jaeyong"), password = EncodedPasswordVO("hashed"))
         val savedEntity = UserEntity(id = 1L, username = "jaeyong", password = "hashed")
         given(userEntityRepository.save(anyNonNull())).willReturn(savedEntity)
 
@@ -35,7 +37,7 @@ class UserPersistenceAdapterTest {
 
         // then
         assertThat(result.id).isEqualTo(1L)
-        assertThat(result.username).isEqualTo("jaeyong")
+        assertThat(result.username).isEqualTo(UsernameVO("jaeyong"))
     }
 
     @Test
@@ -45,7 +47,7 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.existsByUsername("jaeyong")).willReturn(true)
 
         // when & then
-        assertThat(sut.isUsernameTaken("jaeyong")).isTrue()
+        assertThat(sut.isUsernameTaken(UsernameVO("jaeyong"))).isTrue()
     }
 
     @Test
@@ -55,7 +57,7 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.existsByUsername("unknown")).willReturn(false)
 
         // when & then
-        assertThat(sut.isUsernameTaken("unknown")).isFalse()
+        assertThat(sut.isUsernameTaken(UsernameVO("unknown"))).isFalse()
     }
 
     @Test
@@ -66,11 +68,11 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.findByUsername("jaeyong")).willReturn(entity)
 
         // when
-        val result = sut.getByUsername("jaeyong")
+        val result = sut.getByUsername(UsernameVO("jaeyong"))
 
         // then
         assertThat(result).isNotNull
-        assertThat(result?.username).isEqualTo("jaeyong")
+        assertThat(result?.username).isEqualTo(UsernameVO("jaeyong"))
     }
 
     @Test
@@ -80,7 +82,7 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.findByUsername("unknown")).willReturn(null)
 
         // when
-        val result = sut.getByUsername("unknown")
+        val result = sut.getByUsername(UsernameVO("unknown"))
 
         // then
         assertThat(result).isNull()

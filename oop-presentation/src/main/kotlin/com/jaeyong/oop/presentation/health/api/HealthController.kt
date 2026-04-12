@@ -15,6 +15,6 @@ class HealthController(
     @GetMapping
     fun healthCheck(): ResponseEntity<ApiResponse<String>> {
         val result = healthCheckUseCase.checkHealth()
-        return ApiResponse.success(result)
+        return ApiResponse.success(result.status)
     }
 }

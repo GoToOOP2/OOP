@@ -1,5 +1,7 @@
 package com.jaeyong.oop.infrastructure.user.adapter
 
+import com.jaeyong.oop.domain.user.vo.TokenVO
+import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.JwtHandlerPort
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
@@ -18,22 +20,25 @@ class JwtHandlerAdapter(
         Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray(Charsets.UTF_8))
     }
 
-    override fun generateToken(username: String): String =
-        Jwts.builder()
-            .subject(username)
-            .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + jwtProperties.expiration))
-            .signWith(secretKey)
-            .compact()
+    override fun generateToken(username: UsernameVO): TokenVO =
+        TokenVO(
+            Jwts.builder()
+                .subject(username.value)
+                .issuedAt(Date())
+                .expiration(Date(System.currentTimeMillis() + jwtProperties.expiration))
+                .signWith(secretKey)
+                .compact()
+        )
 
-    override fun validateAndExtract(token: String): String? =
+    override fun validateAndExtract(token: TokenVO): UsernameVO? =
         try {
-            Jwts.parser()
+            val subject = Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(token.value)
                 .payload
                 .subject
+            subject?.let { UsernameVO(it) }
         } catch (e: JwtException) {
             null
         } catch (e: IllegalArgumentException) {

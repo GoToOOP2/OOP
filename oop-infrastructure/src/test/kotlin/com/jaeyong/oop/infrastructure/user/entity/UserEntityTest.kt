@@ -1,5 +1,8 @@
 package com.jaeyong.oop.infrastructure.user.entity
 
+import com.jaeyong.oop.domain.user.vo.EncodedPasswordVO
+import com.jaeyong.oop.domain.user.User
+import com.jaeyong.oop.domain.user.vo.UsernameVO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -40,15 +43,15 @@ class UserEntityTest {
 
         // then
         assertThat(domain.id).isEqualTo(1L)
-        assertThat(domain.username).isEqualTo("jaeyong")
-        assertThat(domain.password).isEqualTo("hashed")
+        assertThat(domain.username).isEqualTo(UsernameVO("jaeyong"))
+        assertThat(domain.password).isEqualTo(EncodedPasswordVO("hashed"))
     }
 
     @Test
     @DisplayName("4. fromDomain() 호출 시 엔티티로 정확히 변환된다")
     fun `fromDomain 호출 시 엔티티로 정확히 변환된다`() {
         // given
-        val domain = com.jaeyong.oop.domain.user.User(id = 1L, username = "jaeyong", password = "hashed")
+        val domain = User(id = 1L, username = UsernameVO("jaeyong"), password = EncodedPasswordVO("hashed"))
 
         // when
         val entity = UserEntity.fromDomain(domain)

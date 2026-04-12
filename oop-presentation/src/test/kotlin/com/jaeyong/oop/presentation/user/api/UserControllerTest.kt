@@ -2,6 +2,8 @@ package com.jaeyong.oop.presentation.user.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jaeyong.oop.application.user.common.JoinCommand
+import com.jaeyong.oop.application.user.common.LoginCommand
+import com.jaeyong.oop.application.user.result.LoginResult
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
 import com.jaeyong.oop.application.user.usecase.LoginUseCase
 import com.jaeyong.oop.common.exception.BaseException
@@ -83,7 +85,7 @@ class UserControllerTest {
     @DisplayName("3. 정상 로그인 시 200과 accessToken을 반환한다")
     fun `정상 로그인 시 200과 accessToken을 반환한다`() {
         // given
-        given(loginUseCase.login("jaeyong", "password123")).willReturn("jwt.token.string")
+        given(loginUseCase.login(LoginCommand(username = "jaeyong", password = "password123"))).willReturn(LoginResult(token = "jwt.token.string"))
         val body = mapOf("username" to "jaeyong", "password" to "password123")
 
         // when & then
@@ -101,7 +103,7 @@ class UserControllerTest {
     @DisplayName("4. 잘못된 자격증명으로 로그인 시 400과 A001을 반환한다")
     fun `잘못된 자격증명으로 로그인 시 400과 A001을 반환한다`() {
         // given
-        willThrow(BaseException(ErrorCode.UNAUTHORIZED)).given(loginUseCase).login("jaeyong", "wrongpassword")
+        willThrow(BaseException(ErrorCode.UNAUTHORIZED)).given(loginUseCase).login(LoginCommand(username = "jaeyong", password = "wrongpassword"))
         val body = mapOf("username" to "jaeyong", "password" to "wrongpassword")
 
         // when & then

@@ -1,5 +1,6 @@
 package com.jaeyong.oop.presentation.filter
 
+import com.jaeyong.oop.application.user.common.TokenValidationCommand
 import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -18,9 +19,9 @@ class JwtAuthFilter(
     ) {
         val token = resolveToken(request)
         if (token != null) {
-            val username = tokenValidationUseCase.validateAndExtract(token)
-            if (username != null) {
-                request.setAttribute("username", username)
+            val result = tokenValidationUseCase.validateAndExtract(TokenValidationCommand(token))
+            if (result.username != null) {
+                request.setAttribute("username", result.username)
             }
         }
         filterChain.doFilter(request, response)

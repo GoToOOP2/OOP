@@ -1,6 +1,8 @@
 package com.jaeyong.oop.infrastructure.user.entity
 
+import com.jaeyong.oop.domain.user.vo.EncodedPasswordVO
 import com.jaeyong.oop.domain.user.User
+import com.jaeyong.oop.domain.user.vo.UsernameVO
 import jakarta.persistence.*
 
 @Entity
@@ -15,9 +17,9 @@ class UserEntity(
     @Column(name = "password", nullable = false)
     val password: String
 ) {
-    fun toDomain(): User = User(id, username, password)
+    fun toDomain(): User = User(id, UsernameVO(username), EncodedPasswordVO(password))
 
     companion object {
-        fun fromDomain(user: User): UserEntity = UserEntity(user.id, user.username, user.password)
+        fun fromDomain(user: User): UserEntity = UserEntity(user.id, user.username.value, user.password.value)
     }
 }

@@ -1,5 +1,6 @@
 package com.jaeyong.oop.presentation.health.api
 
+import com.jaeyong.oop.application.health.result.HealthCheckResult
 import com.jaeyong.oop.application.health.usecase.HealthCheckUseCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -30,14 +31,13 @@ class HealthControllerTest {
     @DisplayName("GET /api/health 호출 시 성공 응답을 반환해야 한다")
     fun `healthCheck should return success response`() {
         // given
-        val expectedResult = "success"
-        given(healthCheckUseCase.checkHealth()).willReturn(expectedResult)
+        given(healthCheckUseCase.checkHealth()).willReturn(HealthCheckResult(status = "success"))
 
         // when & then
         mockMvc.perform(get("/api/health")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.code").value("SUCCESS"))
-            .andExpect(jsonPath("$.data").value(expectedResult))
+            .andExpect(jsonPath("$.data").value("success"))
     }
 }

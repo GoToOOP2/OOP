@@ -1,5 +1,6 @@
 package com.jaeyong.oop.application.health.service
 
+import com.jaeyong.oop.application.health.result.HealthCheckResult
 import com.jaeyong.oop.application.health.usecase.HealthCheckUseCase
 import com.jaeyong.oop.domain.health.Health
 import com.jaeyong.oop.domain.health.port.HealthPort
@@ -11,9 +12,9 @@ class HealthService(
     private val healthRepository: HealthPort
 ) : HealthCheckUseCase {
     @Transactional
-    override fun checkHealth(): String {
+    override fun checkHealth(): HealthCheckResult {
         val health = Health(status = "OK")
         healthRepository.save(health)
-        return "success"
+        return HealthCheckResult(status = "success")
     }
 }

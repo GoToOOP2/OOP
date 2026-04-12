@@ -1,6 +1,7 @@
 package com.jaeyong.oop.presentation.user.api
 
 import com.jaeyong.oop.application.user.common.JoinCommand
+import com.jaeyong.oop.application.user.common.LoginCommand
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
 import com.jaeyong.oop.application.user.usecase.LoginUseCase
 import com.jaeyong.oop.presentation.response.ApiResponse
@@ -29,7 +30,7 @@ class UserController(
 
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<ApiResponse<TokenResponse>> {
-        val token = loginUseCase.login(request.username, request.password)
-        return ApiResponse.success(TokenResponse(accessToken = token), HttpStatus.OK)
+        val result = loginUseCase.login(LoginCommand(username = request.username, password = request.password))
+        return ApiResponse.success(TokenResponse(accessToken = result.token), HttpStatus.OK)
     }
 }
