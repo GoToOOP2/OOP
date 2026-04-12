@@ -1,6 +1,6 @@
-package com.jaeyong.oop.infrastructure.jwt
+package com.jaeyong.oop.infrastructure.user.adapter
 
-import com.jaeyong.oop.domain.user.port.JwtHandler
+import com.jaeyong.oop.domain.user.port.JwtHandlerPort
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -10,9 +10,9 @@ import java.util.Date
 
 @Component
 @EnableConfigurationProperties(JwtProperties::class)
-class JwtHandlerImpl(
+class JwtHandlerAdapter(
     private val jwtProperties: JwtProperties
-) : JwtHandler {
+) : JwtHandlerPort {
 
     private val secretKey by lazy {
         Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray(Charsets.UTF_8))

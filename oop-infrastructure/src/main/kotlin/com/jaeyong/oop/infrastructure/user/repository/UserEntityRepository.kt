@@ -1,6 +1,8 @@
-package com.jaeyong.oop.infrastructure.user
+package com.jaeyong.oop.infrastructure.user.repository
 
-interface UserRepository {
+import com.jaeyong.oop.infrastructure.user.entity.UserEntity
+
+interface UserEntityRepository {
     fun save(entity: UserEntity): UserEntity
     fun existsByUsername(username: String): Boolean
     fun findByUsername(username: String): UserEntity?

@@ -1,4 +1,4 @@
-package com.jaeyong.oop.infrastructure.jwt
+package com.jaeyong.oop.infrastructure.user.adapter
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

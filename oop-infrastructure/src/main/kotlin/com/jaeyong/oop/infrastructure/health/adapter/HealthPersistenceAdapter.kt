@@ -1,7 +1,9 @@
-package com.jaeyong.oop.infrastructure.persistence
+package com.jaeyong.oop.infrastructure.health.adapter
 
 import com.jaeyong.oop.domain.health.Health
 import com.jaeyong.oop.domain.health.port.HealthPort
+import com.jaeyong.oop.infrastructure.health.entity.HealthEntity
+import com.jaeyong.oop.infrastructure.health.repository.HealthEntityRepository
 import org.springframework.stereotype.Repository
 
 /**
@@ -9,10 +11,10 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 class HealthPersistenceAdapter(
-    private val healthJpaRepository: HealthJpaRepository
+    private val healthEntityRepository: HealthEntityRepository
 ) : HealthPort {
     override fun save(health: Health): Health {
         val entity = HealthEntity.fromDomain(health)
-        return healthJpaRepository.save(entity).toDomain()
+        return healthEntityRepository.save(entity).toDomain()
     }
 }

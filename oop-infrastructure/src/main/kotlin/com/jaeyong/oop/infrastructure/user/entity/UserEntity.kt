@@ -1,4 +1,4 @@
-package com.jaeyong.oop.infrastructure.user
+package com.jaeyong.oop.infrastructure.user.entity
 
 import com.jaeyong.oop.domain.user.User
 import jakarta.persistence.*

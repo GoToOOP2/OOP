@@ -1,4 +1,4 @@
-package com.jaeyong.oop.infrastructure.persistence
+package com.jaeyong.oop.infrastructure.health.entity
 
 import com.jaeyong.oop.domain.health.Health
 import jakarta.persistence.*
@@ -19,11 +19,10 @@ class HealthEntity(
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime
 ) {
-    // 도메인 모델 <-> DB 엔티티 변환 메서드
     fun toDomain(): Health = Health(id, status, createdAt)
-    
+
     companion object {
-        fun fromDomain(health: Health): HealthEntity = 
+        fun fromDomain(health: Health): HealthEntity =
             HealthEntity(health.id, health.status, health.createdAt)
     }
 }
