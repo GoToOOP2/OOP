@@ -1,6 +1,5 @@
-package com.jaeyong.oop.application.user.service
+package com.jaeyong.oop.application.user.auth
 
-import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import com.jaeyong.oop.domain.user.port.JwtHandler
 import org.springframework.stereotype.Service
 

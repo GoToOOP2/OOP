@@ -2,7 +2,7 @@ package com.jaeyong.oop.presentation.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
-import com.jaeyong.oop.application.user.usecase.LoginUseCase
+import com.jaeyong.oop.application.user.auth.LoginUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.presentation.exception.GlobalExceptionHandler

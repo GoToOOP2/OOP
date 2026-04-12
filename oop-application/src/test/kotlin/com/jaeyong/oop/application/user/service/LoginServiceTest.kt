@@ -1,5 +1,6 @@
 package com.jaeyong.oop.application.user.service
 
+import com.jaeyong.oop.application.user.auth.LoginService
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.User

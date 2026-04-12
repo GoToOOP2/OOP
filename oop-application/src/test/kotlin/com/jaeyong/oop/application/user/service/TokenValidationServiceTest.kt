@@ -1,5 +1,6 @@
 package com.jaeyong.oop.application.user.service
 
+import com.jaeyong.oop.application.user.auth.TokenValidationService
 import com.jaeyong.oop.domain.user.port.JwtHandler
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName

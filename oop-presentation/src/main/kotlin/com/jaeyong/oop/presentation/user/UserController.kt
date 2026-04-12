@@ -2,7 +2,7 @@ package com.jaeyong.oop.presentation.user
 
 import com.jaeyong.oop.application.user.service.JoinCommand
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
-import com.jaeyong.oop.application.user.usecase.LoginUseCase
+import com.jaeyong.oop.application.user.auth.LoginUseCase
 import com.jaeyong.oop.presentation.response.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
