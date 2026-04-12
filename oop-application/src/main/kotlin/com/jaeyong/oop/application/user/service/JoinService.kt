@@ -19,8 +19,8 @@ class JoinService(
     @Transactional
     override fun join(command: JoinCommand) {
         val user = User.signUp(
-            username = UsernameVO(command.username),
-            password = RawPasswordVO(command.password),
+            username = UsernameVO.from(command.username),
+            password = RawPasswordVO.from(command.password),
             passwordEncryptor = passwordEncryptorPort,
             userPort = userPort
         )

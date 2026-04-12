@@ -13,7 +13,7 @@ class TokenValidationService(
 ) : TokenValidationUseCase {
 
     override fun validateAndExtract(command: TokenValidationCommand): TokenValidationResult {
-        val username = jwtHandlerPort.validateAndExtract(TokenVO(command.token))
-        return TokenValidationResult(username = username?.value)
+        val username = jwtHandlerPort.validateAndExtract(TokenVO.from(command.token))
+        return TokenValidationResult.of(username?.value)
     }
 }

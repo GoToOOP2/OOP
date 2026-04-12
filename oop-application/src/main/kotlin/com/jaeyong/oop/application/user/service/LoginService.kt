@@ -20,12 +20,12 @@ class LoginService(
 
     override fun login(command: LoginCommand): LoginResult {
         val user = User.login(
-            username = UsernameVO(command.username),
-            password = RawPasswordVO(command.password),
+            username = UsernameVO.from(command.username),
+            password = RawPasswordVO.from(command.password),
             userPort = userPort,
             passwordEncryptor = passwordEncryptorPort
         )
         val token = jwtHandlerPort.generateToken(user.username)
-        return LoginResult(token = token.value)
+        return LoginResult.of(token.value)
     }
 }

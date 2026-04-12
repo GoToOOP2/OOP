@@ -40,11 +40,11 @@ class LoginServiceTest {
     @DisplayName("1. 존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다")
     fun `존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다`() {
         // given
-        given(userPort.getByUsername(UsernameVO("unknown"))).willReturn(null)
+        given(userPort.getByUsername(UsernameVO.from("unknown"))).willReturn(null)
 
         // when & then
         val exception = assertThrows<BaseException> {
-            sut.login(LoginCommand(username = "unknown", password = "password123"))
+            sut.login(LoginCommand.of(username = "unknown", password = "password123"))
         }
         assertThat(exception.errorCode).isEqualTo(ErrorCode.UNAUTHORIZED)
     }
@@ -53,13 +53,13 @@ class LoginServiceTest {
     @DisplayName("2. 비밀번호가 일치하지 않으면 UNAUTHORIZED 예외를 던진다")
     fun `비밀번호가 일치하지 않으면 UNAUTHORIZED 예외를 던진다`() {
         // given
-        val user = User(id = 1L, username = UsernameVO("jaeyong"), password = EncodedPasswordVO("hashed_password"))
-        given(userPort.getByUsername(UsernameVO("jaeyong"))).willReturn(user)
-        given(passwordEncryptorPort.matches(RawPasswordVO("wrongpassword"), EncodedPasswordVO("hashed_password"))).willReturn(false)
+        val user = User(id = 1L, username = UsernameVO.from("jaeyong"), password = EncodedPasswordVO.from("hashed_password"))
+        given(userPort.getByUsername(UsernameVO.from("jaeyong"))).willReturn(user)
+        given(passwordEncryptorPort.matches(RawPasswordVO.from("wrongpassword"), EncodedPasswordVO.from("hashed_password"))).willReturn(false)
 
         // when & then
         val exception = assertThrows<BaseException> {
-            sut.login(LoginCommand(username = "jaeyong", password = "wrongpassword"))
+            sut.login(LoginCommand.of(username = "jaeyong", password = "wrongpassword"))
         }
         assertThat(exception.errorCode).isEqualTo(ErrorCode.UNAUTHORIZED)
     }
@@ -68,13 +68,13 @@ class LoginServiceTest {
     @DisplayName("3. 정상 로그인 시 JWT 토큰을 반환한다")
     fun `정상 로그인 시 JWT 토큰을 반환한다`() {
         // given
-        val user = User(id = 1L, username = UsernameVO("jaeyong"), password = EncodedPasswordVO("hashed_password"))
-        given(userPort.getByUsername(UsernameVO("jaeyong"))).willReturn(user)
-        given(passwordEncryptorPort.matches(RawPasswordVO("password123"), EncodedPasswordVO("hashed_password"))).willReturn(true)
-        given(jwtHandlerPort.generateToken(UsernameVO("jaeyong"))).willReturn(TokenVO("jwt.token.string"))
+        val user = User(id = 1L, username = UsernameVO.from("jaeyong"), password = EncodedPasswordVO.from("hashed_password"))
+        given(userPort.getByUsername(UsernameVO.from("jaeyong"))).willReturn(user)
+        given(passwordEncryptorPort.matches(RawPasswordVO.from("password123"), EncodedPasswordVO.from("hashed_password"))).willReturn(true)
+        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("jwt.token.string"))
 
         // when
-        val result = sut.login(LoginCommand(username = "jaeyong", password = "password123"))
+        val result = sut.login(LoginCommand.of(username = "jaeyong", password = "password123"))
 
         // then
         assertThat(result.token).isEqualTo("jwt.token.string")

@@ -13,8 +13,8 @@ class HealthService(
 ) : HealthCheckUseCase {
     @Transactional
     override fun checkHealth(): HealthCheckResult {
-        val health = Health(status = "OK")
+        val health = Health.ok()
         healthRepository.save(health)
-        return HealthCheckResult(status = "success")
+        return HealthCheckResult.of("success")
     }
 }

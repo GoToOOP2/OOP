@@ -37,7 +37,7 @@ class JoinServiceTest {
 
         // when & then
         val exception = assertThrows<BaseException> {
-            sut.join(JoinCommand(username = "jaeyong", password = "password123"))
+            sut.join(JoinCommand.of(username = "jaeyong", password = "password123"))
         }
         assertThat(exception.errorCode).isEqualTo(ErrorCode.DUPLICATE)
     }

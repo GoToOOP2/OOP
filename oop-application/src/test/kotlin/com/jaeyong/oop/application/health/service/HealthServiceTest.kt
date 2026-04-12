@@ -26,7 +26,7 @@ class HealthServiceTest {
     @DisplayName("checkHealth 호출 시 Health 도메인을 저장하고 HealthCheckResult를 반환해야 한다")
     fun `checkHealth should save health and return HealthCheckResult`() {
         // given
-        val health = Health(status = "OK")
+        val health = Health.ok()
 
         `when`(healthRepository.save(anyNonNull())).thenReturn(health)
 
