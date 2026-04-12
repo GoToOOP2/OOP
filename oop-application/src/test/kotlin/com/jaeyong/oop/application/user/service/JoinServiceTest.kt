@@ -1,10 +1,11 @@
 package com.jaeyong.oop.application.user.service
 
+import com.jaeyong.oop.application.user.common.JoinCommand
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.User
-import com.jaeyong.oop.domain.user.port.PasswordEncryptor
-import com.jaeyong.oop.domain.user.port.UserOutputPort
+import com.jaeyong.oop.domain.user.port.PasswordEncryptorPort
+import com.jaeyong.oop.domain.user.port.UserPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -22,10 +23,10 @@ import org.mockito.kotlin.argumentCaptor
 class JoinServiceTest {
 
     @Mock
-    private lateinit var userRepository: UserOutputPort
+    private lateinit var userPort: UserPort
 
     @Mock
-    private lateinit var passwordEncryptor: PasswordEncryptor
+    private lateinit var passwordEncryptorPort: PasswordEncryptorPort
 
     @InjectMocks
     private lateinit var sut: JoinService
@@ -34,7 +35,7 @@ class JoinServiceTest {
     @DisplayName("1. 이미 존재하는 username이면 DUPLICATE 예외를 던진다")
     fun `이미 존재하는 username이면 DUPLICATE 예외를 던진다`() {
         // given
-        given(userRepository.isUsernameTaken(anyString())).willReturn(true)
+        given(userPort.isUsernameTaken(anyString())).willReturn(true)
 
         // when & then
         val exception = assertThrows<BaseException> {

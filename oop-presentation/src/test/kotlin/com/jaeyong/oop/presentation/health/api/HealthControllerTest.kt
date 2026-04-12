@@ -1,6 +1,6 @@
-package com.jaeyong.oop.presentation.api
+package com.jaeyong.oop.presentation.health.api
 
-import com.jaeyong.oop.application.usecase.HealthCheckUseCase
+import com.jaeyong.oop.application.health.usecase.HealthCheckUseCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given

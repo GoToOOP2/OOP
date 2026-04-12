@@ -1,11 +1,13 @@
-package com.jaeyong.oop.infrastructure.user
+package com.jaeyong.oop.infrastructure.user.adapter
 
 import com.jaeyong.oop.domain.user.User
+import com.jaeyong.oop.infrastructure.user.entity.UserEntity
+import com.jaeyong.oop.infrastructure.user.repository.UserEntityRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -15,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class UserPersistenceAdapterTest {
 
     @Mock
-    private lateinit var userJpaRepository: UserRepository
+    private lateinit var userEntityRepository: UserEntityRepository
 
     @InjectMocks
     private lateinit var sut: UserPersistenceAdapter
@@ -26,7 +28,7 @@ class UserPersistenceAdapterTest {
         // given
         val user = User(username = "jaeyong", password = "hashed")
         val savedEntity = UserEntity(id = 1L, username = "jaeyong", password = "hashed")
-        given(userJpaRepository.save(any(UserEntity::class.java))).willReturn(savedEntity)
+        given(userEntityRepository.save(anyNonNull())).willReturn(savedEntity)
 
         // when
         val result = sut.register(user)
@@ -40,7 +42,7 @@ class UserPersistenceAdapterTest {
     @DisplayName("2. isUsernameTaken - 존재하는 username이면 true를 반환한다")
     fun `isUsernameTaken - 존재하는 username이면 true를 반환한다`() {
         // given
-        given(userJpaRepository.existsByUsername("jaeyong")).willReturn(true)
+        given(userEntityRepository.existsByUsername("jaeyong")).willReturn(true)
 
         // when & then
         assertThat(sut.isUsernameTaken("jaeyong")).isTrue()
@@ -50,7 +52,7 @@ class UserPersistenceAdapterTest {
     @DisplayName("3. isUsernameTaken - 존재하지 않는 username이면 false를 반환한다")
     fun `isUsernameTaken - 존재하지 않는 username이면 false를 반환한다`() {
         // given
-        given(userJpaRepository.existsByUsername("unknown")).willReturn(false)
+        given(userEntityRepository.existsByUsername("unknown")).willReturn(false)
 
         // when & then
         assertThat(sut.isUsernameTaken("unknown")).isFalse()
@@ -61,7 +63,7 @@ class UserPersistenceAdapterTest {
     fun `getByUsername - 존재하는 username이면 도메인 객체를 반환한다`() {
         // given
         val entity = UserEntity(id = 1L, username = "jaeyong", password = "hashed")
-        given(userJpaRepository.findByUsername("jaeyong")).willReturn(entity)
+        given(userEntityRepository.findByUsername("jaeyong")).willReturn(entity)
 
         // when
         val result = sut.getByUsername("jaeyong")
@@ -75,7 +77,7 @@ class UserPersistenceAdapterTest {
     @DisplayName("5. getByUsername - 존재하지 않는 username이면 null을 반환한다")
     fun `getByUsername - 존재하지 않는 username이면 null을 반환한다`() {
         // given
-        given(userJpaRepository.findByUsername("unknown")).willReturn(null)
+        given(userEntityRepository.findByUsername("unknown")).willReturn(null)
 
         // when
         val result = sut.getByUsername("unknown")
@@ -83,4 +85,12 @@ class UserPersistenceAdapterTest {
         // then
         assertThat(result).isNull()
     }
+
+    private fun <T> anyNonNull(): T {
+        ArgumentMatchers.any<T>()
+        return uninitialized()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> uninitialized(): T = null as T
 }

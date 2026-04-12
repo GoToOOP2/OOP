@@ -1,4 +1,4 @@
-package com.jaeyong.oop.infrastructure.user
+package com.jaeyong.oop.infrastructure.user.entity
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName

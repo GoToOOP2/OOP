@@ -1,9 +1,9 @@
 package com.jaeyong.oop.presentation.exception
 
-import com.jaeyong.oop.application.usecase.HealthCheckUseCase
+import com.jaeyong.oop.application.health.usecase.HealthCheckUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
-import com.jaeyong.oop.presentation.api.HealthController
+import com.jaeyong.oop.presentation.health.api.HealthController
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

@@ -1,8 +1,9 @@
-package com.jaeyong.oop.presentation.user
+package com.jaeyong.oop.presentation.user.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.jaeyong.oop.application.user.common.JoinCommand
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
-import com.jaeyong.oop.application.user.auth.LoginUseCase
+import com.jaeyong.oop.application.user.usecase.LoginUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.presentation.exception.GlobalExceptionHandler
@@ -48,7 +49,7 @@ class UserControllerTest {
     @DisplayName("1. 정상 회원가입 시 201을 반환한다")
     fun `정상 회원가입 시 201을 반환한다`() {
         // given
-        willDoNothing().given(joinUseCase).join("jaeyong", "password123")
+        willDoNothing().given(joinUseCase).join(JoinCommand(username = "jaeyong", password = "password123"))
         val body = mapOf("username" to "jaeyong", "password" to "password123")
 
         // when & then
@@ -65,7 +66,7 @@ class UserControllerTest {
     @DisplayName("2. 중복 username으로 가입 시 400과 D002를 반환한다")
     fun `중복 username으로 가입 시 400과 D002를 반환한다`() {
         // given
-        willThrow(BaseException(ErrorCode.DUPLICATE)).given(joinUseCase).join("jaeyong", "password123")
+        willThrow(BaseException(ErrorCode.DUPLICATE)).given(joinUseCase).join(JoinCommand(username = "jaeyong", password = "password123"))
         val body = mapOf("username" to "jaeyong", "password" to "password123")
 
         // when & then

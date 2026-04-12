@@ -1,12 +1,11 @@
 package com.jaeyong.oop.application.user.service
 
-import com.jaeyong.oop.application.user.auth.LoginService
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.User
-import com.jaeyong.oop.domain.user.port.JwtHandler
-import com.jaeyong.oop.domain.user.port.PasswordEncryptor
-import com.jaeyong.oop.domain.user.port.UserOutputPort
+import com.jaeyong.oop.domain.user.port.JwtHandlerPort
+import com.jaeyong.oop.domain.user.port.PasswordEncryptorPort
+import com.jaeyong.oop.domain.user.port.UserPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -23,13 +22,13 @@ import org.mockito.kotlin.argumentCaptor
 class LoginServiceTest {
 
     @Mock
-    private lateinit var userRepository: UserOutputPort
+    private lateinit var userPort: UserPort
 
     @Mock
-    private lateinit var passwordEncryptor: PasswordEncryptor
+    private lateinit var passwordEncryptorPort: PasswordEncryptorPort
 
     @Mock
-    private lateinit var jwtProvider: JwtHandler
+    private lateinit var jwtHandlerPort: JwtHandlerPort
 
     @InjectMocks
     private lateinit var sut: LoginService
@@ -38,7 +37,7 @@ class LoginServiceTest {
     @DisplayName("1. 존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다")
     fun `존재하지 않는 username이면 UNAUTHORIZED 예외를 던진다`() {
         // given
-        given(userRepository.getByUsername("unknown")).willReturn(null)
+        given(userPort.getByUsername("unknown")).willReturn(null)
 
         // when & then
         val exception = assertThrows<BaseException> {
@@ -52,8 +51,8 @@ class LoginServiceTest {
     fun `비밀번호가 일치하지 않으면 UNAUTHORIZED 예외를 던진다`() {
         // given
         val user = User(id = 1L, username = "jaeyong", password = "hashed_password")
-        given(userRepository.getByUsername("jaeyong")).willReturn(user)
-        given(passwordEncryptor.matches("wrongpassword", "hashed_password")).willReturn(false)
+        given(userPort.getByUsername("jaeyong")).willReturn(user)
+        given(passwordEncryptorPort.matches("wrongpassword", "hashed_password")).willReturn(false)
 
         // when & then
         val exception = assertThrows<BaseException> {
@@ -67,15 +66,15 @@ class LoginServiceTest {
     fun `정상 로그인 시 JWT 토큰을 반환한다`() {
         // given
         val user = User(id = 1L, username = "jaeyong", password = "hashed_password")
-        given(userRepository.getByUsername("jaeyong")).willReturn(user)
-        given(passwordEncryptor.matches("password123", "hashed_password")).willReturn(true)
+        given(userPort.getByUsername("jaeyong")).willReturn(user)
+        given(passwordEncryptorPort.matches("password123", "hashed_password")).willReturn(true)
 
         // when
         sut.login("jaeyong", "password123")
 
         // then
         val captor = argumentCaptor<String>()
-        verify(jwtProvider).generateToken(captor.capture())
+        verify(jwtHandlerPort).generateToken(captor.capture())
         assertThat(captor.firstValue).isEqualTo("jaeyong")
     }
 }

@@ -1,17 +1,17 @@
-package com.jaeyong.oop.infrastructure.jwt
+package com.jaeyong.oop.infrastructure.user.adapter
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class JwtHandlerImplTest {
+class JwtHandlerAdapterTest {
 
-    private lateinit var sut: JwtHandlerImpl
+    private lateinit var sut: JwtHandlerAdapter
 
     @BeforeEach
     fun setUp() {
-        sut = JwtHandlerImpl(
+        sut = JwtHandlerAdapter(
             JwtProperties(
                 secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
                 expiration = 86400000L
@@ -43,7 +43,7 @@ class JwtHandlerImplTest {
     @DisplayName("3. 다른 서명키로 위변조된 토큰은 null을 반환한다")
     fun `다른 서명키로 위변조된 토큰은 null을 반환한다`() {
         // given
-        val forgedProvider = JwtHandlerImpl(
+        val forgedProvider = JwtHandlerAdapter(
             JwtProperties(
                 secret = "forged-secret-key-must-be-at-least-256-bits-long-here-pad",
                 expiration = 86400000L
@@ -59,7 +59,7 @@ class JwtHandlerImplTest {
     @DisplayName("4. 만료된 토큰은 null을 반환한다")
     fun `만료된 토큰은 null을 반환한다`() {
         // given
-        val expiredProvider = JwtHandlerImpl(
+        val expiredProvider = JwtHandlerAdapter(
             JwtProperties(
                 secret = "test-secret-key-must-be-at-least-256-bits-long-here-padding",
                 expiration = 0L
