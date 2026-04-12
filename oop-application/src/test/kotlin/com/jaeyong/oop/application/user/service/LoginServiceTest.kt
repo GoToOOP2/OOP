@@ -53,7 +53,7 @@ class LoginServiceTest {
     @DisplayName("2. 비밀번호가 일치하지 않으면 UNAUTHORIZED 예외를 던진다")
     fun `비밀번호가 일치하지 않으면 UNAUTHORIZED 예외를 던진다`() {
         // given
-        val user = User(id = 1L, username = UsernameVO.from("jaeyong"), password = EncodedPasswordVO.from("hashed_password"))
+        val user = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed_password"))
         given(userPort.getByUsername(UsernameVO.from("jaeyong"))).willReturn(user)
         given(passwordEncryptorPort.matches(RawPasswordVO.from("wrongpassword"), EncodedPasswordVO.from("hashed_password"))).willReturn(false)
 
@@ -68,7 +68,7 @@ class LoginServiceTest {
     @DisplayName("3. 정상 로그인 시 JWT 토큰을 반환한다")
     fun `정상 로그인 시 JWT 토큰을 반환한다`() {
         // given
-        val user = User(id = 1L, username = UsernameVO.from("jaeyong"), password = EncodedPasswordVO.from("hashed_password"))
+        val user = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed_password"))
         given(userPort.getByUsername(UsernameVO.from("jaeyong"))).willReturn(user)
         given(passwordEncryptorPort.matches(RawPasswordVO.from("password123"), EncodedPasswordVO.from("hashed_password"))).willReturn(true)
         given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("jwt.token.string"))

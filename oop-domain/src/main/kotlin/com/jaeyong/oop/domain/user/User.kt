@@ -8,7 +8,7 @@ import com.jaeyong.oop.domain.user.vo.EncodedPasswordVO
 import com.jaeyong.oop.domain.user.vo.RawPasswordVO
 import com.jaeyong.oop.domain.user.vo.UsernameVO
 
-data class User(
+data class User private constructor(
     val id: Long? = null,
     val username: UsernameVO,
     val password: EncodedPasswordVO
@@ -20,6 +20,8 @@ data class User(
     }
 
     companion object {
+        fun restore(id: Long?, username: UsernameVO, password: EncodedPasswordVO): User = User(id, username, password)
+
         fun signUp(username: UsernameVO, password: RawPasswordVO, passwordEncryptor: PasswordEncryptorPort, userPort: UserPort): User {
             if (userPort.isUsernameTaken(username)) {
                 throw BaseException(ErrorCode.DUPLICATE)
