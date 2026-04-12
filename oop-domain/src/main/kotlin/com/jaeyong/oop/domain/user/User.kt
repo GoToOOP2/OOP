@@ -26,5 +26,12 @@ data class User(
             }
             return User(username = username, password = passwordEncryptor.encrypt(password))
         }
+
+        fun login(username: UsernameVO, password: RawPasswordVO, userPort: UserPort, passwordEncryptor: PasswordEncryptorPort): User {
+            val user = userPort.getByUsername(username)
+                ?: throw BaseException(ErrorCode.UNAUTHORIZED)
+            user.authenticate(password, passwordEncryptor)
+            return user
+        }
     }
 }

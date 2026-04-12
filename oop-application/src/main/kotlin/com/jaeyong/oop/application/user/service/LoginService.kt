@@ -3,8 +3,7 @@ package com.jaeyong.oop.application.user.service
 import com.jaeyong.oop.application.user.common.LoginCommand
 import com.jaeyong.oop.application.user.result.LoginResult
 import com.jaeyong.oop.application.user.usecase.LoginUseCase
-import com.jaeyong.oop.common.exception.BaseException
-import com.jaeyong.oop.common.exception.ErrorCode
+import com.jaeyong.oop.domain.user.User
 import com.jaeyong.oop.domain.user.vo.RawPasswordVO
 import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.JwtHandlerPort
@@ -20,14 +19,13 @@ class LoginService(
 ) : LoginUseCase {
 
     override fun login(command: LoginCommand): LoginResult {
-        val username = UsernameVO(command.username)
-        val rawPassword = RawPasswordVO(command.password)
-
-        val user = userPort.getByUsername(username)
-            ?: throw BaseException(ErrorCode.UNAUTHORIZED)
-
-        user.authenticate(rawPassword, passwordEncryptorPort)
-        val token = jwtHandlerPort.generateToken(username)
+        val user = User.login(
+            username = UsernameVO(command.username),
+            password = RawPasswordVO(command.password),
+            userPort = userPort,
+            passwordEncryptor = passwordEncryptorPort
+        )
+        val token = jwtHandlerPort.generateToken(user.username)
         return LoginResult(token = token.value)
     }
 }
