@@ -1,8 +1,6 @@
 package com.jaeyong.oop.application.user.service
 
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
-import com.jaeyong.oop.common.exception.BaseException
-import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.vo.RawPasswordVO
 import com.jaeyong.oop.domain.user.User
 import com.jaeyong.oop.domain.user.vo.UsernameVO
@@ -20,11 +18,12 @@ class JoinService(
 
     @Transactional
     override fun join(command: JoinCommand) {
-        val username = UsernameVO(command.username)
-        if (userPort.isUsernameTaken(username)) {
-            throw BaseException(ErrorCode.DUPLICATE)
-        }
-        val user = User.signUp(username = username, password = RawPasswordVO(command.password), passwordEncryptor = passwordEncryptorPort)
+        val user = User.signUp(
+            username = UsernameVO(command.username),
+            password = RawPasswordVO(command.password),
+            passwordEncryptor = passwordEncryptorPort,
+            userPort = userPort
+        )
         userPort.register(user)
     }
 }
