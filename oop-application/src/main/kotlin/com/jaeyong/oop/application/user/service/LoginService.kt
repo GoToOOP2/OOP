@@ -26,9 +26,7 @@ class LoginService(
         val user = userPort.getByUsername(username)
             ?: throw BaseException(ErrorCode.UNAUTHORIZED)
 
-        if (!user.matchesPassword(rawPassword, passwordEncryptorPort)) {
-            throw BaseException(ErrorCode.UNAUTHORIZED)
-        }
+        user.authenticate(rawPassword, passwordEncryptorPort)
         val token = jwtHandlerPort.generateToken(username)
         return LoginResult(token = token.value)
     }
