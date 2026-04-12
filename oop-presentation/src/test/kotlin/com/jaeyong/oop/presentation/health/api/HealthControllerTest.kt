@@ -31,7 +31,7 @@ class HealthControllerTest {
     @DisplayName("GET /api/health 호출 시 성공 응답을 반환해야 한다")
     fun `healthCheck should return success response`() {
         // given
-        given(healthCheckUseCase.checkHealth()).willReturn(HealthCheckResult(status = "success"))
+        given(healthCheckUseCase.checkHealth()).willReturn(HealthCheckResult.of("success"))
 
         // when & then
         mockMvc.perform(get("/api/health")

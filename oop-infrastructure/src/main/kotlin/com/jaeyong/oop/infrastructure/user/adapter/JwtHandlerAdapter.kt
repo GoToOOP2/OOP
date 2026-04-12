@@ -21,7 +21,7 @@ class JwtHandlerAdapter(
     }
 
     override fun generateToken(username: UsernameVO): TokenVO =
-        TokenVO(
+        TokenVO.from(
             Jwts.builder()
                 .subject(username.value)
                 .issuedAt(Date())
@@ -38,7 +38,7 @@ class JwtHandlerAdapter(
                 .parseSignedClaims(token.value)
                 .payload
                 .subject
-            subject?.let { UsernameVO(it) }
+            subject?.let { UsernameVO.from(it) }
         } catch (e: JwtException) {
             null
         } catch (e: IllegalArgumentException) {

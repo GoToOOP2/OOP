@@ -17,7 +17,7 @@ class UserEntity(
     @Column(name = "password", nullable = false)
     val password: String
 ) {
-    fun toDomain(): User = User(id, UsernameVO(username), EncodedPasswordVO(password))
+    fun toDomain(): User = User(id, UsernameVO.from(username), EncodedPasswordVO.from(password))
 
     companion object {
         fun fromDomain(user: User): UserEntity = UserEntity(user.id, user.username.value, user.password.value)

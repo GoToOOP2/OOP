@@ -35,7 +35,7 @@ class JwtAuthFilterTest {
             addHeader("Authorization", "Bearer valid.token")
         }
         val response = MockHttpServletResponse()
-        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand("valid.token"))).willReturn(TokenValidationResult("jaeyong"))
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("valid.token"))).willReturn(TokenValidationResult.of("jaeyong"))
 
         // when
         sut.doFilter(request, response, filterChain)
@@ -65,7 +65,7 @@ class JwtAuthFilterTest {
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer invalid.token")
         }
-        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand("invalid.token"))).willReturn(TokenValidationResult(null))
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("invalid.token"))).willReturn(TokenValidationResult.of(null))
 
         // when
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
@@ -96,7 +96,7 @@ class JwtAuthFilterTest {
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer valid.token")
         }
-        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand("valid.token"))).willReturn(TokenValidationResult("jaeyong"))
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("valid.token"))).willReturn(TokenValidationResult.of("jaeyong"))
 
         // when
         sut.doFilter(request, MockHttpServletResponse(), filterChain)

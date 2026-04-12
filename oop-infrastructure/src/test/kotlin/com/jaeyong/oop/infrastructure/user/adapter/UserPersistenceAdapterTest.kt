@@ -28,7 +28,7 @@ class UserPersistenceAdapterTest {
     @DisplayName("1. register 호출 시 저장된 도메인 객체를 반환한다")
     fun `register 호출 시 저장된 도메인 객체를 반환한다`() {
         // given
-        val user = User(username = UsernameVO("jaeyong"), password = EncodedPasswordVO("hashed"))
+        val user = User(username = UsernameVO.from("jaeyong"), password = EncodedPasswordVO.from("hashed"))
         val savedEntity = UserEntity(id = 1L, username = "jaeyong", password = "hashed")
         given(userEntityRepository.save(anyNonNull())).willReturn(savedEntity)
 
@@ -37,7 +37,7 @@ class UserPersistenceAdapterTest {
 
         // then
         assertThat(result.id).isEqualTo(1L)
-        assertThat(result.username).isEqualTo(UsernameVO("jaeyong"))
+        assertThat(result.username).isEqualTo(UsernameVO.from("jaeyong"))
     }
 
     @Test
@@ -47,7 +47,7 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.existsByUsername("jaeyong")).willReturn(true)
 
         // when & then
-        assertThat(sut.isUsernameTaken(UsernameVO("jaeyong"))).isTrue()
+        assertThat(sut.isUsernameTaken(UsernameVO.from("jaeyong"))).isTrue()
     }
 
     @Test
@@ -57,7 +57,7 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.existsByUsername("unknown")).willReturn(false)
 
         // when & then
-        assertThat(sut.isUsernameTaken(UsernameVO("unknown"))).isFalse()
+        assertThat(sut.isUsernameTaken(UsernameVO.from("unknown"))).isFalse()
     }
 
     @Test
@@ -68,11 +68,11 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.findByUsername("jaeyong")).willReturn(entity)
 
         // when
-        val result = sut.getByUsername(UsernameVO("jaeyong"))
+        val result = sut.getByUsername(UsernameVO.from("jaeyong"))
 
         // then
         assertThat(result).isNotNull
-        assertThat(result?.username).isEqualTo(UsernameVO("jaeyong"))
+        assertThat(result?.username).isEqualTo(UsernameVO.from("jaeyong"))
     }
 
     @Test
@@ -82,7 +82,7 @@ class UserPersistenceAdapterTest {
         given(userEntityRepository.findByUsername("unknown")).willReturn(null)
 
         // when
-        val result = sut.getByUsername(UsernameVO("unknown"))
+        val result = sut.getByUsername(UsernameVO.from("unknown"))
 
         // then
         assertThat(result).isNull()

@@ -19,7 +19,7 @@ class JwtAuthFilter(
     ) {
         val token = resolveToken(request)
         if (token != null) {
-            val result = tokenValidationUseCase.validateAndExtract(TokenValidationCommand(token))
+            val result = tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of(token))
             if (result.username != null) {
                 request.setAttribute("username", result.username)
             }

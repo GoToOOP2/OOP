@@ -19,7 +19,7 @@ class HealthEntity(
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime
 ) {
-    fun toDomain(): Health = Health(id, status, createdAt)
+    fun toDomain(): Health = Health.restore(id, status, createdAt)
 
     companion object {
         fun fromDomain(health: Health): HealthEntity =

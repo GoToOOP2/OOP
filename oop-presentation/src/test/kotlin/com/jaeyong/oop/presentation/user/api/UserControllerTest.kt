@@ -51,7 +51,7 @@ class UserControllerTest {
     @DisplayName("1. 정상 회원가입 시 201을 반환한다")
     fun `정상 회원가입 시 201을 반환한다`() {
         // given
-        willDoNothing().given(joinUseCase).join(JoinCommand(username = "jaeyong", password = "password123"))
+        willDoNothing().given(joinUseCase).join(JoinCommand.of(username = "jaeyong", password = "password123"))
         val body = mapOf("username" to "jaeyong", "password" to "password123")
 
         // when & then
@@ -68,7 +68,7 @@ class UserControllerTest {
     @DisplayName("2. 중복 username으로 가입 시 400과 D002를 반환한다")
     fun `중복 username으로 가입 시 400과 D002를 반환한다`() {
         // given
-        willThrow(BaseException(ErrorCode.DUPLICATE)).given(joinUseCase).join(JoinCommand(username = "jaeyong", password = "password123"))
+        willThrow(BaseException(ErrorCode.DUPLICATE)).given(joinUseCase).join(JoinCommand.of(username = "jaeyong", password = "password123"))
         val body = mapOf("username" to "jaeyong", "password" to "password123")
 
         // when & then
@@ -85,7 +85,7 @@ class UserControllerTest {
     @DisplayName("3. 정상 로그인 시 200과 accessToken을 반환한다")
     fun `정상 로그인 시 200과 accessToken을 반환한다`() {
         // given
-        given(loginUseCase.login(LoginCommand(username = "jaeyong", password = "password123"))).willReturn(LoginResult(token = "jwt.token.string"))
+        given(loginUseCase.login(LoginCommand.of(username = "jaeyong", password = "password123"))).willReturn(LoginResult.of("jwt.token.string"))
         val body = mapOf("username" to "jaeyong", "password" to "password123")
 
         // when & then
@@ -103,7 +103,7 @@ class UserControllerTest {
     @DisplayName("4. 잘못된 자격증명으로 로그인 시 400과 A001을 반환한다")
     fun `잘못된 자격증명으로 로그인 시 400과 A001을 반환한다`() {
         // given
-        willThrow(BaseException(ErrorCode.UNAUTHORIZED)).given(loginUseCase).login(LoginCommand(username = "jaeyong", password = "wrongpassword"))
+        willThrow(BaseException(ErrorCode.UNAUTHORIZED)).given(loginUseCase).login(LoginCommand.of(username = "jaeyong", password = "wrongpassword"))
         val body = mapOf("username" to "jaeyong", "password" to "wrongpassword")
 
         // when & then

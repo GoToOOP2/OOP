@@ -28,7 +28,7 @@ class HealthPersistenceAdapterTest {
     fun `save should persist Health entity and return domain object`() {
         // given
         val now = LocalDateTime.now()
-        val health = Health(status = "UP", createdAt = now)
+        val health = Health.restore(null, "UP", now)
         val entity = HealthEntity(id = 1L, status = "UP", createdAt = now)
         given(healthEntityRepository.save(anyNonNull())).willReturn(entity)
 

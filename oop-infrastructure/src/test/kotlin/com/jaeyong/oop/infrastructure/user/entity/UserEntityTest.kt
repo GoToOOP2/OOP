@@ -43,15 +43,15 @@ class UserEntityTest {
 
         // then
         assertThat(domain.id).isEqualTo(1L)
-        assertThat(domain.username).isEqualTo(UsernameVO("jaeyong"))
-        assertThat(domain.password).isEqualTo(EncodedPasswordVO("hashed"))
+        assertThat(domain.username).isEqualTo(UsernameVO.from("jaeyong"))
+        assertThat(domain.password).isEqualTo(EncodedPasswordVO.from("hashed"))
     }
 
     @Test
     @DisplayName("4. fromDomain() 호출 시 엔티티로 정확히 변환된다")
     fun `fromDomain 호출 시 엔티티로 정확히 변환된다`() {
         // given
-        val domain = User(id = 1L, username = UsernameVO("jaeyong"), password = EncodedPasswordVO("hashed"))
+        val domain = User(id = 1L, username = UsernameVO.from("jaeyong"), password = EncodedPasswordVO.from("hashed"))
 
         // when
         val entity = UserEntity.fromDomain(domain)

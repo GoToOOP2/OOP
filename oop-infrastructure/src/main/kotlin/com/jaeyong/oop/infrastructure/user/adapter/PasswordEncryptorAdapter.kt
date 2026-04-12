@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class PasswordEncryptorAdapter : PasswordEncryptorPort {
     private val encoder = BCryptPasswordEncoder()
 
-    override fun encrypt(raw: RawPasswordVO): EncodedPasswordVO = EncodedPasswordVO(encoder.encode(raw.value))
+    override fun encrypt(raw: RawPasswordVO): EncodedPasswordVO = EncodedPasswordVO.from(encoder.encode(raw.value))
 
     override fun matches(raw: RawPasswordVO, encoded: EncodedPasswordVO): Boolean = encoder.matches(raw.value, encoded.value)
 }

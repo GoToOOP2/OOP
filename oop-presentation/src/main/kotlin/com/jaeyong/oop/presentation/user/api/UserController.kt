@@ -24,13 +24,13 @@ class UserController(
 ) {
     @PostMapping("/join")
     fun join(@Valid @RequestBody request: JoinRequest): ResponseEntity<ApiResponse<Nothing>> {
-        joinUseCase.join(JoinCommand(username = request.username, password = request.password))
+        joinUseCase.join(JoinCommand.of(username = request.username, password = request.password))
         return ApiResponse.success(HttpStatus.CREATED)
     }
 
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<ApiResponse<TokenResponse>> {
-        val result = loginUseCase.login(LoginCommand(username = request.username, password = request.password))
-        return ApiResponse.success(TokenResponse(accessToken = result.token), HttpStatus.OK)
+        val result = loginUseCase.login(LoginCommand.of(username = request.username, password = request.password))
+        return ApiResponse.success(TokenResponse.of(accessToken = result.token), HttpStatus.OK)
     }
 }
