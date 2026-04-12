@@ -1,6 +1,6 @@
 package com.jaeyong.oop.boot.config
 
-import com.jaeyong.oop.application.user.auth.TokenValidationUseCase
+import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import com.jaeyong.oop.presentation.filter.JwtAuthFilter
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
