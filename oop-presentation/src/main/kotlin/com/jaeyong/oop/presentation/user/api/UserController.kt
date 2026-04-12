@@ -1,9 +1,12 @@
-package com.jaeyong.oop.presentation.user
+package com.jaeyong.oop.presentation.user.api
 
-import com.jaeyong.oop.application.user.service.JoinCommand
+import com.jaeyong.oop.application.user.common.JoinCommand
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
-import com.jaeyong.oop.application.user.auth.LoginUseCase
+import com.jaeyong.oop.application.user.usecase.LoginUseCase
 import com.jaeyong.oop.presentation.response.ApiResponse
+import com.jaeyong.oop.presentation.user.request.JoinRequest
+import com.jaeyong.oop.presentation.user.request.LoginRequest
+import com.jaeyong.oop.presentation.user.response.TokenResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

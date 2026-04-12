@@ -1,6 +1,6 @@
 package com.jaeyong.oop.presentation.filter
 
-import com.jaeyong.oop.application.user.auth.TokenValidationUseCase
+import com.jaeyong.oop.application.user.usecase.TokenValidationUseCase
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

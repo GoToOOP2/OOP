@@ -1,4 +1,4 @@
-package com.jaeyong.oop.presentation.user
+package com.jaeyong.oop.presentation.user.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 
