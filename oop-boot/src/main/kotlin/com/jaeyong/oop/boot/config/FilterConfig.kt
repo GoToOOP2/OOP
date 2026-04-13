@@ -14,8 +14,8 @@ class FilterConfig(
     @Bean
     fun jwtAuthFilter(): FilterRegistrationBean<JwtAuthFilter> {
         val registration = FilterRegistrationBean(JwtAuthFilter(tokenValidationUseCase))
-        registration.addUrlPatterns("/api/*")
-        registration.order = 1
+        registration.addUrlPatterns("/api/*") // /api/ 하위 요청에만 JWT 검증 적용 (swagger, health 등 제외)
+        registration.order = 1               // 여러 필터가 있을 때 실행 순서 (낮을수록 먼저)
         return registration
     }
 }

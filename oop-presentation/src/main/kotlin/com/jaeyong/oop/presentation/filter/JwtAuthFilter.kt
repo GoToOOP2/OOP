@@ -21,12 +21,15 @@ class JwtAuthFilter(
         if (token != null) {
             val result = tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of(token))
             if (result.username != null) {
+                // 검증된 username을 request에 저장 → CurrentUserArgumentResolver가 꺼내서 컨트롤러 파라미터에 주입
                 request.setAttribute("username", result.username)
             }
         }
+        // 인증 실패해도 filterChain은 계속 진행 (인가는 각 컨트롤러/서비스에서 처리)
         filterChain.doFilter(request, response)
     }
 
+    // Authorization 헤더에서 "Bearer " 접두사를 제거하고 순수 토큰 문자열만 반환
     private fun resolveToken(request: HttpServletRequest): String? {
         val bearer = request.getHeader(HttpHeaders.AUTHORIZATION) ?: return null
         return if (bearer.startsWith("Bearer ")) bearer.substring(7) else null

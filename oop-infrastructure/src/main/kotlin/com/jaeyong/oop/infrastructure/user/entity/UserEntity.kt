@@ -17,9 +17,11 @@ class UserEntity(
     @Column(name = "password", nullable = false)
     val password: String
 ) {
+    // DB 조회 결과를 도메인 객체로 변환. restore()를 사용해 비즈니스 규칙 검증 없이 순수 복원
     fun toDomain(): User = User.restore(id, UsernameVO.from(username), EncodedPasswordVO.from(password))
 
     companion object {
+        // 도메인 객체를 JPA 저장용 Entity로 변환. VO에서 raw value를 꺼내 String으로 저장
         fun fromDomain(user: User): UserEntity = UserEntity(user.id, user.username.value, user.password.value)
     }
 }
