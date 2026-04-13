@@ -8,9 +8,12 @@ import com.jaeyong.oop.presentation.response.ApiResponse
 import com.jaeyong.oop.presentation.user.request.JoinRequest
 import com.jaeyong.oop.presentation.user.request.LoginRequest
 import com.jaeyong.oop.presentation.user.response.TokenResponse
+import com.jaeyong.oop.presentation.auth.CurrentUser
 import jakarta.validation.Valid
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,6 +25,15 @@ class UserController(
     private val joinUseCase: JoinUseCase,
     private val loginUseCase: LoginUseCase
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    // TODO: 테스트용 - 확인 후 삭제
+    @GetMapping("/me")
+    fun me(@CurrentUser username: String?): ResponseEntity<ApiResponse<String>> {
+        log.info("CurrentUser username = {}", username)
+        return ApiResponse.success(username ?: "비로그인", HttpStatus.OK)
+    }
+
     @PostMapping("/join")
     fun join(@Valid @RequestBody request: JoinRequest): ResponseEntity<ApiResponse<Nothing>> {
         joinUseCase.join(JoinCommand.of(username = request.username, password = request.password))
