@@ -1,0 +1,212 @@
+# Authentication — Join & Login
+
+> **Spring Security 미사용** · JWT(JJWT 0.12) · Hexagonal Architecture
+
+---
+
+## 설계 원칙
+
+Spring Security의 필터 체인·`SecurityContextHolder`를 제거하고, 동일한 책임을  
+직접 구현한 컴포넌트로 대체한다.
+
+| Spring Security | 이번 구현 |
+|---|---|
+| `UsernamePasswordAuthenticationFilter` | `LoginService` |
+| `AuthenticationManager` / `UserDetailsService` | `UserRepository.findByUsername` |
+| `BCryptPasswordEncoder` | `BCryptPasswordEncryptor` (spring-security-crypto만 사용) |
+| `SecurityContextHolder` | `request.setAttribute` (Request Scope) |
+| 자동 필터 체인 | `JwtAuthFilter` + `FilterRegistrationBean` |
+
+---
+
+## 컴포넌트 배치
+
+```mermaid
+flowchart LR
+    subgraph presentation
+        UC["UserController"]
+        F["JwtAuthFilter"]
+        AR["CurrentUserArgumentResolver"]
+    end
+
+    subgraph application
+        JU["JoinService"]
+        LU["LoginService"]
+        TV["TokenValidationService"]
+    end
+
+    subgraph domain["domain — Port"]
+        UR["UserRepository"]
+        PE["PasswordEncryptor"]
+        JH["JwtHandler"]
+    end
+
+    subgraph infrastructure["infrastructure — Adapter"]
+        UPA["UserPersistenceAdapter"]
+        BCE["BCryptPasswordEncryptor"]
+        JHI["JwtHandlerImpl"]
+    end
+
+    UC --> LU & JU
+    F  --> TV
+    AR --> UC
+
+    LU --> UR & PE & JH
+    JU --> UR & PE
+    TV --> JH
+
+    UPA -. implements .-> UR
+    BCE -. implements .-> PE
+    JHI -. implements .-> JH
+```
+
+---
+
+## 회원가입 (POST /api/users/join)
+
+```mermaid
+sequenceDiagram
+    actor Client
+    participant C  as UserController
+    participant S  as JoinService
+    participant R  as UserRepository
+    participant E  as PasswordEncryptor
+    participant DB as PostgreSQL
+
+    Client ->>+ C: POST /api/users/join<br/>{username, password}
+    C ->>+ S: join(JoinCommand)
+    S ->>+ R: existsByUsername(username)
+    R -->>- S: true / false
+    alt 중복
+        S -->> C: BaseException(DUPLICATE)
+        C -->> Client: 400 Bad Request<br/>{"code": "D002", "data": null}
+    end
+    S ->>+ E: encrypt(password)
+    E -->>- S: bcrypt hash
+    S ->>+ R: save(User)
+    R ->>+ DB: INSERT users
+    DB -->>- R: saved
+    R -->>- S: User
+    S -->>- C: void
+    C -->>- Client: 201 Created
+```
+
+---
+
+## 로그인 (POST /api/users/login)
+
+```mermaid
+sequenceDiagram
+    actor Client
+    participant C  as UserController
+    participant S  as LoginService
+    participant R  as UserRepository
+    participant E  as PasswordEncryptor
+    participant J  as JwtHandler
+    participant DB as PostgreSQL
+
+    Client ->>+ C: POST /api/users/login<br/>{username, password}
+    C ->>+ S: login(username, password)
+    S ->>+ R: findByUsername(username)
+    R ->>+ DB: SELECT users WHERE username=?
+    DB -->>- R: UserEntity
+    R -->>- S: User?
+    alt 유저 없음
+        S -->> C: BaseException(UNAUTHORIZED)
+        C -->> Client: 401 Unauthorized
+    end
+    S ->>+ E: matches(rawPassword, encodedPassword)
+    E -->>- S: true / false
+    alt 비밀번호 불일치
+        S -->> C: BaseException(UNAUTHORIZED)
+        C -->> Client: 401 Unauthorized
+    end
+    S ->>+ J: generateToken(username)
+    J -->>- S: JWT string
+    S -->>- C: token
+    C -->>- Client: 200 OK<br/>{"accessToken": "eyJ..."}
+```
+
+---
+
+## 인가 — JWT Filter
+
+모든 `/api/*` 요청에 적용. 토큰이 없거나 유효하지 않으면 차단하지 않고 통과시킨다.
+토큰이 유효하면 `request.setAttribute("username", ...)`에 저장되며, `@CurrentUser`로 컨트롤러에서 꺼내 쓴다.
+
+```mermaid
+sequenceDiagram
+    actor Client
+    participant F  as JwtAuthFilter
+    participant TV as TokenValidationService
+    participant J  as JwtHandler
+    participant R  as HttpServletRequest
+    participant H  as Controller
+
+    Client ->>+ F: HTTP Request<br/>Authorization: Bearer {token}
+    F ->> F: resolveToken() Bearer 접두사 제거
+    F ->> TV: validateAndExtract(token)
+    TV ->> J: isValid(token)
+    J -->> TV: true / false
+    alt 유효
+        TV ->> J: extractUsername(token)
+        J -->> TV: username
+        TV -->> F: username
+        F ->> R: setAttribute username
+    else 무효 / 없음
+        TV -->> F: null
+    end
+    F ->>+ H: doFilter 다음 체인
+    H -->>- F: response
+    F -->>- Client: HTTP Response
+```
+
+---
+
+## 도메인 포트 계약
+
+```kotlin
+// 세 포트 모두 oop-domain에 위치 — infrastructure가 단방향으로 구현
+
+interface UserRepository {
+    fun save(user: User): User
+    fun existsByUsername(username: String): Boolean
+    fun findByUsername(username: String): User?
+}
+
+interface PasswordEncryptor {
+    fun encrypt(raw: String): String
+    fun matches(raw: String, encoded: String): Boolean
+}
+
+interface JwtHandler {
+    fun generateToken(username: String): String
+    fun extractUsername(token: String): String
+    fun isValid(token: String): Boolean
+}
+```
+
+---
+
+## API
+
+| Method | Path | Body | 성공 | 실패 |
+|---|---|---|---|---|
+| `POST` | `/api/users/join` | `{username, password}` | `201` | `400` D002 (중복) |
+| `POST` | `/api/users/login` | `{username, password}` | `200 {accessToken}` | `401` 인증 실패 |
+
+**인증이 필요한 엔드포인트** — `Authorization: Bearer <token>` 헤더 첨부.  
+유효한 토큰이면 `@CurrentUser`로 컨트롤러 파라미터에서 username 접근 가능.
+
+---
+
+## JWT 설정
+
+```yaml
+# application.yml
+jwt:
+  secret: <256 bit 이상 랜덤 문자열>
+  expiration: 86400000   # 24h (ms)
+```
+
+알고리즘: **HMAC-SHA256** · 만료: 발급 기준 24시간

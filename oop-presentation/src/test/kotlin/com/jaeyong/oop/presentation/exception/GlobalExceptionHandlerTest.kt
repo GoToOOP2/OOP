@@ -1,9 +1,9 @@
 package com.jaeyong.oop.presentation.exception
 
-import com.jaeyong.oop.application.usecase.HealthCheckUseCase
+import com.jaeyong.oop.application.health.usecase.HealthCheckUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
-import com.jaeyong.oop.presentation.api.HealthController
+import com.jaeyong.oop.presentation.health.api.HealthController
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -32,6 +32,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 class GlobalExceptionHandlerTest {
 
     private lateinit var mockMvc: MockMvc
+    private val sut = GlobalExceptionHandler()
 
     @Mock
     private lateinit var healthCheckUseCase: HealthCheckUseCase
@@ -39,7 +40,7 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     fun setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(HealthController(healthCheckUseCase))
-            .setControllerAdvice(GlobalExceptionHandler())
+            .setControllerAdvice(sut)
             .build()
     }
 

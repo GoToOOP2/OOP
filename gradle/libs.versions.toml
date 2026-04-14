@@ -1,20 +1,29 @@
 [versions]
 kotlin = "1.9.24"
+mockito-kotlin = "5.2.1"
 spring-boot = "3.2.3"
 dependency-management = "1.1.4"
 springdoc = "2.3.0"
+jjwt = "0.12.3"
 
 [libraries]
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-tx = { module = "org.springframework:spring-tx" }
 spring-context = { module = "org.springframework:spring-context" }
 postgresql = { module = "org.postgresql:postgresql" }
+h2 = { module = "com.h2database:h2" }
+spring-security-crypto = { module = "org.springframework.security:spring-security-crypto" }
+spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 [bundles]
 kotlin = ["kotlin-reflect", "kotlin-stdlib", "jackson-kotlin"]
