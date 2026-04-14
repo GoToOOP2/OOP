@@ -7,9 +7,11 @@ data class UpdatePostResult private constructor(
     val id: Long,
     val title: String,
     val content: String,
+    val authorUsername: String,
+    val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun of(post: Post) = UpdatePostResult(post.id!!, post.title.value, post.content.value, post.updatedAt)
+        fun of(post: Post) = UpdatePostResult(post.id!!, post.title.value, post.content.value, post.authorUsername, post.createdAt, post.updatedAt)
     }
 }
