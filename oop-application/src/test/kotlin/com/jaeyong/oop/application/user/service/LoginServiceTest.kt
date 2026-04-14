@@ -10,6 +10,7 @@ import com.jaeyong.oop.domain.user.User
 import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.JwtHandlerPort
 import com.jaeyong.oop.domain.user.port.PasswordEncryptorPort
+import com.jaeyong.oop.domain.user.port.RefreshTokenHandlerPort
 import com.jaeyong.oop.domain.user.port.UserPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -32,6 +33,9 @@ class LoginServiceTest {
 
     @Mock
     private lateinit var jwtHandlerPort: JwtHandlerPort
+
+    @Mock
+    private lateinit var refreshTokenHandlerPort: RefreshTokenHandlerPort
 
     @InjectMocks
     private lateinit var sut: LoginService
@@ -65,18 +69,20 @@ class LoginServiceTest {
     }
 
     @Test
-    @DisplayName("3. 정상 로그인 시 JWT 토큰을 반환한다")
-    fun `정상 로그인 시 JWT 토큰을 반환한다`() {
+    @DisplayName("3. 정상 로그인 시 access token과 refresh token을 반환한다")
+    fun `정상 로그인 시 access token과 refresh token을 반환한다`() {
         // given
         val user = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed_password"))
         given(userPort.getByUsername(UsernameVO.from("jaeyong"))).willReturn(user)
         given(passwordEncryptorPort.matches(RawPasswordVO.from("password123"), EncodedPasswordVO.from("hashed_password"))).willReturn(true)
-        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("jwt.token.string"))
+        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("access.token.string"))
+        given(refreshTokenHandlerPort.generateRefreshToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("refresh.token.string"))
 
         // when
         val result = sut.login(LoginCommand.of(username = "jaeyong", password = "password123"))
 
         // then
-        assertThat(result.token).isEqualTo("jwt.token.string")
+        assertThat(result.token).isEqualTo("access.token.string")
+        assertThat(result.refreshToken).isEqualTo("refresh.token.string")
     }
 }

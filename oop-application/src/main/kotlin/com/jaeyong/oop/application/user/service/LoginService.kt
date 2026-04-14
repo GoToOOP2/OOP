@@ -8,6 +8,7 @@ import com.jaeyong.oop.domain.user.vo.RawPasswordVO
 import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.JwtHandlerPort
 import com.jaeyong.oop.domain.user.port.PasswordEncryptorPort
+import com.jaeyong.oop.domain.user.port.RefreshTokenHandlerPort
 import com.jaeyong.oop.domain.user.port.UserPort
 import org.springframework.stereotype.Service
 
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Service
 class LoginService(
     private val userPort: UserPort,
     private val passwordEncryptorPort: PasswordEncryptorPort,
-    private val jwtHandlerPort: JwtHandlerPort
+    private val jwtHandlerPort: JwtHandlerPort,
+    private val refreshTokenHandlerPort: RefreshTokenHandlerPort
 ) : LoginUseCase {
 
     override fun login(command: LoginCommand): LoginResult {
@@ -26,6 +28,7 @@ class LoginService(
             passwordEncryptor = passwordEncryptorPort
         )
         val token = jwtHandlerPort.generateToken(user.username)
-        return LoginResult.of(token.value)
+        val refreshToken = refreshTokenHandlerPort.generateRefreshToken(user.username)
+        return LoginResult.of(token.value, refreshToken.value)
     }
 }
