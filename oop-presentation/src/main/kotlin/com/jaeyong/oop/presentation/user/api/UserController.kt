@@ -2,11 +2,14 @@ package com.jaeyong.oop.presentation.user.api
 
 import com.jaeyong.oop.application.user.common.JoinCommand
 import com.jaeyong.oop.application.user.common.LoginCommand
+import com.jaeyong.oop.application.user.common.RefreshCommand
 import com.jaeyong.oop.application.user.usecase.JoinUseCase
 import com.jaeyong.oop.application.user.usecase.LoginUseCase
+import com.jaeyong.oop.application.user.usecase.RefreshUseCase
 import com.jaeyong.oop.presentation.response.ApiResponse
 import com.jaeyong.oop.presentation.user.request.JoinRequest
 import com.jaeyong.oop.presentation.user.request.LoginRequest
+import com.jaeyong.oop.presentation.user.request.RefreshRequest
 import com.jaeyong.oop.presentation.user.response.TokenResponse
 import com.jaeyong.oop.presentation.auth.CurrentUser
 import jakarta.validation.Valid
@@ -23,7 +26,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/users")
 class UserController(
     private val joinUseCase: JoinUseCase,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val refreshUseCase: RefreshUseCase
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -43,6 +47,12 @@ class UserController(
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<ApiResponse<TokenResponse>> {
         val result = loginUseCase.login(LoginCommand.of(username = request.username, password = request.password))
-        return ApiResponse.success(TokenResponse.of(accessToken = result.token), HttpStatus.OK)
+        return ApiResponse.success(TokenResponse.of(accessToken = result.token, refreshToken = result.refreshToken), HttpStatus.OK)
+    }
+
+    @PostMapping("/refresh")
+    fun refresh(@RequestBody request: RefreshRequest): ResponseEntity<ApiResponse<TokenResponse>> {
+        val result = refreshUseCase.refresh(RefreshCommand.of(request.refreshToken))
+        return ApiResponse.success(TokenResponse.of(accessToken = result.accessToken, refreshToken = result.refreshToken), HttpStatus.OK)
     }
 }

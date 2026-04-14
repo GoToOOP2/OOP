@@ -35,6 +35,7 @@ class CurrentUserArgumentResolver : HandlerMethodArgumentResolver {
         
         // [중요] JwtAuthFilter에서 request.setAttribute("username", ...)로 넣어둔 값을 꺼냅니다.
         // 이 리턴값이 컨트롤러의 파라미터(String) 자리에 자동으로 주입됩니다.
+        // 유저네임으로 꺼내서 파라미터에 주입
         return request?.getAttribute("username") as? String
     }
 }
