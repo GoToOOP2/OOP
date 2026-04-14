@@ -9,4 +9,5 @@ server:
 
 jwt:
   secret: oop-project-jwt-secret-key-must-be-at-least-256-bits-long-here
-  expiration: 86400000 # 24시간 (ms)
+  expiration: 1800000 # 30분 (ms)
+  refresh-expiration: 604800000 # 7일 (ms)
