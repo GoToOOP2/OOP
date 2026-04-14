@@ -6,16 +6,25 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+/**
+ * 서블릿 필터 등록 설정.
+ */
 @Configuration
 class FilterConfig(
     private val tokenValidationUseCase: TokenValidationUseCase
 ) {
 
+    /**
+     * [JwtAuthFilter]를 `/api/` 하위 경로에 등록한다.
+     *
+     * swagger, actuator 등 `/api/` 외 경로는 JWT 검증 대상에서 제외된다.
+     * order = 1 로 설정해 다른 필터보다 먼저 실행되도록 한다.
+     */
     @Bean
     fun jwtAuthFilter(): FilterRegistrationBean<JwtAuthFilter> {
         val registration = FilterRegistrationBean(JwtAuthFilter(tokenValidationUseCase))
-        registration.addUrlPatterns("/api/*") // /api/ 하위 요청에만 JWT 검증 적용 (swagger, health 등 제외)
-        registration.order = 1               // 여러 필터가 있을 때 실행 순서 (낮을수록 먼저)
+        registration.addUrlPatterns("/api/*")
+        registration.order = 1
         return registration
     }
 }
