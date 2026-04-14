@@ -7,6 +7,9 @@ import com.jaeyong.oop.infrastructure.user.entity.UserEntity
 import com.jaeyong.oop.infrastructure.user.repository.UserEntityRepository
 import org.springframework.stereotype.Repository
 
+/**
+ * [UserPort] Outbound Adapter — JPA를 통해 User를 저장하고 조회한다.
+ */
 @Repository
 class UserPersistenceAdapter(
     private val userEntityRepository: UserEntityRepository
