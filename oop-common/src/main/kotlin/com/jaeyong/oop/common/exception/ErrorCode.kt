@@ -20,6 +20,8 @@ enum class ErrorCode(
     BUSINESS_RULE_VIOLATION("D003"),
     /** D004 — 유효하지 않은 상태 */
     INVALID_STATE("D004"),
+    /** D005 — 게시글 접근 권한 없음 (본인 게시글 아님) */
+    POST_ACCESS_DENIED("D005"),
 
     /** A001 — 인증 실패 (자격증명 불일치, 토큰 무효) */
     UNAUTHORIZED("A001"),
