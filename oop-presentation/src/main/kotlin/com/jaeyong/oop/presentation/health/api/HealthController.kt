@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 class HealthController(
     private val healthCheckUseCase: HealthCheckUseCase
 ) {
+    /**
+     * 서버 상태를 확인한다.
+     *
+     * @return 200 OK, body: 현재 서버 상태 문자열 (예: "OK")
+     */
     @GetMapping
     fun healthCheck(): ResponseEntity<ApiResponse<String>> {
         val result = healthCheckUseCase.checkHealth()

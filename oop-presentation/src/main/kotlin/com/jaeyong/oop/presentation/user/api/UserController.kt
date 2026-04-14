@@ -38,18 +38,36 @@ class UserController(
         return ApiResponse.success(username ?: "비로그인", HttpStatus.OK)
     }
 
+    /**
+     * 회원가입 — username, password를 받아 사용자를 등록한다.
+     *
+     * @param request username, password
+     * @return 201 Created
+     */
     @PostMapping("/join")
     fun join(@Valid @RequestBody request: JoinRequest): ResponseEntity<ApiResponse<Nothing>> {
         joinUseCase.join(JoinCommand.of(username = request.username, password = request.password))
         return ApiResponse.success(HttpStatus.CREATED)
     }
 
+    /**
+     * 로그인 — 인증 성공 시 access token과 refresh token을 반환한다.
+     *
+     * @param request username, password
+     * @return 200 OK, body: accessToken, refreshToken
+     */
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<ApiResponse<TokenResponse>> {
         val result = loginUseCase.login(LoginCommand.of(username = request.username, password = request.password))
         return ApiResponse.success(TokenResponse.of(accessToken = result.token, refreshToken = result.refreshToken), HttpStatus.OK)
     }
 
+    /**
+     * 토큰 갱신 — refresh token을 검증하고 access/refresh token을 재발급한다 (Rotate).
+     *
+     * @param request refresh token
+     * @return 200 OK, body: 새 accessToken, 새 refreshToken
+     */
     @PostMapping("/refresh")
     fun refresh(@RequestBody request: RefreshRequest): ResponseEntity<ApiResponse<TokenResponse>> {
         val result = refreshUseCase.refresh(RefreshCommand.of(request.refreshToken))

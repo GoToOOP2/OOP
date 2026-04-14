@@ -17,8 +17,13 @@ data class ApiResponse<T>(
 
         private const val SUCCESS_CODE = "SUCCESS"
 
-        // ── 성공 응답 ──
-
+        /**
+         * 데이터가 있는 성공 응답을 생성한다.
+         *
+         * @param data 응답 본문에 포함할 데이터
+         * @param status HTTP 상태 코드 (기본값 200 OK)
+         * @return code = "SUCCESS", data = [data]
+         */
         fun <T> success(
             data: T,
             status: HttpStatus = HttpStatus.OK
@@ -26,14 +31,25 @@ data class ApiResponse<T>(
             ResponseEntity.status(status)
                 .body(ApiResponse(SUCCESS_CODE, data))
 
+        /**
+         * 데이터가 없는 성공 응답을 생성한다.
+         *
+         * @param status HTTP 상태 코드 (기본값 200 OK)
+         * @return code = "SUCCESS", data = null
+         */
         fun success(
             status: HttpStatus = HttpStatus.OK
         ): ResponseEntity<ApiResponse<Nothing>> =
             ResponseEntity.status(status)
                 .body(ApiResponse(SUCCESS_CODE, null))
 
-        // ── 실패 응답 ──
-
+        /**
+         * 실패 응답을 생성한다.
+         *
+         * @param status HTTP 상태 코드
+         * @param code 에러 코드 문자열 (예: "A001", "D002")
+         * @return code = [code], data = null
+         */
         fun fail(
             status: HttpStatus, code: String
         ): ResponseEntity<ApiResponse<Nothing>> =
