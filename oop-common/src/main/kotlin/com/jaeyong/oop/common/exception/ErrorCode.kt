@@ -22,6 +22,14 @@ enum class ErrorCode(
     INVALID_STATE("D004"),
     /** D005 — 게시글 접근 권한 없음 (본인 게시글 아님) */
     POST_ACCESS_DENIED("D005"),
+    /** D006 — 게시글 제목이 공백 */
+    POST_TITLE_BLANK("D006"),
+    /** D007 — 게시글 제목이 최대 길이(100자) 초과 */
+    POST_TITLE_TOO_LONG("D007"),
+    /** D008 — 게시글 내용이 공백 */
+    POST_CONTENT_BLANK("D008"),
+    /** D009 — 게시글 내용이 최대 길이(5000자) 초과 */
+    POST_CONTENT_TOO_LONG("D009"),
 
     /** A001 — 인증 실패 (자격증명 불일치, 토큰 무효) */
     UNAUTHORIZED("A001"),

@@ -1,11 +1,15 @@
 package com.jaeyong.oop.domain.post
 
+import com.jaeyong.oop.common.exception.BaseException
+import com.jaeyong.oop.common.exception.ErrorCode
+
+/** 게시글 제목 VO, of()를 통해서만 생성 가능 */
 data class PostTitle private constructor(val value: String) {
     companion object {
         private const val MAX_LENGTH = 100
         fun of(value: String): PostTitle {
-            require(value.isNotBlank()) { "제목은 공백일 수 없습니다" }
-            require(value.length <= MAX_LENGTH) { "제목은 ${MAX_LENGTH}자 이하여야 합니다" }
+            if (value.isBlank()) throw BaseException(ErrorCode.POST_TITLE_BLANK)
+            if (value.length > MAX_LENGTH) throw BaseException(ErrorCode.POST_TITLE_TOO_LONG)
             return PostTitle(value)
         }
     }
