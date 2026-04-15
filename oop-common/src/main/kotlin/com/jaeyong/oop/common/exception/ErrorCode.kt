@@ -23,6 +23,8 @@ enum class ErrorCode(
 
     /** A001 — 인증 실패 (자격증명 불일치, 토큰 무효) */
     UNAUTHORIZED("A001"),
+    /** A003 — 권한 없음 (인가 실패) */
+    ACCESS_DENIED("A003"),
     /** A002 — 외부 서비스 호출 실패 */
     EXTERNAL_SERVICE_FAIL("A002"),
 
