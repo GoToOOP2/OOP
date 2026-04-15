@@ -8,6 +8,7 @@ import com.jaeyong.oop.domain.post.port.PostPort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/** 존재 여부 확인 후 작성자 검증, 삭제 */
 @Service
 class DeletePostService(private val postPort: PostPort) : DeletePostUseCase {
 

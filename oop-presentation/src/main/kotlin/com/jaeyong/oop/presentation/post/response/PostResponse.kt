@@ -5,6 +5,7 @@ import com.jaeyong.oop.application.post.result.GetPostResult
 import com.jaeyong.oop.application.post.result.UpdatePostResult
 import java.time.LocalDateTime
 
+/** 게시글 단건 응답, 생성/조회/수정 Result를 공통 응답으로 변환 */
 data class PostResponse(
     val id: Long,
     val title: String,

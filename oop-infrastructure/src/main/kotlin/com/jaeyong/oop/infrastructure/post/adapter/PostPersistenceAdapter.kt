@@ -7,6 +7,7 @@ import com.jaeyong.oop.infrastructure.post.repository.PostEntityRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 
+/** PostPort 구현체, PostEntityRepository 통해 JPA와 통신 */
 @Repository
 class PostPersistenceAdapter(
     private val postEntityRepository: PostEntityRepository
@@ -16,10 +17,10 @@ class PostPersistenceAdapter(
         postEntityRepository.save(PostEntity.fromDomain(post)).toDomain()
 
     override fun findById(id: Long): Post? =
-        postEntityRepository.findPostById(id)?.toDomain()
+        postEntityRepository.findPostEntityById(id)?.toDomain()
 
     override fun findAll(page: Int, size: Int): List<Post> =
-        postEntityRepository.findAllPaged(PageRequest.of(page, size)).map { it.toDomain() }
+        postEntityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size)).map { it.toDomain() }
 
     override fun countAll(): Long =
         postEntityRepository.count()

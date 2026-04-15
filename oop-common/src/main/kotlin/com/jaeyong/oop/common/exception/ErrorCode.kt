@@ -35,6 +35,8 @@ enum class ErrorCode(
     UNAUTHORIZED("A001"),
     /** A002 — 외부 서비스 호출 실패 */
     EXTERNAL_SERVICE_FAIL("A002"),
+    /** A003 — 저장 후 ID 반환 실패 */
+    SAVE_ID_NOT_RETURNED("A003"),
 
     /** C001 — `@Valid` 검증 실패 */
     VALIDATION_ERROR("C001"),

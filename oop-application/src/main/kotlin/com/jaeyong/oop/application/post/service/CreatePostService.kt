@@ -10,6 +10,7 @@ import com.jaeyong.oop.domain.post.port.PostPort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/** VO 생성으로 도메인 검증 후 저장 */
 @Service
 class CreatePostService(private val postPort: PostPort) : CreatePostUseCase {
 

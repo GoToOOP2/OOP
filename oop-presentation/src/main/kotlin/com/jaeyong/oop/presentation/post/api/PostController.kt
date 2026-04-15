@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+/** 게시글 CRUD API */
 @RestController
 @RequestMapping("/posts")
 class PostController(

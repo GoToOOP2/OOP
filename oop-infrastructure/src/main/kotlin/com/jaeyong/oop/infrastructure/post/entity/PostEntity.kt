@@ -6,6 +6,7 @@ import com.jaeyong.oop.domain.post.PostTitle
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
+/** 게시글 JPA 엔티티, toDomain/fromDomain으로 도메인 객체와 변환 */
 @Entity
 @Table(name = "posts")
 class PostEntity(
@@ -15,10 +16,10 @@ class PostEntity(
     @Column(name = "title", nullable = false)
     val title: String,
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content", nullable = false)
     val content: String,
 
-    @Column(name = "author_username", nullable = false, length = 50)
+    @Column(name = "author_username", nullable = false)
     val authorUsername: String,
 
     @Column(name = "created_at", nullable = false)

@@ -7,6 +7,7 @@ import com.jaeyong.oop.domain.post.port.PostPort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/** 페이지네이션 목록 조회, 전체 수 별도 조회 */
 @Service
 class GetPostListService(private val postPort: PostPort) : GetPostListUseCase {
 

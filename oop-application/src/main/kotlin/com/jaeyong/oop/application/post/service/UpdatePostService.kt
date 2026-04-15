@@ -11,6 +11,7 @@ import com.jaeyong.oop.domain.post.port.PostPort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/** 존재 여부 확인 후 도메인에서 작성자 검증, 수정 저장 */
 @Service
 class UpdatePostService(private val postPort: PostPort) : UpdatePostUseCase {
 
