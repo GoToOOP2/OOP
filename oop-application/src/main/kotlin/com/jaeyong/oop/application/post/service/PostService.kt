@@ -2,6 +2,7 @@ package com.jaeyong.oop.application.post.service
 
 import com.jaeyong.oop.application.post.common.CreatePostCommand
 import com.jaeyong.oop.application.post.common.DeletePostCommand
+import com.jaeyong.oop.application.post.common.GetPostCommand
 import com.jaeyong.oop.application.post.common.UpdatePostCommand
 import com.jaeyong.oop.application.post.result.CreatePostResult
 import com.jaeyong.oop.application.post.result.GetPostListResult
@@ -53,12 +54,12 @@ class PostService(
     /**
      * ID로 게시글을 단건 조회한다.
      *
-     * @param id 조회할 게시글 ID
+     * @param command 조회할 게시글 ID를 담은 커맨드
      * @return 게시글 상세 정보와 작성자명을 담은 결과
      * @throws BaseException 게시글 또는 작성자가 존재하지 않으면 [ErrorCode.NOT_FOUND]
      */
-    override fun getById(id: Long): GetPostResult {
-        val post = postPort.findByIdAndDeletedFalse(id)
+    override fun getById(command: GetPostCommand): GetPostResult {
+        val post = postPort.findByIdAndDeletedFalse(command.postId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
         val author = userQueryPort.findById(post.authorId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)

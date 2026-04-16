@@ -2,6 +2,7 @@ package com.jaeyong.oop.presentation.post.api
 
 import com.jaeyong.oop.application.post.common.CreatePostCommand
 import com.jaeyong.oop.application.post.common.DeletePostCommand
+import com.jaeyong.oop.application.post.common.GetPostCommand
 import com.jaeyong.oop.application.post.common.UpdatePostCommand
 import com.jaeyong.oop.application.post.usecase.CreatePostUseCase
 import com.jaeyong.oop.application.post.usecase.DeletePostUseCase
@@ -78,7 +79,7 @@ class PostController(
      */
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<ApiResponse<PostDetailResponse>> {
-        val result = getPostUseCase.getById(id)
+        val result = getPostUseCase.getById(GetPostCommand.of(id))
         val response = PostDetailResponse.of(
             id = result.id, title = result.title, content = result.content,
             authorId = result.authorId, authorName = result.authorName,
