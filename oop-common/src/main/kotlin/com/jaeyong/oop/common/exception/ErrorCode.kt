@@ -20,11 +20,23 @@ enum class ErrorCode(
     BUSINESS_RULE_VIOLATION("D003"),
     /** D004 — 유효하지 않은 상태 */
     INVALID_STATE("D004"),
+    /** D005 — 게시글 접근 권한 없음 (본인 게시글 아님) */
+    POST_ACCESS_DENIED("D005"),
+    /** D006 — 게시글 제목이 공백 */
+    POST_TITLE_BLANK("D006"),
+    /** D007 — 게시글 제목이 최대 길이(100자) 초과 */
+    POST_TITLE_TOO_LONG("D007"),
+    /** D008 — 게시글 내용이 공백 */
+    POST_CONTENT_BLANK("D008"),
+    /** D009 — 게시글 내용이 최대 길이(5000자) 초과 */
+    POST_CONTENT_TOO_LONG("D009"),
 
     /** A001 — 인증 실패 (자격증명 불일치, 토큰 무효) */
     UNAUTHORIZED("A001"),
     /** A002 — 외부 서비스 호출 실패 */
     EXTERNAL_SERVICE_FAIL("A002"),
+    /** A003 — 저장 후 ID 반환 실패 */
+    SAVE_ID_NOT_RETURNED("A003"),
 
     /** C001 — `@Valid` 검증 실패 */
     VALIDATION_ERROR("C001"),

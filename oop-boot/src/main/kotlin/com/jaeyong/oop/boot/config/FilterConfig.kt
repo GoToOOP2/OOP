@@ -23,7 +23,7 @@ class FilterConfig(
     @Bean
     fun jwtAuthFilter(): FilterRegistrationBean<JwtAuthFilter> {
         val registration = FilterRegistrationBean(JwtAuthFilter(tokenValidationUseCase))
-        registration.addUrlPatterns("/api/*")
+        registration.addUrlPatterns("/api/*", "/posts/*", "/posts")
         registration.order = 1
         return registration
     }
