@@ -20,12 +20,6 @@ data class PostListResponse private constructor(
     val createdAt: LocalDateTime
 ) {
     companion object {
-        fun of(
-            id: Long, title: String,
-            authorId: Long, authorName: String,
-            createdAt: LocalDateTime
-        ): PostListResponse = PostListResponse(id, title, authorId, authorName, createdAt)
-
         /**
          * Application 결과를 응답 DTO로 변환한다.
          */

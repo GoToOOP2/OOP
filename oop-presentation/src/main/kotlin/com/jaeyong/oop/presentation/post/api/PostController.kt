@@ -56,7 +56,7 @@ class PostController(
     ): ResponseEntity<ApiResponse<CreatePostResponse>> {
         val authenticatedUserId = userId ?: throw BaseException(ErrorCode.UNAUTHORIZED)
         val result = createPostUseCase.create(request.toCommand(authenticatedUserId))
-        return ApiResponse.success(CreatePostResponse.of(result.postId), HttpStatus.CREATED)
+        return ApiResponse.success(CreatePostResponse.from(result), HttpStatus.CREATED)
     }
 
     /**

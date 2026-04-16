@@ -25,12 +25,6 @@ data class PostDetailResponse private constructor(
     val updatedAt: LocalDateTime
 ) {
     companion object {
-        fun of(
-            id: Long, title: String, content: String,
-            authorId: Long, authorName: String,
-            createdAt: LocalDateTime, updatedAt: LocalDateTime
-        ): PostDetailResponse = PostDetailResponse(id, title, content, authorId, authorName, createdAt, updatedAt)
-
         /**
          * 단건 조회 결과를 응답 DTO로 변환한다.
          */
