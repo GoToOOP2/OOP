@@ -29,13 +29,14 @@ class GetPostService(
 
     override fun getAll(): List<GetPostListResult> {
         val posts = postPort.findAllByDeletedFalse()
+        val authorIds = posts.map { it.authorId }.distinct()
+        val authorMap = userQueryPort.findByIds(authorIds)
         return posts.map { post ->
-            val author = userQueryPort.findById(post.authorId)
             GetPostListResult.of(
                 id = post.id!!,
                 title = post.title.value,
                 authorId = post.authorId,
-                authorName = author?.username?.value ?: "알 수 없음",
+                authorName = authorMap[post.authorId]?.username?.value ?: "알 수 없음",
                 createdAt = post.createdAt
             )
         }
