@@ -7,6 +7,7 @@ import com.jaeyong.oop.application.post.command.GetPostListCommand
 import com.jaeyong.oop.application.post.command.UpdatePostCommand
 import com.jaeyong.oop.application.post.usecase.PostUseCase
 import com.jaeyong.oop.presentation.auth.CurrentUser
+import io.swagger.v3.oas.annotations.Parameter
 import com.jaeyong.oop.presentation.post.request.CreatePostRequest
 import com.jaeyong.oop.presentation.post.request.UpdatePostRequest
 import com.jaeyong.oop.presentation.post.response.PostListResponse
@@ -27,7 +28,7 @@ class PostController(
     @PostMapping
     fun create(
         @Valid @RequestBody request: CreatePostRequest,
-        @CurrentUser username: String
+        @Parameter(hidden = true) @CurrentUser username: String
     ): ResponseEntity<ApiResponse<PostResponse>> {
         val result = postUseCase.create(CreatePostCommand.of(request.title, request.content, username))
         return ApiResponse.success(PostResponse.of(result), HttpStatus.CREATED)
@@ -52,7 +53,7 @@ class PostController(
     fun update(
         @PathVariable id: Long,
         @Valid @RequestBody request: UpdatePostRequest,
-        @CurrentUser username: String
+        @Parameter(hidden = true) @CurrentUser username: String
     ): ResponseEntity<ApiResponse<PostResponse>> {
         val result = postUseCase.update(UpdatePostCommand.of(id, request.title, request.content, username))
         return ApiResponse.success(PostResponse.of(result), HttpStatus.OK)
@@ -61,7 +62,7 @@ class PostController(
     @DeleteMapping("/{id}")
     fun delete(
         @PathVariable id: Long,
-        @CurrentUser username: String
+        @Parameter(hidden = true) @CurrentUser username: String
     ): ResponseEntity<ApiResponse<Nothing>> {
         postUseCase.delete(DeletePostCommand.of(id, username))
         return ApiResponse.success(HttpStatus.NO_CONTENT)
