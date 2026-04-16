@@ -128,7 +128,7 @@ classDiagram
 sequenceDiagram
     actor Client
     participant C as PostController
-    participant S as CreatePostService
+    participant S as PostService
     participant PP as PostPort
     participant DB as PostgreSQL
 
@@ -152,13 +152,13 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C as PostController
-    participant S as GetPostService
+    participant S as PostService
     participant PP as PostPort
     participant UQP as UserQueryPort
     participant DB as PostgreSQL
 
     Client ->>+ C: GET /api/posts/{id}
-    C ->>+ S: getById(id)
+    C ->>+ S: getById(GetPostCommand)
     S ->>+ PP: findByIdAndDeletedFalse(id)
     PP ->>+ DB: SELECT posts WHERE id=? AND deleted=false
     DB -->>- PP: PostJpaEntity
@@ -181,7 +181,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C as PostController
-    participant S as GetPostService
+    participant S as PostService
     participant PP as PostPort
     participant UQP as UserQueryPort
     participant DB as PostgreSQL
@@ -209,7 +209,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C as PostController
-    participant S as UpdatePostService
+    participant S as PostService
     participant PP as PostPort
     participant UQP as UserQueryPort
     participant DB as PostgreSQL
@@ -248,7 +248,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C as PostController
-    participant S as DeletePostService
+    participant S as PostService
     participant PP as PostPort
     participant DB as PostgreSQL
 
