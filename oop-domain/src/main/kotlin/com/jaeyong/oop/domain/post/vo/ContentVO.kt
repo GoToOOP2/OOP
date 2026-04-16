@@ -1,5 +1,8 @@
 package com.jaeyong.oop.domain.post.vo
 
+import com.jaeyong.oop.common.exception.BaseException
+import com.jaeyong.oop.common.exception.ErrorCode
+
 /**
  * 게시글 내용 Value Object.
  *
@@ -7,7 +10,7 @@ package com.jaeyong.oop.domain.post.vo
  */
 data class ContentVO private constructor(val value: String) {
     init {
-        require(value.isNotBlank()) { "내용은 비어있을 수 없습니다" }
+        if (value.isBlank()) throw BaseException(ErrorCode.CONTENT_BLANK)
     }
 
     companion object {

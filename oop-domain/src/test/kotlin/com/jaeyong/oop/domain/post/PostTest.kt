@@ -154,24 +154,27 @@ class PostTest {
     inner class VoValidation {
 
         @Test
-        @DisplayName("5-1. 빈 제목으로 TitleVO 생성 시 예외가 발생한다")
-        fun `빈 제목으로 TitleVO 생성 시 예외가 발생한다`() {
+        @DisplayName("5-1. 빈 제목으로 TitleVO 생성 시 TITLE_BLANK 예외가 발생한다")
+        fun `빈 제목으로 TitleVO 생성 시 TITLE_BLANK 예외가 발생한다`() {
             assertThatThrownBy { TitleVO.from("   ") }
-                .isInstanceOf(IllegalArgumentException::class.java)
+                .isInstanceOf(BaseException::class.java)
+                .extracting("errorCode").isEqualTo(ErrorCode.TITLE_BLANK)
         }
 
         @Test
-        @DisplayName("5-2. 255자 초과 제목으로 TitleVO 생성 시 예외가 발생한다")
-        fun `255자 초과 제목으로 TitleVO 생성 시 예외가 발생한다`() {
+        @DisplayName("5-2. 255자 초과 제목으로 TitleVO 생성 시 TITLE_TOO_LONG 예외가 발생한다")
+        fun `255자 초과 제목으로 TitleVO 생성 시 TITLE_TOO_LONG 예외가 발생한다`() {
             assertThatThrownBy { TitleVO.from("a".repeat(256)) }
-                .isInstanceOf(IllegalArgumentException::class.java)
+                .isInstanceOf(BaseException::class.java)
+                .extracting("errorCode").isEqualTo(ErrorCode.TITLE_TOO_LONG)
         }
 
         @Test
-        @DisplayName("5-3. 빈 내용으로 ContentVO 생성 시 예외가 발생한다")
-        fun `빈 내용으로 ContentVO 생성 시 예외가 발생한다`() {
+        @DisplayName("5-3. 빈 내용으로 ContentVO 생성 시 CONTENT_BLANK 예외가 발생한다")
+        fun `빈 내용으로 ContentVO 생성 시 CONTENT_BLANK 예외가 발생한다`() {
             assertThatThrownBy { ContentVO.from("   ") }
-                .isInstanceOf(IllegalArgumentException::class.java)
+                .isInstanceOf(BaseException::class.java)
+                .extracting("errorCode").isEqualTo(ErrorCode.CONTENT_BLANK)
         }
     }
 }

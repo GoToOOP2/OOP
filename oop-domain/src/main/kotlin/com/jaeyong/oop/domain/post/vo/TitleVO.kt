@@ -1,5 +1,8 @@
 package com.jaeyong.oop.domain.post.vo
 
+import com.jaeyong.oop.common.exception.BaseException
+import com.jaeyong.oop.common.exception.ErrorCode
+
 /**
  * 게시글 제목 Value Object.
  *
@@ -7,11 +10,13 @@ package com.jaeyong.oop.domain.post.vo
  */
 data class TitleVO private constructor(val value: String) {
     init {
-        require(value.isNotBlank()) { "제목은 비어있을 수 없습니다" }
-        require(value.length <= 255) { "제목은 255자 이하여야 합니다" }
+        if (value.isBlank()) throw BaseException(ErrorCode.TITLE_BLANK)
+        if (value.length > MAX_LENGTH) throw BaseException(ErrorCode.TITLE_TOO_LONG)
     }
 
     companion object {
+        private const val MAX_LENGTH = 255
+
         fun from(value: String): TitleVO = TitleVO(value)
     }
 }
