@@ -75,8 +75,8 @@ class LoginServiceTest {
         val user = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed_password"))
         given(userPort.getByUsername(UsernameVO.from("jaeyong"))).willReturn(user)
         given(passwordEncryptorPort.matches(RawPasswordVO.from("password123"), EncodedPasswordVO.from("hashed_password"))).willReturn(true)
-        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("access.token.string"))
-        given(refreshTokenHandlerPort.generateRefreshToken(UsernameVO.from("jaeyong"))).willReturn(TokenVO.from("refresh.token.string"))
+        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"), 1L)).willReturn(TokenVO.from("access.token.string"))
+        given(refreshTokenHandlerPort.generateRefreshToken(UsernameVO.from("jaeyong"), 1L)).willReturn(TokenVO.from("refresh.token.string"))
 
         // when
         val result = sut.login(LoginCommand.of(username = "jaeyong", password = "password123"))
