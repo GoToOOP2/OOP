@@ -48,3 +48,19 @@
 
 ---
 
+## Infrastructure
+
+### PostEntityTest
+
+> 팩토리 메서드(`entity()`, `post()`)로 기본값 제공 — 테스트마다 필요한 필드만 오버라이드
+
+| 테스트 | 검증 |
+|---|---|
+| `toDomain()` — 전체 필드 매핑 | PostEntity → Post 모든 필드 일치 |
+| `toDomain()` — updatedAt null | null 필드 정상 변환 |
+| `fromDomain()` — 전체 필드 매핑 | Post → PostEntity 모든 필드 일치 |
+| `fromDomain()` — id null | 저장 전 상태(id=null) 정상 변환 |
+| 왕복 변환 (`fromDomain → toDomain`) | 변환 후 모든 필드 동일 |
+
+---
+
