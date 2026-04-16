@@ -31,7 +31,7 @@ class UpdatePostService(
         val author = userQueryPort.findById(saved.authorId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
         return UpdatePostResult.of(
-            id = saved.id!!,
+            id = requireNotNull(saved.id) { "Post ID must not be null after save" },
             title = saved.title.value,
             content = saved.content.value,
             authorId = saved.authorId,

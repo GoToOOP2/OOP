@@ -32,7 +32,7 @@ class PostJpaEntity(
 ) {
 
     fun toDomain(): Post = Post.restore(
-        id = id!!,
+        id = requireNotNull(id) { "Post entity ID must not be null" },
         title = TitleVO.from(title),
         content = ContentVO.from(content),
         authorId = authorId,

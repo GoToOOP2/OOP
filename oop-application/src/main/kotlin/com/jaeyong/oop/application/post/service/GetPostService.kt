@@ -33,7 +33,7 @@ class GetPostService(
         val authorMap = userQueryPort.findByIds(authorIds)
         return posts.map { post ->
             GetPostListResult.of(
-                id = post.id!!,
+                id = requireNotNull(post.id) { "Post ID must not be null" },
                 title = post.title.value,
                 authorId = post.authorId,
                 authorName = authorMap[post.authorId]?.username?.value ?: "알 수 없음",
@@ -44,7 +44,7 @@ class GetPostService(
 
     private fun toGetPostResult(post: Post, author: User): GetPostResult =
         GetPostResult.of(
-            id = post.id!!,
+            id = requireNotNull(post.id) { "Post ID must not be null" },
             title = post.title.value,
             content = post.content.value,
             authorId = post.authorId,

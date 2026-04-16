@@ -23,6 +23,6 @@ class CreatePostService(
             authorId = command.authorId
         )
         val saved = postPort.save(post)
-        return CreatePostResult.of(saved.id!!)
+        return CreatePostResult.of(requireNotNull(saved.id) { "Post ID must not be null after save" })
     }
 }
