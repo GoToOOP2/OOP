@@ -48,7 +48,7 @@ class PostService(
             authorId = command.authorId
         )
         val saved = postPort.save(post)
-        return CreatePostResult.of(requireNotNull(saved.id) { "Post ID must not be null after save" })
+        return CreatePostResult.from(saved)
     }
 
     /**
@@ -63,15 +63,7 @@ class PostService(
             ?: throw BaseException(ErrorCode.NOT_FOUND)
         val author = userQueryPort.findById(post.authorId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
-        return GetPostResult.of(
-            id = requireNotNull(post.id) { "Post ID must not be null" },
-            title = post.title.value,
-            content = post.content.value,
-            authorId = post.authorId,
-            authorName = author.username.value,
-            createdAt = post.createdAt,
-            updatedAt = post.updatedAt
-        )
+        return GetPostResult.from(post, author)
     }
 
     /**
@@ -84,13 +76,7 @@ class PostService(
         val authorIds = posts.map { it.authorId }.distinct()
         val authorMap = userQueryPort.findByIds(authorIds)
         return posts.map { post ->
-            GetPostListResult.of(
-                id = requireNotNull(post.id) { "Post ID must not be null" },
-                title = post.title.value,
-                authorId = post.authorId,
-                authorName = authorMap[post.authorId]?.username?.value ?: "알 수 없음",
-                createdAt = post.createdAt
-            )
+            GetPostListResult.from(post, authorMap[post.authorId])
         }
     }
 
@@ -113,15 +99,7 @@ class PostService(
         val saved = postPort.save(post)
         val author = userQueryPort.findById(saved.authorId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
-        return UpdatePostResult.of(
-            id = requireNotNull(saved.id) { "Post ID must not be null after save" },
-            title = saved.title.value,
-            content = saved.content.value,
-            authorId = saved.authorId,
-            authorName = author.username.value,
-            createdAt = saved.createdAt,
-            updatedAt = saved.updatedAt
-        )
+        return UpdatePostResult.from(saved, author)
     }
 
     /**

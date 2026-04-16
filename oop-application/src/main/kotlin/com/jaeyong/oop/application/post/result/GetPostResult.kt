@@ -1,5 +1,7 @@
 package com.jaeyong.oop.application.post.result
 
+import com.jaeyong.oop.domain.post.Post
+import com.jaeyong.oop.domain.user.User
 import java.time.LocalDateTime
 
 /**
@@ -28,5 +30,19 @@ data class GetPostResult private constructor(
             authorId: Long, authorName: String,
             createdAt: LocalDateTime, updatedAt: LocalDateTime
         ): GetPostResult = GetPostResult(id, title, content, authorId, authorName, createdAt, updatedAt)
+
+        /**
+         * Post 도메인 객체와 작성자로부터 결과를 생성한다.
+         */
+        fun from(post: Post, author: User): GetPostResult =
+            GetPostResult(
+                id = requireNotNull(post.id) { "Post ID must not be null" }, // DB 조회된 게시글에 PK가 없는 상황 → 500 서버오류 (클라이언트 오류가 아님)
+                title = post.title.value,
+                content = post.content.value,
+                authorId = post.authorId,
+                authorName = author.username.value,
+                createdAt = post.createdAt,
+                updatedAt = post.updatedAt
+            )
     }
 }
