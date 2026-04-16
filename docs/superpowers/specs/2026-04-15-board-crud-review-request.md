@@ -20,57 +20,58 @@
 ## 3. 컴포넌트 배치
 
 ```mermaid
-flowchart LR
-    subgraph presentation
+flowchart TB
+    subgraph presentation["Presentation"]
         PC["PostController"]
     end
 
-    subgraph application
-        subgraph usecase["UseCase"]
+    subgraph application["Application"]
+        direction LR
+        subgraph usecase["UseCase (인터페이스)"]
             CPU["CreatePostUseCase"]
             GPU["GetPostUseCase"]
             UPU["UpdatePostUseCase"]
             DPU["DeletePostUseCase"]
         end
-
-        subgraph service["Service"]
-            CPS["CreatePostService"]
-            GPS["GetPostService"]
-            UPS["UpdatePostService"]
-            DPS["DeletePostService"]
-        end
+        PS["PostService\n(4개 UseCase 통합 구현)"]
     end
 
-    subgraph domain["domain — Port"]
+    subgraph domain["Domain — Port"]
+        direction LR
         PP["PostPort"]
         UQP["UserQueryPort"]
     end
 
-    subgraph infrastructure["infrastructure — Adapter"]
-        PPA["PostPersistenceAdapter"]
-        PER["PostEntityRepository"]
-        PJR["PostJpaRepository\n(JpaRepository)"]
+    subgraph infrastructure["Infrastructure — Adapter"]
+        direction LR
+        subgraph post-infra["Post 영속성"]
+            PPA["PostPersistenceAdapter"]
+            PER["PostEntityRepository"]
+            PJR["PostJpaRepository"]
+        end
         UPA["UserPersistenceAdapter"]
     end
 
-    PC --CreatePostCommand--> CPU
-    PC --UpdatePostCommand--> UPU
-    PC --DeletePostCommand--> DPU
-    PC --> GPU
+    %% Presentation → Application
+    PC --> CPU & GPU & UPU & DPU
 
-    CPS -. implements .-> CPU
-    GPS -. implements .-> GPU
-    UPS -. implements .-> UPU
-    DPS -. implements .-> DPU
+    %% Service implements UseCase
+    PS -. implements .-> CPU
+    PS -. implements .-> GPU
+    PS -. implements .-> UPU
+    PS -. implements .-> DPU
 
-    CPS & GPS & UPS & DPS --> PP
-    GPS & UPS --> UQP
+    %% Application → Domain Port
+    PS --> PP
+    PS --> UQP
 
+    %% Infrastructure implements Domain Port
     PPA -. implements .-> PP
+    UPA -. implements .-> UQP
+
+    %% Infrastructure 3단 구조
     PPA --> PER
     PJR -. implements .-> PER
-
-    UPA -. implements .-> UQP
 ```
 
 ---
@@ -195,7 +196,7 @@ sequenceDiagram
     S ->>+ UQP: findByIds(authorIds)
     UQP ->>+ DB: SELECT users WHERE id IN (...)
     DB -->>- UQP: List User
-    UQP -->>- S: Map&lt;Long, User&gt;
+    UQP -->>- S: Map(Long, User)
     S -->>- C: List GetPostListResult
     C -->>- Client: 200 OK<br/>{"code":"SUCCESS","data":[{id, title, authorId, authorName, createdAt}]}
 ```
@@ -352,18 +353,18 @@ data class Post private constructor(...) {
 
 **왜:** 기존 `User.signUp()`, `User.login()`, `User.restore()` 패턴과 동일합니다. 생성자를 `private`으로 닫아 잘못된 경로로 객체가 만들어지는 것을 방지합니다. `restore`는 Infrastructure에서 DB → 도메인 변환 시 비즈니스 검증 없이 순수 복원만 수행합니다.
 
-### 11-4. UseCase/Service를 기능별로 분리 (ISP)
+### 11-4. UseCase 분리 + Service 통합
 
 ```
-CreatePostUseCase / CreatePostService
-GetPostUseCase    / GetPostService
-UpdatePostUseCase / UpdatePostService
-DeletePostUseCase / DeletePostService
+CreatePostUseCase  ─┐
+GetPostUseCase     ─┼─→  PostService (통합)
+UpdatePostUseCase  ─┤
+DeletePostUseCase  ─┘
 ```
 
-**왜:** 기존 User 도메인이 `JoinUseCase`, `LoginUseCase`, `RefreshUseCase`로 분리되어 있습니다. 하나의 `PostUseCase`에 5개 메서드를 넣으면 ISP(Interface Segregation Principle) 위반이며, Controller가 불필요한 메서드에 의존하게 됩니다.
+**왜:** UseCase 인터페이스는 ISP를 위해 분리하되, Service 구현체는 하나로 통합했습니다. CRUD 수준의 서비스 로직은 각각 10줄 내외로 매우 얇아 4개 파일로 분리하면 오버엔지니어링이며, 공통 의존성(PostPort, UserQueryPort) 중복과 네비게이션 비용이 증가합니다. PostService가 4개 UseCase를 다중 구현하면 Controller는 여전히 필요한 UseCase만 의존하면서, 도메인 관심사가 한 곳에 모여 흐름 파악이 쉬워집니다.
 
-**대안 고려:** `PostUseCase` 단일 인터페이스 → ISP 위반, 기존 패턴 불일치.
+**대안 고려:** Service도 기능별 분리(기존 User 패턴) → CRUD에는 과도한 분리, 클래스 수 증가.
 
 ### 11-5. JWT에 userId 추가 (@CurrentUser 반환 타입 변경)
 
