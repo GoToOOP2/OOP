@@ -21,21 +21,8 @@ flowchart LR
     end
 
     subgraph application
-        subgraph usecase["UseCase"]
-            CPU["CreatePostUseCase"]
-            GPU["GetPostUseCase"]
-            GPLU["GetPostListUseCase"]
-            UPU["UpdatePostUseCase"]
-            DPU["DeletePostUseCase"]
-        end
-
-        subgraph service["Service"]
-            CPS["CreatePostService"]
-            GPS["GetPostService"]
-            GPLS["GetPostListService"]
-            UPS["UpdatePostService"]
-            DPS["DeletePostService"]
-        end
+        PUC["PostUseCase"]
+        PS["PostService"]
     end
 
     subgraph domain["domain — Port"]
@@ -48,19 +35,9 @@ flowchart LR
         PJR["PostJpaRepository\n(JpaRepository)"]
     end
 
-    PC --CreatePostCommand--> CPU
-    PC --GetPostCommand--> GPU
-    PC --GetPostListCommand--> GPLU
-    PC --UpdatePostCommand--> UPU
-    PC --DeletePostCommand--> DPU
-
-    CPU -. implements .-> CPS
-    GPU -. implements .-> GPS
-    GPLU -. implements .-> GPLS
-    UPU -. implements .-> UPS
-    DPU -. implements .-> DPS
-
-    CPS & GPS & GPLS & UPS & DPS --> PP
+    PC --"Command"--> PUC
+    PUC -. implements .-> PS
+    PS --> PP
 
     PPA -. implements .-> PP
     PPA --> PER
@@ -122,7 +99,7 @@ classDiagram
 sequenceDiagram
     actor Client
     participant C  as PostController
-    participant S  as CreatePostService
+    participant S  as PostService
     participant R  as PostRepository
     participant DB as PostgreSQL
 
@@ -144,7 +121,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C  as PostController
-    participant S  as GetPostService
+    participant S  as PostService
     participant R  as PostRepository
     participant DB as PostgreSQL
 
@@ -170,7 +147,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C  as PostController
-    participant S  as GetPostListService
+    participant S  as PostService
     participant R  as PostRepository
     participant DB as PostgreSQL
 
@@ -192,7 +169,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C  as PostController
-    participant S  as UpdatePostService
+    participant S  as PostService
     participant R  as PostRepository
     participant DB as PostgreSQL
 
@@ -227,7 +204,7 @@ sequenceDiagram
 sequenceDiagram
     actor Client
     participant C  as PostController
-    participant S  as DeletePostService
+    participant S  as PostService
     participant R  as PostRepository
     participant DB as PostgreSQL
 
