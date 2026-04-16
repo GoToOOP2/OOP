@@ -293,3 +293,17 @@ classDiagram
 | `GET` | `/posts/{id}` | 게시글 단건 조회 | - | 불필요 | `200` | `404` D001 |
 | `PUT` | `/posts/{id}` | 게시글 수정 (본인만) | `{title, content}` | 필요 | `200` | `404` D001 · `403` D005 |
 | `DELETE` | `/posts/{id}` | 게시글 삭제 (본인만) | - | 필요 | `204` | `404` D001 · `403` D005 |
+
+---
+
+## UseCase 예외 처리
+
+| UseCase | 예외 | 에러코드 | 발생 조건 |
+|---|---|---|---|
+| `create` | PostTitle/PostContent 검증 | `D006~D009` | 제목/내용 공백·길이 초과 |
+| `get` | BaseException | `D001` NOT_FOUND | 게시글 없음 |
+| `getList` | 없음 | - | 항상 성공 (빈 리스트 반환) |
+| `update` | BaseException | `D001` NOT_FOUND | 게시글 없음 |
+| `update` | Post.update() 내부 | `D005` POST_ACCESS_DENIED | 본인 글 아님 |
+| `delete` | BaseException | `D001` NOT_FOUND | 게시글 없음 |
+| `delete` | Post.validateOwner() 내부 | `D005` POST_ACCESS_DENIED | 본인 글 아님 |

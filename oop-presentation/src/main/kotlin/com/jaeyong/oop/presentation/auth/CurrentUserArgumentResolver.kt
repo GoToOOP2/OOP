@@ -1,5 +1,7 @@
 package com.jaeyong.oop.presentation.auth
 
+import com.jaeyong.oop.common.exception.BaseException
+import com.jaeyong.oop.common.exception.ErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.MethodParameter
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -24,17 +26,19 @@ class CurrentUserArgumentResolver : HandlerMethodArgumentResolver {
     /**
      * request attribute에서 username을 꺼내 반환한다.
      *
-     * 비로그인 요청이면 attribute가 없으므로 null을 반환한다.
+     * 비로그인 요청이면 attribute가 없으므로 UNAUTHORIZED 예외를 던진다.
      *
-     * @return 인증된 사용자명, 비로그인이면 null
+     * @return 인증된 사용자명
+     * @throws BaseException UNAUTHORIZED — JWT 없거나 인증 실패
      */
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): String? {
+    ): String {
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
         return request?.getAttribute("username") as? String
+            ?: throw BaseException(ErrorCode.UNAUTHORIZED)
     }
 }
