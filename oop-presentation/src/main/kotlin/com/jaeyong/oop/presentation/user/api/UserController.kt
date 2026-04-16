@@ -33,9 +33,9 @@ class UserController(
 
     // TODO: 테스트용 - 확인 후 삭제
     @GetMapping("/me")
-    fun me(@CurrentUser username: String?): ResponseEntity<ApiResponse<String>> {
-        log.info("CurrentUser username = {}", username)
-        return ApiResponse.success(username ?: "비로그인", HttpStatus.OK)
+    fun me(@CurrentUser userId: Long?): ResponseEntity<ApiResponse<String>> {
+        log.info("CurrentUser userId = {}", userId)
+        return ApiResponse.success(userId?.toString() ?: "비로그인", HttpStatus.OK)
     }
 
     /**

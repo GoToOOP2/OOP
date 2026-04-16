@@ -8,9 +8,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 /**
- * [@CurrentUser][CurrentUser] 어노테이션이 붙은 컨트롤러 파라미터에 인증된 사용자명을 주입한다.
+ * [@CurrentUser][CurrentUser] 어노테이션이 붙은 컨트롤러 파라미터에 인증된 사용자 ID를 주입한다.
  *
- * [com.jaeyong.oop.presentation.filter.JwtAuthFilter]가 검증 후 request attribute("username")에
+ * [com.jaeyong.oop.presentation.filter.JwtAuthFilter]가 검증 후 request attribute("userId")에
  * 저장한 값을 꺼내서 컨트롤러 파라미터에 주입한다.
  */
 class CurrentUserArgumentResolver : HandlerMethodArgumentResolver {
@@ -22,19 +22,19 @@ class CurrentUserArgumentResolver : HandlerMethodArgumentResolver {
         parameter.hasParameterAnnotation(CurrentUser::class.java)
 
     /**
-     * request attribute에서 username을 꺼내 반환한다.
+     * request attribute에서 userId를 꺼내 반환한다.
      *
      * 비로그인 요청이면 attribute가 없으므로 null을 반환한다.
      *
-     * @return 인증된 사용자명, 비로그인이면 null
+     * @return 인증된 사용자 ID, 비로그인이면 null
      */
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): String? {
+    ): Long? {
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
-        return request?.getAttribute("username") as? String
+        return request?.getAttribute("userId") as? Long
     }
 }
