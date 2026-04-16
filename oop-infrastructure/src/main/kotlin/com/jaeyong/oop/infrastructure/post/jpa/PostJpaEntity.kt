@@ -6,6 +6,9 @@ import com.jaeyong.oop.domain.post.vo.TitleVO
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
+/**
+ * 게시글 JPA 엔티티 — `posts` 테이블과 매핑되며, 도메인 객체와의 변환을 담당한다.
+ */
 @Entity
 @Table(name = "posts")
 class PostJpaEntity(
@@ -31,6 +34,11 @@ class PostJpaEntity(
     val updatedAt: LocalDateTime = LocalDateTime.now()
 ) {
 
+    /**
+     * JPA 엔티티를 도메인 객체로 변환한다.
+     *
+     * @return 게시글 도메인 객체
+     */
     fun toDomain(): Post = Post.restore(
         id = requireNotNull(id) { "Post entity ID must not be null" },
         title = TitleVO.from(title),
@@ -42,6 +50,12 @@ class PostJpaEntity(
     )
 
     companion object {
+        /**
+         * 도메인 객체를 JPA 엔티티로 변환한다.
+         *
+         * @param post 게시글 도메인 객체
+         * @return JPA 엔티티
+         */
         fun fromDomain(post: Post): PostJpaEntity = PostJpaEntity(
             id = post.id,
             title = post.title.value,

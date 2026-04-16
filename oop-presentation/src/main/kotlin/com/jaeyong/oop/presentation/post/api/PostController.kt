@@ -21,6 +21,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+/**
+ * 게시글 CRUD API 컨트롤러.
+ */
 @RestController
 @RequestMapping("/api/posts")
 class PostController(
@@ -30,6 +33,13 @@ class PostController(
     private val deletePostUseCase: DeletePostUseCase
 ) {
 
+    /**
+     * 게시글 생성 — 인증된 사용자가 제목과 본문을 입력하여 게시글을 등록한다.
+     *
+     * @param userId 인증된 사용자 ID
+     * @param request 제목, 본문
+     * @return 201 Created, body: 생성된 게시글 ID
+     */
     @PostMapping
     fun create(
         @CurrentUser userId: Long?,
@@ -42,6 +52,11 @@ class PostController(
         return ApiResponse.success(CreatePostResponse.of(result.postId), HttpStatus.CREATED)
     }
 
+    /**
+     * 게시글 목록 조회 — 전체 게시글을 요약 형태로 반환한다.
+     *
+     * @return 200 OK, body: 게시글 목록
+     */
     @GetMapping
     fun getAll(): ResponseEntity<ApiResponse<List<PostListResponse>>> {
         val results = getPostUseCase.getAll()
@@ -55,6 +70,12 @@ class PostController(
         return ApiResponse.success(responses)
     }
 
+    /**
+     * 게시글 상세 조회 — ID로 게시글의 전체 정보를 반환한다.
+     *
+     * @param id 게시글 ID
+     * @return 200 OK, body: 게시글 상세
+     */
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<ApiResponse<PostDetailResponse>> {
         val result = getPostUseCase.getById(id)
@@ -66,6 +87,14 @@ class PostController(
         return ApiResponse.success(response)
     }
 
+    /**
+     * 게시글 수정 — 인증된 사용자가 자신의 게시글 제목과 본문을 수정한다.
+     *
+     * @param id 게시글 ID
+     * @param userId 인증된 사용자 ID
+     * @param request 제목, 본문
+     * @return 200 OK, body: 수정된 게시글 상세
+     */
     @PutMapping("/{id}")
     fun update(
         @PathVariable id: Long,
@@ -84,6 +113,13 @@ class PostController(
         return ApiResponse.success(response)
     }
 
+    /**
+     * 게시글 삭제 — 인증된 사용자가 자신의 게시글을 삭제한다.
+     *
+     * @param id 게시글 ID
+     * @param userId 인증된 사용자 ID
+     * @return 200 OK
+     */
     @DeleteMapping("/{id}")
     fun delete(
         @PathVariable id: Long,
