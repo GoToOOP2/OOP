@@ -40,7 +40,7 @@ class PostJpaEntity(
      * @return 게시글 도메인 객체
      */
     fun toDomain(): Post = Post.restore(
-        id = requireNotNull(id) { "Post entity ID must not be null" },
+        id = requireNotNull(id) { "Post entity ID must not be null" }, // DB에서 조회된 엔티티에 PK가 없는 상황 → 500 서버오류 (클라이언트 오류가 아님)
         title = TitleVO.from(title),
         content = ContentVO.from(content),
         authorId = authorId,
