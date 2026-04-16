@@ -20,9 +20,17 @@ enum class ErrorCode(
     BUSINESS_RULE_VIOLATION("D003"),
     /** D004 — 유효하지 않은 상태 */
     INVALID_STATE("D004"),
+    /** D005 — 제목 빈값 */
+    TITLE_BLANK("D005"),
+    /** D006 — 제목 길이 초과 (255자) */
+    TITLE_TOO_LONG("D006"),
+    /** D007 — 내용 빈값 */
+    CONTENT_BLANK("D007"),
 
     /** A001 — 인증 실패 (자격증명 불일치, 토큰 무효) */
     UNAUTHORIZED("A001"),
+    /** A003 — 권한 없음 (인가 실패) */
+    ACCESS_DENIED("A003"),
     /** A002 — 외부 서비스 호출 실패 */
     EXTERNAL_SERVICE_FAIL("A002"),
 

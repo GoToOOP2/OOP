@@ -3,10 +3,13 @@ package com.jaeyong.oop.application.user.service
 import com.jaeyong.oop.application.user.common.RefreshCommand
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
+import com.jaeyong.oop.domain.user.User
+import com.jaeyong.oop.domain.user.vo.EncodedPasswordVO
 import com.jaeyong.oop.domain.user.vo.TokenVO
 import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.JwtHandlerPort
 import com.jaeyong.oop.domain.user.port.RefreshTokenHandlerPort
+import com.jaeyong.oop.domain.user.port.UserQueryPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -26,17 +29,22 @@ class RefreshServiceTest {
     @Mock
     private lateinit var refreshTokenHandlerPort: RefreshTokenHandlerPort
 
+    @Mock
+    private lateinit var userQueryPort: UserQueryPort
+
     @InjectMocks
     private lateinit var sut: RefreshService
 
     @Test
     @DisplayName("1. 유효한 refresh token으로 access token과 refresh token을 재발급한다")
     fun `유효한 refresh token으로 access token과 refresh token을 재발급한다`() {
+        val user = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed_password"))
         given(refreshTokenHandlerPort.validateAndExtractRefresh(TokenVO.from("valid.refresh.token")))
-            .willReturn(UsernameVO.from("jaeyong"))
-        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong")))
+            .willReturn(1L)
+        given(userQueryPort.findById(1L)).willReturn(user)
+        given(jwtHandlerPort.generateToken(UsernameVO.from("jaeyong"), 1L))
             .willReturn(TokenVO.from("new.access.token"))
-        given(refreshTokenHandlerPort.generateRefreshToken(UsernameVO.from("jaeyong")))
+        given(refreshTokenHandlerPort.generateRefreshToken(UsernameVO.from("jaeyong"), 1L))
             .willReturn(TokenVO.from("new.refresh.token"))
 
         val result = sut.refresh(RefreshCommand.of("valid.refresh.token"))

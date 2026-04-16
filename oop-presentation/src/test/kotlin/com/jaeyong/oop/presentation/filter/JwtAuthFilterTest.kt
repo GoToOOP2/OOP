@@ -35,7 +35,7 @@ class JwtAuthFilterTest {
             addHeader("Authorization", "Bearer valid.token")
         }
         val response = MockHttpServletResponse()
-        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("valid.token"))).willReturn(TokenValidationResult.of("jaeyong"))
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("valid.token"))).willReturn(TokenValidationResult.of(1L))
 
         // when
         sut.doFilter(request, response, filterChain)
@@ -55,7 +55,7 @@ class JwtAuthFilterTest {
         sut.doFilter(request, response, filterChain)
 
         // then
-        assertThat(request.getAttribute("username")).isNull()
+        assertThat(request.getAttribute("userId")).isNull()
     }
 
     @Test
@@ -71,7 +71,7 @@ class JwtAuthFilterTest {
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
-        assertThat(request.getAttribute("username")).isNull()
+        assertThat(request.getAttribute("userId")).isNull()
     }
 
     @Test
@@ -86,22 +86,22 @@ class JwtAuthFilterTest {
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
-        assertThat(request.getAttribute("username")).isNull()
+        assertThat(request.getAttribute("userId")).isNull()
     }
 
     @Test
-    @DisplayName("5. 유효한 토큰이면 request attribute에 username이 저장된다")
-    fun `유효한 토큰이면 request attribute에 username이 저장된다`() {
+    @DisplayName("5. 유효한 토큰이면 request attribute에 userId가 저장된다")
+    fun `유효한 토큰이면 request attribute에 userId가 저장된다`() {
         // given
         val request = MockHttpServletRequest().apply {
             addHeader("Authorization", "Bearer valid.token")
         }
-        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("valid.token"))).willReturn(TokenValidationResult.of("jaeyong"))
+        given(tokenValidationUseCase.validateAndExtract(TokenValidationCommand.of("valid.token"))).willReturn(TokenValidationResult.of(1L))
 
         // when
         sut.doFilter(request, MockHttpServletResponse(), filterChain)
 
         // then
-        assertThat(request.getAttribute("username")).isEqualTo("jaeyong")
+        assertThat(request.getAttribute("userId")).isEqualTo(1L)
     }
 }
