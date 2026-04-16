@@ -1,5 +1,7 @@
 package com.jaeyong.oop.presentation.post.response
 
+import com.jaeyong.oop.application.post.result.GetPostResult
+import com.jaeyong.oop.application.post.result.UpdatePostResult
 import java.time.LocalDateTime
 
 /**
@@ -28,5 +30,17 @@ data class PostDetailResponse private constructor(
             authorId: Long, authorName: String,
             createdAt: LocalDateTime, updatedAt: LocalDateTime
         ): PostDetailResponse = PostDetailResponse(id, title, content, authorId, authorName, createdAt, updatedAt)
+
+        /**
+         * 단건 조회 결과를 응답 DTO로 변환한다.
+         */
+        fun from(result: GetPostResult): PostDetailResponse =
+            PostDetailResponse(result.id, result.title, result.content, result.authorId, result.authorName, result.createdAt, result.updatedAt)
+
+        /**
+         * 수정 결과를 응답 DTO로 변환한다.
+         */
+        fun from(result: UpdatePostResult): PostDetailResponse =
+            PostDetailResponse(result.id, result.title, result.content, result.authorId, result.authorName, result.createdAt, result.updatedAt)
     }
 }

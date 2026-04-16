@@ -1,5 +1,6 @@
 package com.jaeyong.oop.presentation.post.response
 
+import com.jaeyong.oop.application.post.result.GetPostListResult
 import java.time.LocalDateTime
 
 /**
@@ -24,5 +25,11 @@ data class PostListResponse private constructor(
             authorId: Long, authorName: String,
             createdAt: LocalDateTime
         ): PostListResponse = PostListResponse(id, title, authorId, authorName, createdAt)
+
+        /**
+         * Application 결과를 응답 DTO로 변환한다.
+         */
+        fun from(result: GetPostListResult): PostListResponse =
+            PostListResponse(result.id, result.title, result.authorId, result.authorName, result.createdAt)
     }
 }
