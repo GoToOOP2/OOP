@@ -1,5 +1,7 @@
 package com.jaeyong.oop.application.post.result
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.domain.post.Post
 
 /**
@@ -7,6 +9,7 @@ import com.jaeyong.oop.domain.post.Post
  *
  * @property postId 생성된 게시글 ID
  */
+@ConsistentCopyVisibility
 data class CreatePostResult private constructor(val postId: Long) {
     companion object {
         fun of(postId: Long): CreatePostResult = CreatePostResult(postId)

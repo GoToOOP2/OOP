@@ -1,5 +1,7 @@
 package com.jaeyong.oop.presentation.user.response
 
+import kotlin.ConsistentCopyVisibility
+
 import io.swagger.v3.oas.annotations.media.Schema
 
 /**
@@ -8,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
  * @property accessToken 발급된 JWT access token
  * @property refreshToken 발급된 JWT refresh token
  */
+@ConsistentCopyVisibility
 data class TokenResponse private constructor(
     @Schema(description = "JWT 액세스 토큰", example = "eyJhbGciOiJIUzI1NiJ9...")
     val accessToken: String,

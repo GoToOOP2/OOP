@@ -1,10 +1,13 @@
 package com.jaeyong.oop.application.user.common
 
+import kotlin.ConsistentCopyVisibility
+
 /**
  * 토큰 갱신 유스케이스 입력 커맨드.
  *
  * @property refreshToken 갱신에 사용할 refresh token
  */
+@ConsistentCopyVisibility
 data class RefreshCommand private constructor(
     val refreshToken: String
 ) {

@@ -1,5 +1,7 @@
 package com.jaeyong.oop.application.post.common
 
+import kotlin.ConsistentCopyVisibility
+
 /**
  * 게시글 수정 커맨드.
  *
@@ -8,6 +10,7 @@ package com.jaeyong.oop.application.post.common
  * @property content 수정할 내용
  * @property requesterId 수정 요청자 ID
  */
+@ConsistentCopyVisibility
 data class UpdatePostCommand private constructor(
     val postId: Long,
     val title: String,

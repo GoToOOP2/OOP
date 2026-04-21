@@ -1,5 +1,7 @@
 package com.jaeyong.oop.presentation.post.response
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.application.post.result.CreatePostResult
 
 /**
@@ -7,6 +9,7 @@ import com.jaeyong.oop.application.post.result.CreatePostResult
  *
  * @property postId 생성된 게시글 ID
  */
+@ConsistentCopyVisibility
 data class CreatePostResponse private constructor(val postId: Long) {
     companion object {
         /**

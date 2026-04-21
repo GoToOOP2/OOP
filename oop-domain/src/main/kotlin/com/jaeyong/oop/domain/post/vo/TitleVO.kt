@@ -1,5 +1,7 @@
 package com.jaeyong.oop.domain.post.vo
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 
@@ -8,6 +10,7 @@ import com.jaeyong.oop.common.exception.ErrorCode
  *
  * 1~255자 제한을 생성 시점에 강제한다.
  */
+@ConsistentCopyVisibility
 data class TitleVO private constructor(val value: String) {
     init {
         if (value.isBlank()) throw BaseException(ErrorCode.TITLE_BLANK)

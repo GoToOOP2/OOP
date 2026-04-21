@@ -1,5 +1,7 @@
 package com.jaeyong.oop.application.post.common
 
+import kotlin.ConsistentCopyVisibility
+
 /**
  * 게시글 생성 커맨드.
  *
@@ -7,6 +9,7 @@ package com.jaeyong.oop.application.post.common
  * @property content 게시글 내용
  * @property authorId 작성자 ID
  */
+@ConsistentCopyVisibility
 data class CreatePostCommand private constructor(
     val title: String,
     val content: String,

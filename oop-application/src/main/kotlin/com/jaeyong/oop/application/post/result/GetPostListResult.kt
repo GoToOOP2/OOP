@@ -1,5 +1,7 @@
 package com.jaeyong.oop.application.post.result
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.domain.post.Post
 import com.jaeyong.oop.domain.user.User
 import java.time.LocalDateTime
@@ -13,6 +15,7 @@ import java.time.LocalDateTime
  * @property authorName 작성자 이름
  * @property createdAt 생성 일시
  */
+@ConsistentCopyVisibility
 data class GetPostListResult private constructor(
     val id: Long,
     val title: String,

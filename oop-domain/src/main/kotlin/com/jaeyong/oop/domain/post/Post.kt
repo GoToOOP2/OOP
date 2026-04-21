@@ -1,5 +1,7 @@
 package com.jaeyong.oop.domain.post
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.post.vo.ContentVO
@@ -11,6 +13,7 @@ import java.time.LocalDateTime
  *
  * 외부에서 직접 생성 금지 — 반드시 [create], [restore] 팩토리 메서드를 통해 생성한다.
  */
+@ConsistentCopyVisibility
 data class Post private constructor(
     val id: Long? = null,
     var title: TitleVO,

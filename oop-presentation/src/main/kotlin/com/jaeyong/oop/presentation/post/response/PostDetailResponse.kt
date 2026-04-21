@@ -1,5 +1,7 @@
 package com.jaeyong.oop.presentation.post.response
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.application.post.result.GetPostResult
 import com.jaeyong.oop.application.post.result.UpdatePostResult
 import java.time.LocalDateTime
@@ -15,6 +17,7 @@ import java.time.LocalDateTime
  * @property createdAt 생성 일시
  * @property updatedAt 수정 일시
  */
+@ConsistentCopyVisibility
 data class PostDetailResponse private constructor(
     val id: Long,
     val title: String,
