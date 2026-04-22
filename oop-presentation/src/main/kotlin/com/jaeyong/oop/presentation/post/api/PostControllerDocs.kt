@@ -3,9 +3,10 @@ package com.jaeyong.oop.presentation.post.api
 import com.jaeyong.oop.presentation.post.request.CreatePostRequest
 import com.jaeyong.oop.presentation.post.request.UpdatePostRequest
 import com.jaeyong.oop.presentation.post.response.CreatePostResponse
-import com.jaeyong.oop.presentation.post.response.PostListResponse
-import com.jaeyong.oop.presentation.post.response.PostResponse
+import com.jaeyong.oop.presentation.post.response.GetPostResponse
+import com.jaeyong.oop.presentation.post.response.UpdatePostResponse
 import com.jaeyong.oop.presentation.response.ApiResponse
+import com.jaeyong.oop.presentation.response.PageResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse as SwaggerApiResponse
@@ -34,7 +35,7 @@ interface PostControllerDocs {
     )
     fun get(
         @Parameter(description = "게시글 id") id: Long
-    ): ResponseEntity<ApiResponse<PostResponse>>
+    ): ResponseEntity<ApiResponse<GetPostResponse>>
 
     @Operation(summary = "게시글 목록 조회", description = "페이징과 정렬 방향을 지정해 게시글 목록을 조회합니다. 기본값: page=0, size=10, direction=DESC(최신순).")
     @ApiResponses(
@@ -44,7 +45,7 @@ interface PostControllerDocs {
         @Parameter(description = "페이지 번호 (0부터 시작)") page: Int,
         @Parameter(description = "페이지 크기") size: Int,
         @Parameter(description = "정렬 방향 (ASC / DESC)") direction: String
-    ): ResponseEntity<ApiResponse<PostListResponse>>
+    ): ResponseEntity<ApiResponse<PageResponse<GetPostResponse>>>
 
     @Operation(summary = "게시글 수정", description = "게시글 제목과 내용을 수정합니다. 작성자 본인만 수정할 수 있습니다.")
     @ApiResponses(
@@ -58,7 +59,7 @@ interface PostControllerDocs {
         @Parameter(description = "게시글 id") id: Long,
         request: UpdatePostRequest,
         @Parameter(hidden = true) username: String
-    ): ResponseEntity<ApiResponse<PostResponse>>
+    ): ResponseEntity<ApiResponse<UpdatePostResponse>>
 
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다. 작성자 본인만 삭제할 수 있습니다.")
     @ApiResponses(

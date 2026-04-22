@@ -10,9 +10,10 @@ import com.jaeyong.oop.presentation.auth.CurrentUser
 import com.jaeyong.oop.presentation.post.request.CreatePostRequest
 import com.jaeyong.oop.presentation.post.request.UpdatePostRequest
 import com.jaeyong.oop.presentation.post.response.CreatePostResponse
-import com.jaeyong.oop.presentation.post.response.PostListResponse
-import com.jaeyong.oop.presentation.post.response.PostResponse
+import com.jaeyong.oop.presentation.post.response.GetPostResponse
+import com.jaeyong.oop.presentation.post.response.UpdatePostResponse
 import com.jaeyong.oop.presentation.response.ApiResponse
+import com.jaeyong.oop.presentation.response.PageResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -34,9 +35,9 @@ class PostController(
     }
 
     @GetMapping("/{id}")
-    override fun get(@PathVariable id: Long): ResponseEntity<ApiResponse<PostResponse>> {
+    override fun get(@PathVariable id: Long): ResponseEntity<ApiResponse<GetPostResponse>> {
         val result = postUseCase.get(GetPostQuery.from(id))
-        return ApiResponse.success(PostResponse.from(result), HttpStatus.OK)
+        return ApiResponse.success(GetPostResponse.from(result), HttpStatus.OK)
     }
 
     @GetMapping
@@ -44,9 +45,9 @@ class PostController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "DESC") direction: String
-    ): ResponseEntity<ApiResponse<PostListResponse>> {
+    ): ResponseEntity<ApiResponse<PageResponse<GetPostResponse>>> {
         val result = postUseCase.getList(GetPostListQuery.of(page, size, direction))
-        return ApiResponse.success(PostListResponse.from(result), HttpStatus.OK)
+        return ApiResponse.success(PageResponse.from(result) { GetPostResponse.from(it) }, HttpStatus.OK)
     }
 
     @PutMapping("/{id}")
@@ -54,9 +55,9 @@ class PostController(
         @PathVariable id: Long,
         @Valid @RequestBody request: UpdatePostRequest,
         @CurrentUser username: String
-    ): ResponseEntity<ApiResponse<PostResponse>> {
+    ): ResponseEntity<ApiResponse<UpdatePostResponse>> {
         val result = postUseCase.update(UpdatePostCommand.of(id, request.title, request.content, username))
-        return ApiResponse.success(PostResponse.from(result), HttpStatus.OK)
+        return ApiResponse.success(UpdatePostResponse.from(result), HttpStatus.OK)
     }
 
     @DeleteMapping("/{id}")
