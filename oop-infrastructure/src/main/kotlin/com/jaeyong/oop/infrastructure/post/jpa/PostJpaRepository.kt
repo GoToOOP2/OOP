@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface PostJpaRepository : JpaRepository<PostEntity, Long>, PostEntityRepository {
     override fun findPostEntityById(id: Long): PostEntity?
-    override fun findAllByOrderByCreatedAtDesc(pageable: Pageable): List<PostEntity>
+    override fun findAllByOrderByIdDesc(pageable: Pageable): List<PostEntity>
 }

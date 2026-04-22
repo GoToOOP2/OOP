@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable
 interface PostEntityRepository {
     fun save(entity: PostEntity): PostEntity
     fun findPostEntityById(id: Long): PostEntity?
-    fun findAllByOrderByCreatedAtDesc(pageable: Pageable): List<PostEntity>
+    fun findAllByOrderByIdDesc(pageable: Pageable): List<PostEntity>
     fun count(): Long
     fun deleteById(id: Long)
 }

@@ -5,6 +5,7 @@ import com.jaeyong.oop.domain.post.port.PostPort
 import com.jaeyong.oop.infrastructure.post.entity.PostEntity
 import com.jaeyong.oop.infrastructure.post.repository.PostEntityRepository
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 
 /** PostPort 구현체, PostEntityRepository 통해 JPA와 통신 */
@@ -19,8 +20,10 @@ class PostPersistenceAdapter(
     override fun getById(id: Long): Post? =
         postEntityRepository.findPostEntityById(id)?.toDomain()
 
-    override fun getAll(page: Int, size: Int): List<Post> =
-        postEntityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size)).map { it.toDomain() }
+    override fun getAll(page: Int, size: Int, direction: String): List<Post> {
+        val sortOrder = Sort.by(Sort.Direction.fromString(direction), "id")
+        return postEntityRepository.findAllByOrderByIdDesc(PageRequest.of(page, size, sortOrder)).map { it.toDomain() }
+    }
 
     override fun countAll(): Long =
         postEntityRepository.count()

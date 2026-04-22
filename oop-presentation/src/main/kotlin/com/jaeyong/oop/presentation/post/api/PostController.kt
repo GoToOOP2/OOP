@@ -44,9 +44,10 @@ class PostController(
     @GetMapping
     fun getList(
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "DESC") direction: String
     ): ResponseEntity<ApiResponse<PostListResponse>> {
-        val result = postUseCase.getList(GetPostListQuery.of(page, size))
+        val result = postUseCase.getList(GetPostListQuery.of(page, size, direction))
         return ApiResponse.success(PostListResponse.from(result), HttpStatus.OK)
     }
 

@@ -34,7 +34,7 @@ class PostService(private val postPort: PostPort) : PostUseCase {
 
     @Transactional(readOnly = true)
     override fun getList(command: GetPostListQuery): GetPostListResult {
-        val posts = postPort.getAll(command.page, command.size)
+        val posts = postPort.getAll(command.page, command.size, command.direction)
         val total = postPort.countAll()
         return GetPostListResult.of(posts, total, command.page, command.size)
     }
