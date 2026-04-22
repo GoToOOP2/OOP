@@ -36,7 +36,7 @@ class PostTest {
         val updatedAt = LocalDateTime.of(2024, 1, 2, 0, 0)
 
         // when
-        val sut = Post.restore(1L, title, content, author, createdAt, updatedAt)
+        val sut = Post.reconstruct(1L, title, content, author, createdAt, updatedAt)
 
         // then
         assertThat(sut.id).isEqualTo(1L)
@@ -69,7 +69,7 @@ class PostTest {
     @DisplayName("update - 정상 수정 시 새 객체 반환, updatedAt 설정됨")
     fun updatePostSuccess() {
         // given
-        val sut = Post.restore(1L, title, content, author, LocalDateTime.now(), null)
+        val sut = Post.reconstruct(1L, title, content, author, LocalDateTime.now(), null)
         // when
         val updated = sut.update("수정된 제목", "수정된 내용", author)
 
@@ -82,7 +82,7 @@ class PostTest {
     @DisplayName("update - 타인이 수정하면 POST_ACCESS_DENIED")
     fun updatePostFail() {
         // given
-        val sut = Post.restore(1L, title, content, author, LocalDateTime.now(), null)
+        val sut = Post.reconstruct(1L, title, content, author, LocalDateTime.now(), null)
 
         // when & then
         val ex = assertThrows<BaseException> {

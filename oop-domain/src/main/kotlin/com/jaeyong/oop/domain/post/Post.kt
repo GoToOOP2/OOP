@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 /**
  * 게시글 도메인 엔티티
  *
- * - create: 신규 생성 / restore: DB 조회 후 복원 (createdAt 보존 목적)
+ * - create: 신규 생성 / reconstruct: DB 조회 후 재구성 (createdAt 보존 목적)
  * - 불변 객체, 수정 시 새 객체로 대입
  */
 data class Post private constructor(
@@ -36,7 +36,7 @@ data class Post private constructor(
         fun create(title: String, content: String, authorUsername: String): Post =
             Post(title = PostTitle.from(title), content = PostContent.from(content), authorUsername = authorUsername, createdAt = LocalDateTime.now())
 
-        fun restore(
+        fun reconstruct(
             id: Long?,
             title: String,
             content: String,

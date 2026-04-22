@@ -51,7 +51,7 @@ class UserEntityTest {
     @DisplayName("4. fromDomain() 호출 시 엔티티로 정확히 변환된다")
     fun `fromDomain 호출 시 엔티티로 정확히 변환된다`() {
         // given
-        val domain = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed"))
+        val domain = User.reconstruct(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed"))
 
         // when
         val entity = UserEntity.fromDomain(domain)

@@ -24,7 +24,7 @@ class HealthEntity(
      *
      * @return 복원된 [Health] 도메인 객체
      */
-    fun toDomain(): Health = Health.restore(id, status, createdAt)
+    fun toDomain(): Health = Health.reconstruct(id, status, createdAt)
 
     companion object {
         /**

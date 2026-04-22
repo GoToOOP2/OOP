@@ -28,7 +28,7 @@ class UserPersistenceAdapterTest {
     @DisplayName("1. register 호출 시 저장된 도메인 객체를 반환한다")
     fun `register 호출 시 저장된 도메인 객체를 반환한다`() {
         // given
-        val user = User.restore(null, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed"))
+        val user = User.reconstruct(null, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed"))
         val savedEntity = UserEntity(id = 1L, username = "jaeyong", password = "hashed")
         given(userEntityRepository.save(anyNonNull())).willReturn(savedEntity)
 

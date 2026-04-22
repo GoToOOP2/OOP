@@ -26,7 +26,7 @@ class PostEntity(
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime? = null
 ) {
-    fun toDomain(): Post = Post.restore(id, title, content, authorUsername, createdAt, updatedAt)
+    fun toDomain(): Post = Post.reconstruct(id, title, content, authorUsername, createdAt, updatedAt)
 
     companion object {
         fun fromDomain(post: Post): PostEntity = PostEntity(

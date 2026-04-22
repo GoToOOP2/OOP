@@ -29,7 +29,7 @@ class PostEntityTest {
         authorUsername: String = "user1",
         createdAt: LocalDateTime = LocalDateTime.of(2024, 1, 1, 0, 0),
         updatedAt: LocalDateTime? = LocalDateTime.of(2024, 1, 2, 0, 0)
-    ) = Post.restore(id = id, title = title, content = content, authorUsername = authorUsername, createdAt = createdAt, updatedAt = updatedAt)
+    ) = Post.reconstruct(id = id, title = title, content = content, authorUsername = authorUsername, createdAt = createdAt, updatedAt = updatedAt)
 
     @Test
     @DisplayName("toDomain - 모든 필드가 Post 도메인 객체로 정확히 매핑된다")

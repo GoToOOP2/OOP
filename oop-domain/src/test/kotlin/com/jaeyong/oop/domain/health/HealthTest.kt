@@ -31,7 +31,7 @@ class HealthTest {
         val createdAt = LocalDateTime.of(2024, 1, 1, 0, 0)
 
         // when
-        val health = Health.restore(id, status, createdAt)
+        val health = Health.reconstruct(id, status, createdAt)
 
         // then
         assertThat(health.id).isEqualTo(id)

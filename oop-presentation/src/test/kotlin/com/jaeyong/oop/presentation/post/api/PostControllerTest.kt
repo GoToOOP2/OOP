@@ -100,10 +100,10 @@ class PostControllerTest {
      *
      * 기본값을 제공하면서 필요한 필드만 오버라이드할 수 있어
      * 각 테스트가 관심 없는 값을 반복 선언할 필요가 없다.
-     * Post.restore()를 통해 DB 복원 경로를 재현하고, CreatePostResult.from()로 래핑한다.
+     * Post.reconstruct()를 통해 DB 복원 경로를 재현하고, CreatePostResult.from()로 래핑한다.
      */
     private fun createPostResult(id: Long = POST_ID) = CreatePostResult.from(
-        Post.restore(id, TITLE, CONTENT, USERNAME, LocalDateTime.of(2024, 1, 1, 0, 0), null)
+        Post.reconstruct(id, TITLE, CONTENT, USERNAME, LocalDateTime.of(2024, 1, 1, 0, 0), null)
     )
 
     /**
