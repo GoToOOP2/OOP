@@ -2,14 +2,15 @@ package com.jaeyong.oop.presentation.post.api
 
 import com.jaeyong.oop.application.post.command.CreatePostCommand
 import com.jaeyong.oop.application.post.command.DeletePostCommand
-import com.jaeyong.oop.application.post.command.GetPostCommand
-import com.jaeyong.oop.application.post.command.GetPostListCommand
+import com.jaeyong.oop.application.post.command.GetPostQuery
+import com.jaeyong.oop.application.post.command.GetPostListQuery
 import com.jaeyong.oop.application.post.command.UpdatePostCommand
 import com.jaeyong.oop.application.post.usecase.PostUseCase
 import com.jaeyong.oop.presentation.auth.CurrentUser
 import io.swagger.v3.oas.annotations.Parameter
 import com.jaeyong.oop.presentation.post.request.CreatePostRequest
 import com.jaeyong.oop.presentation.post.request.UpdatePostRequest
+import com.jaeyong.oop.presentation.post.response.CreatePostResponse
 import com.jaeyong.oop.presentation.post.response.PostListResponse
 import com.jaeyong.oop.presentation.post.response.PostResponse
 import com.jaeyong.oop.presentation.response.ApiResponse
@@ -29,14 +30,14 @@ class PostController(
     fun create(
         @Valid @RequestBody request: CreatePostRequest,
         @Parameter(hidden = true) @CurrentUser username: String
-    ): ResponseEntity<ApiResponse<PostResponse>> {
+    ): ResponseEntity<ApiResponse<CreatePostResponse>> {
         val result = postUseCase.create(CreatePostCommand.of(request.title, request.content, username))
-        return ApiResponse.success(PostResponse.of(result), HttpStatus.CREATED)
+        return ApiResponse.success(CreatePostResponse.of(result), HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long): ResponseEntity<ApiResponse<PostResponse>> {
-        val result = postUseCase.get(GetPostCommand.of(id))
+        val result = postUseCase.get(GetPostQuery.of(id))
         return ApiResponse.success(PostResponse.of(result), HttpStatus.OK)
     }
 
@@ -45,7 +46,7 @@ class PostController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<ApiResponse<PostListResponse>> {
-        val result = postUseCase.getList(GetPostListCommand.of(page, size))
+        val result = postUseCase.getList(GetPostListQuery.of(page, size))
         return ApiResponse.success(PostListResponse.of(result), HttpStatus.OK)
     }
 

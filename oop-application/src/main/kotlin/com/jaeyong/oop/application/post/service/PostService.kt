@@ -2,8 +2,8 @@ package com.jaeyong.oop.application.post.service
 
 import com.jaeyong.oop.application.post.command.CreatePostCommand
 import com.jaeyong.oop.application.post.command.DeletePostCommand
-import com.jaeyong.oop.application.post.command.GetPostCommand
-import com.jaeyong.oop.application.post.command.GetPostListCommand
+import com.jaeyong.oop.application.post.command.GetPostQuery
+import com.jaeyong.oop.application.post.command.GetPostListQuery
 import com.jaeyong.oop.application.post.command.UpdatePostCommand
 import com.jaeyong.oop.application.post.result.CreatePostResult
 import com.jaeyong.oop.application.post.result.GetPostListResult
@@ -33,13 +33,13 @@ class PostService(private val postPort: PostPort) : PostUseCase {
     }
 
     @Transactional(readOnly = true)
-    override fun get(command: GetPostCommand): GetPostResult {
+    override fun get(command: GetPostQuery): GetPostResult {
         val post = postPort.findById(command.id) ?: throw BaseException(ErrorCode.NOT_FOUND)
         return GetPostResult.of(post)
     }
 
     @Transactional(readOnly = true)
-    override fun getList(command: GetPostListCommand): GetPostListResult {
+    override fun getList(command: GetPostListQuery): GetPostListResult {
         val posts = postPort.findAll(command.page, command.size)
         val total = postPort.countAll()
         return GetPostListResult.of(posts, total, command.page, command.size)
