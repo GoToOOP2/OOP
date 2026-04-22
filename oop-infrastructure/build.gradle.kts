@@ -5,6 +5,8 @@ plugins {
 dependencies {
     "implementation"(project(":oop-domain"))
     "implementation"(libs.bundles.spring.infrastructure)
+    "implementation"(libs.jooq)
+    "implementation"(libs.jooq.kotlin)
     "implementation"(libs.spring.security.crypto)
     "implementation"(libs.jjwt.api)
     "runtimeOnly"(libs.postgresql)

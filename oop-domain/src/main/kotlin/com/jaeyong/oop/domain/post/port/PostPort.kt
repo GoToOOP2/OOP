@@ -6,6 +6,7 @@ interface PostPort {
     fun store(post: Post): Post
     fun getById(id: Long): Post?
     fun getAll(page: Int, size: Int, direction: String): List<Post>
+    fun getAllWithTotal(page: Int, size: Int, direction: String): Pair<List<Post>, Long>
     fun countAll(): Long
     fun delete(id: Long)
 }

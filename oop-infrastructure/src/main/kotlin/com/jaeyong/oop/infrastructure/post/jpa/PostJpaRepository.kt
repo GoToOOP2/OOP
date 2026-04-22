@@ -1,11 +1,9 @@
 package com.jaeyong.oop.infrastructure.post.jpa
 
 import com.jaeyong.oop.infrastructure.post.entity.PostEntity
-import com.jaeyong.oop.infrastructure.post.repository.PostEntityRepository
-import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface PostJpaRepository : JpaRepository<PostEntity, Long>, PostEntityRepository {
-    override fun findPostEntityById(id: Long): PostEntity?
-    override fun findAllByOrderByIdDesc(pageable: Pageable): List<PostEntity>
+/** 오직 JPA 기능만 수행하는 인터페이스 */
+interface PostJpaRepository : JpaRepository<PostEntity, Long> {
+    fun findPostEntityById(id: Long): PostEntity?
 }
