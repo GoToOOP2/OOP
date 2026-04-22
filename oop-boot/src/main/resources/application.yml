@@ -16,3 +16,5 @@ filter:
   url-patterns:
     - /posts/*
     - /posts
+    - /users/*
+    - /users
