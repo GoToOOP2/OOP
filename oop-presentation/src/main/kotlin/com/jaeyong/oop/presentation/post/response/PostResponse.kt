@@ -1,11 +1,10 @@
 package com.jaeyong.oop.presentation.post.response
 
-import com.jaeyong.oop.application.post.result.CreatePostResult
 import com.jaeyong.oop.application.post.result.GetPostResult
 import com.jaeyong.oop.application.post.result.UpdatePostResult
 import java.time.LocalDateTime
 
-/** 게시글 단건 응답, 생성/조회/수정 Result를 공통 응답으로 변환 */
+/** 게시글 단건 응답, 조회/수정 Result를 공통 응답으로 변환 */
 data class PostResponse(
     val id: Long,
     val title: String,
@@ -15,7 +14,6 @@ data class PostResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun of(result: CreatePostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, null)
         fun of(result: GetPostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, result.updatedAt)
         fun of(result: UpdatePostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, result.updatedAt)
     }

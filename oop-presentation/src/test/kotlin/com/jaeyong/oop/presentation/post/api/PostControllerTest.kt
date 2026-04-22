@@ -104,14 +104,8 @@ class PostControllerTest {
      * 각 테스트가 관심 없는 값을 반복 선언할 필요가 없다.
      * Post.restore()를 통해 DB 복원 경로를 재현하고, CreatePostResult.of()로 래핑한다.
      */
-    private fun createPostResult(
-        id: Long = POST_ID,
-        title: String = TITLE,
-        content: String = CONTENT,
-        authorUsername: String = USERNAME,
-        createdAt: LocalDateTime = LocalDateTime.of(2024, 1, 1, 0, 0)
-    ) = CreatePostResult.of(
-        Post.restore(id, PostTitle.of(title), PostContent.of(content), authorUsername, createdAt, null)
+    private fun createPostResult(id: Long = POST_ID) = CreatePostResult.of(
+        Post.restore(id, PostTitle.of(TITLE), PostContent.of(CONTENT), USERNAME, LocalDateTime.of(2024, 1, 1, 0, 0), null)
     )
 
     /**
@@ -141,8 +135,6 @@ class PostControllerTest {
             .andExpect(status().isCreated)
             .andExpect(jsonPath("$.code").value("SUCCESS"))
             .andExpect(jsonPath("$.data.id").value(POST_ID))
-            .andExpect(jsonPath("$.data.title").value(TITLE))
-            .andExpect(jsonPath("$.data.content").value(CONTENT))
 
         // Command 올바르게 만들어서 넘겼는지 검증
         verify(postUseCase).create(captor.capture())
