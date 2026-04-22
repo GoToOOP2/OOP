@@ -18,6 +18,9 @@ data class Post private constructor(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime? = null
 ) {
+    val titleValue: String get() = title.value
+    val contentValue: String get() = content.value
+
     /** 작성자 본인 여부 검증, 실패 시 POST_ACCESS_DENIED */
     fun validateOwner(requesterUsername: String) {
         if (authorUsername != requesterUsername)

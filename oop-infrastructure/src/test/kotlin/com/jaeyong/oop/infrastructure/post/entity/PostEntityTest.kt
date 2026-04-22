@@ -44,8 +44,8 @@ class PostEntityTest {
 
         // then
         assertThat(post.id).isEqualTo(sut.id)
-        assertThat(post.title.value).isEqualTo(sut.title)
-        assertThat(post.content.value).isEqualTo(sut.content)
+        assertThat(post.titleValue).isEqualTo(sut.title)
+        assertThat(post.contentValue).isEqualTo(sut.content)
         assertThat(post.authorUsername).isEqualTo(sut.authorUsername)
         assertThat(post.createdAt).isEqualTo(sut.createdAt)
         assertThat(post.updatedAt).isEqualTo(sut.updatedAt)
@@ -75,8 +75,8 @@ class PostEntityTest {
 
         // then
         assertThat(sut.id).isEqualTo(post.id)
-        assertThat(sut.title).isEqualTo(post.title.value)
-        assertThat(sut.content).isEqualTo(post.content.value)
+        assertThat(sut.title).isEqualTo(post.titleValue)
+        assertThat(sut.content).isEqualTo(post.contentValue)
         assertThat(sut.authorUsername).isEqualTo(post.authorUsername)
         assertThat(sut.createdAt).isEqualTo(post.createdAt)
         assertThat(sut.updatedAt).isEqualTo(post.updatedAt)
@@ -106,8 +106,8 @@ class PostEntityTest {
 
         // then
         assertThat(sut.id).isEqualTo(post.id)
-        assertThat(sut.title.value).isEqualTo(post.title.value)
-        assertThat(sut.content.value).isEqualTo(post.content.value)
+        assertThat(sut.titleValue).isEqualTo(post.titleValue)
+        assertThat(sut.contentValue).isEqualTo(post.contentValue)
         assertThat(sut.authorUsername).isEqualTo(post.authorUsername)
         assertThat(sut.createdAt).isEqualTo(post.createdAt)
         assertThat(sut.updatedAt).isEqualTo(post.updatedAt)

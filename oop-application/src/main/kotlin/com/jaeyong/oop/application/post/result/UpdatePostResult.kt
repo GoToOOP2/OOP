@@ -16,7 +16,7 @@ data class UpdatePostResult private constructor(
     companion object {
         fun of(post: Post) = UpdatePostResult(
             post.id ?: throw BaseException(ErrorCode.SAVE_ID_NOT_RETURNED),
-            post.title.value, post.content.value, post.authorUsername, post.createdAt, post.updatedAt
+            post.titleValue, post.contentValue, post.authorUsername, post.createdAt, post.updatedAt
         )
     }
 }

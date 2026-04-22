@@ -16,7 +16,7 @@ data class GetPostResult private constructor(
     companion object {
         fun of(post: Post) = GetPostResult(
             post.id ?: throw BaseException(ErrorCode.SAVE_ID_NOT_RETURNED),
-            post.title.value, post.content.value,
+            post.titleValue, post.contentValue,
             post.authorUsername, post.createdAt, post.updatedAt
         )
     }

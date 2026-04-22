@@ -33,8 +33,8 @@ class PostEntity(
     companion object {
         fun fromDomain(post: Post): PostEntity = PostEntity(
             id = post.id,
-            title = post.title.value,
-            content = post.content.value,
+            title = post.titleValue,
+            content = post.contentValue,
             authorUsername = post.authorUsername,
             createdAt = post.createdAt,
             updatedAt = post.updatedAt
