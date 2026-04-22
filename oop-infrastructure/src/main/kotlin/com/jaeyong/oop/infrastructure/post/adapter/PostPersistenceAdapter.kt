@@ -13,7 +13,7 @@ class PostPersistenceAdapter(
     private val postEntityRepository: PostEntityRepository
 ) : PostPort {
 
-    override fun save(post: Post): Post =
+    override fun store(post: Post): Post =
         postEntityRepository.save(PostEntity.fromDomain(post)).toDomain()
 
     override fun getById(id: Long): Post? =
