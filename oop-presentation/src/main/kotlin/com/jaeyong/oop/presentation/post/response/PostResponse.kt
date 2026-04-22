@@ -14,7 +14,7 @@ data class PostResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun of(result: GetPostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, result.updatedAt)
-        fun of(result: UpdatePostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, result.updatedAt)
+        fun from(result: GetPostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, result.updatedAt)
+        fun from(result: UpdatePostResult) = PostResponse(result.id, result.title, result.content, result.authorUsername, result.createdAt, result.updatedAt)
     }
 }

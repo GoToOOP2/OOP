@@ -23,13 +23,13 @@ class PostService(private val postPort: PostPort) : PostUseCase {
     @Transactional
     override fun create(command: CreatePostCommand): CreatePostResult {
         val post = Post.create(command.title, command.content, command.authorUsername)
-        return CreatePostResult.of(postPort.save(post))
+        return CreatePostResult.from(postPort.save(post))
     }
 
     @Transactional(readOnly = true)
     override fun get(command: GetPostQuery): GetPostResult {
         val post = postPort.getById(command.id) ?: throw BaseException(ErrorCode.NOT_FOUND)
-        return GetPostResult.of(post)
+        return GetPostResult.from(post)
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +43,7 @@ class PostService(private val postPort: PostPort) : PostUseCase {
     override fun update(command: UpdatePostCommand): UpdatePostResult {
         val post = postPort.getById(command.id) ?: throw BaseException(ErrorCode.NOT_FOUND)
         val updated = post.update(command.title, command.content, command.requesterUsername)
-        return UpdatePostResult.of(postPort.save(updated))
+        return UpdatePostResult.from(postPort.save(updated))
     }
 
     @Transactional

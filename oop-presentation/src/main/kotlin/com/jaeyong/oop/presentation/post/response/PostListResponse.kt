@@ -10,8 +10,8 @@ data class PostListResponse(
     val size: Int
 ) {
     companion object {
-        fun of(result: GetPostListResult) = PostListResponse(
-            posts = result.posts.map { PostResponse.of(it) },
+        fun from(result: GetPostListResult) = PostListResponse(
+            posts = result.posts.map { PostResponse.from(it) },
             totalCount = result.totalCount,
             page = result.page,
             size = result.size

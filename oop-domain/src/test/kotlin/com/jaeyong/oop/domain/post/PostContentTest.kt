@@ -17,7 +17,7 @@ class PostContentTest {
         val value = "정상 내용"
 
         // when
-        val content = PostContent.of(value)
+        val content = PostContent.from(value)
 
         // then
         assertEquals(value, content.value)
@@ -30,7 +30,7 @@ class PostContentTest {
         val value = "a".repeat(5000)
 
         // when
-        val content = PostContent.of(value)
+        val content = PostContent.from(value)
 
         // then
         assertEquals(5000, content.value.length)
@@ -43,7 +43,7 @@ class PostContentTest {
         val value = "   "
 
         // when & then
-        val ex = assertThrows<BaseException> { PostContent.of(value) }
+        val ex = assertThrows<BaseException> { PostContent.from(value) }
         assertEquals(ErrorCode.POST_CONTENT_BLANK, ex.errorCode)
     }
 
@@ -54,7 +54,7 @@ class PostContentTest {
         val value = "a".repeat(5001)
 
         // when & then
-        val ex = assertThrows<BaseException> { PostContent.of(value) }
+        val ex = assertThrows<BaseException> { PostContent.from(value) }
         assertEquals(ErrorCode.POST_CONTENT_TOO_LONG, ex.errorCode)
     }
 }

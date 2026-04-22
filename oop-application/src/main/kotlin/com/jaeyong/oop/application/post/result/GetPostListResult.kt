@@ -10,6 +10,6 @@ data class GetPostListResult private constructor(
 ) {
     companion object {
         fun of(posts: List<Post>, totalCount: Long, page: Int, size: Int) =
-            GetPostListResult(posts.map { GetPostResult.of(it) }, totalCount, page, size)
+            GetPostListResult(posts.map { GetPostResult.from(it) }, totalCount, page, size)
     }
 }

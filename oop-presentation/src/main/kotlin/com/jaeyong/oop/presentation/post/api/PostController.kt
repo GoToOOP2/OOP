@@ -32,13 +32,13 @@ class PostController(
         @Parameter(hidden = true) @CurrentUser username: String
     ): ResponseEntity<ApiResponse<CreatePostResponse>> {
         val result = postUseCase.create(CreatePostCommand.of(request.title, request.content, username))
-        return ApiResponse.success(CreatePostResponse.of(result), HttpStatus.CREATED)
+        return ApiResponse.success(CreatePostResponse.from(result), HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long): ResponseEntity<ApiResponse<PostResponse>> {
-        val result = postUseCase.get(GetPostQuery.of(id))
-        return ApiResponse.success(PostResponse.of(result), HttpStatus.OK)
+        val result = postUseCase.get(GetPostQuery.from(id))
+        return ApiResponse.success(PostResponse.from(result), HttpStatus.OK)
     }
 
     @GetMapping
@@ -47,7 +47,7 @@ class PostController(
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<ApiResponse<PostListResponse>> {
         val result = postUseCase.getList(GetPostListQuery.of(page, size))
-        return ApiResponse.success(PostListResponse.of(result), HttpStatus.OK)
+        return ApiResponse.success(PostListResponse.from(result), HttpStatus.OK)
     }
 
     @PutMapping("/{id}")
@@ -57,7 +57,7 @@ class PostController(
         @Parameter(hidden = true) @CurrentUser username: String
     ): ResponseEntity<ApiResponse<PostResponse>> {
         val result = postUseCase.update(UpdatePostCommand.of(id, request.title, request.content, username))
-        return ApiResponse.success(PostResponse.of(result), HttpStatus.OK)
+        return ApiResponse.success(PostResponse.from(result), HttpStatus.OK)
     }
 
     @DeleteMapping("/{id}")

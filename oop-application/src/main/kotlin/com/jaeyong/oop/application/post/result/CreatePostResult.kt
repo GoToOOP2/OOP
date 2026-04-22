@@ -8,7 +8,7 @@ data class CreatePostResult private constructor(
     val id: Long
 ) {
     companion object {
-        fun of(post: Post) = CreatePostResult(
+        fun from(post: Post) = CreatePostResult(
             post.id ?: throw BaseException(ErrorCode.SAVE_ID_NOT_RETURNED)
         )
     }

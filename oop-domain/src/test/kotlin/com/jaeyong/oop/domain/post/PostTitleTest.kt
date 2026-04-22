@@ -17,7 +17,7 @@ class PostTitleTest {
         val value = "정상 제목"
 
         // when
-        val title = PostTitle.of(value)
+        val title = PostTitle.from(value)
 
         // then
         assertEquals(value, title.value)
@@ -30,7 +30,7 @@ class PostTitleTest {
         val value = "a".repeat(100)
 
         // when
-        val title = PostTitle.of(value)
+        val title = PostTitle.from(value)
 
         // then
         assertEquals(100, title.value.length)
@@ -43,7 +43,7 @@ class PostTitleTest {
         val value = "   "
 
         // when & then
-        val ex = assertThrows<BaseException> { PostTitle.of(value) }
+        val ex = assertThrows<BaseException> { PostTitle.from(value) }
         assertEquals(ErrorCode.POST_TITLE_BLANK, ex.errorCode)
     }
 
@@ -54,7 +54,7 @@ class PostTitleTest {
         val value = "a".repeat(101)
 
         // when & then
-        val ex = assertThrows<BaseException> { PostTitle.of(value) }
+        val ex = assertThrows<BaseException> { PostTitle.from(value) }
         assertEquals(ErrorCode.POST_TITLE_TOO_LONG, ex.errorCode)
     }
 }

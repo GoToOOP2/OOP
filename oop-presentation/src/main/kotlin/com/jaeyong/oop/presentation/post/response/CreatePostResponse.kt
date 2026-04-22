@@ -4,6 +4,6 @@ import com.jaeyong.oop.application.post.result.CreatePostResult
 
 data class CreatePostResponse(val id: Long) {
     companion object {
-        fun of(result: CreatePostResult) = CreatePostResponse(result.id)
+        fun from(result: CreatePostResult) = CreatePostResponse(result.id)
     }
 }

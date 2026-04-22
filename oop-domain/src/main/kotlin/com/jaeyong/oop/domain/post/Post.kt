@@ -29,12 +29,12 @@ data class Post private constructor(
 
     fun update(title: String, content: String, requesterUsername: String): Post {
         validateOwner(requesterUsername)
-        return copy(title = PostTitle.of(title), content = PostContent.of(content), updatedAt = LocalDateTime.now())
+        return copy(title = PostTitle.from(title), content = PostContent.from(content), updatedAt = LocalDateTime.now())
     }
 
     companion object {
         fun create(title: String, content: String, authorUsername: String): Post =
-            Post(title = PostTitle.of(title), content = PostContent.of(content), authorUsername = authorUsername, createdAt = LocalDateTime.now())
+            Post(title = PostTitle.from(title), content = PostContent.from(content), authorUsername = authorUsername, createdAt = LocalDateTime.now())
 
         fun restore(
             id: Long?,
@@ -43,6 +43,6 @@ data class Post private constructor(
             authorUsername: String,
             createdAt: LocalDateTime,
             updatedAt: LocalDateTime?
-        ): Post = Post(id, PostTitle.of(title), PostContent.of(content), authorUsername, createdAt, updatedAt)
+        ): Post = Post(id, PostTitle.from(title), PostContent.from(content), authorUsername, createdAt, updatedAt)
     }
 }

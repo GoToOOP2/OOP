@@ -14,7 +14,7 @@ data class UpdatePostResult private constructor(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun of(post: Post) = UpdatePostResult(
+        fun from(post: Post) = UpdatePostResult(
             post.id ?: throw BaseException(ErrorCode.SAVE_ID_NOT_RETURNED),
             post.titleValue, post.contentValue, post.authorUsername, post.createdAt, post.updatedAt
         )
