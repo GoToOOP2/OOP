@@ -1,8 +1,6 @@
 package com.jaeyong.oop.infrastructure.post.entity
 
 import com.jaeyong.oop.domain.post.Post
-import com.jaeyong.oop.domain.post.PostContent
-import com.jaeyong.oop.domain.post.PostTitle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -31,7 +29,7 @@ class PostEntityTest {
         authorUsername: String = "user1",
         createdAt: LocalDateTime = LocalDateTime.of(2024, 1, 1, 0, 0),
         updatedAt: LocalDateTime? = LocalDateTime.of(2024, 1, 2, 0, 0)
-    ) = Post.restore(id = id, title = PostTitle.of(title), content = PostContent.of(content), authorUsername = authorUsername, createdAt = createdAt, updatedAt = updatedAt)
+    ) = Post.restore(id = id, title = title, content = content, authorUsername = authorUsername, createdAt = createdAt, updatedAt = updatedAt)
 
     @Test
     @DisplayName("toDomain - 모든 필드가 Post 도메인 객체로 정확히 매핑된다")

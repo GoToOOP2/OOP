@@ -16,15 +16,15 @@ class PostPersistenceAdapter(
     override fun save(post: Post): Post =
         postEntityRepository.save(PostEntity.fromDomain(post)).toDomain()
 
-    override fun findById(id: Long): Post? =
+    override fun getById(id: Long): Post? =
         postEntityRepository.findPostEntityById(id)?.toDomain()
 
-    override fun findAll(page: Int, size: Int): List<Post> =
+    override fun getAll(page: Int, size: Int): List<Post> =
         postEntityRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size)).map { it.toDomain() }
 
     override fun countAll(): Long =
         postEntityRepository.count()
 
-    override fun deleteById(id: Long) =
+    override fun delete(id: Long) =
         postEntityRepository.deleteById(id)
 }

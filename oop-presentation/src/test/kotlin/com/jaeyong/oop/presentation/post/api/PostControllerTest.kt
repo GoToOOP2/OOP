@@ -15,8 +15,6 @@ import com.jaeyong.oop.application.post.command.CreatePostCommand
 import com.jaeyong.oop.application.post.result.CreatePostResult
 import com.jaeyong.oop.application.post.usecase.PostUseCase
 import com.jaeyong.oop.domain.post.Post
-import com.jaeyong.oop.domain.post.PostContent
-import com.jaeyong.oop.domain.post.PostTitle
 import com.jaeyong.oop.presentation.auth.CurrentUserArgumentResolver
 import com.jaeyong.oop.presentation.exception.GlobalExceptionHandler
 import org.junit.jupiter.api.DisplayName
@@ -105,7 +103,7 @@ class PostControllerTest {
      * Post.restore()를 통해 DB 복원 경로를 재현하고, CreatePostResult.of()로 래핑한다.
      */
     private fun createPostResult(id: Long = POST_ID) = CreatePostResult.of(
-        Post.restore(id, PostTitle.of(TITLE), PostContent.of(CONTENT), USERNAME, LocalDateTime.of(2024, 1, 1, 0, 0), null)
+        Post.restore(id, TITLE, CONTENT, USERNAME, LocalDateTime.of(2024, 1, 1, 0, 0), null)
     )
 
     /**

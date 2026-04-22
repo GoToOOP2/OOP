@@ -1,8 +1,6 @@
 package com.jaeyong.oop.infrastructure.post.entity
 
 import com.jaeyong.oop.domain.post.Post
-import com.jaeyong.oop.domain.post.PostContent
-import com.jaeyong.oop.domain.post.PostTitle
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -28,7 +26,7 @@ class PostEntity(
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime? = null
 ) {
-    fun toDomain(): Post = Post.restore(id, PostTitle.of(title), PostContent.of(content), authorUsername, createdAt, updatedAt)
+    fun toDomain(): Post = Post.restore(id, title, content, authorUsername, createdAt, updatedAt)
 
     companion object {
         fun fromDomain(post: Post): PostEntity = PostEntity(

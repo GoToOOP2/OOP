@@ -27,22 +27,22 @@ data class Post private constructor(
             throw BaseException(ErrorCode.POST_ACCESS_DENIED)
     }
 
-    fun update(title: PostTitle, content: PostContent, requesterUsername: String): Post {
+    fun update(title: String, content: String, requesterUsername: String): Post {
         validateOwner(requesterUsername)
-        return copy(title = title, content = content, updatedAt = LocalDateTime.now())
+        return copy(title = PostTitle.of(title), content = PostContent.of(content), updatedAt = LocalDateTime.now())
     }
 
     companion object {
-        fun create(title: PostTitle, content: PostContent, authorUsername: String): Post =
-            Post(title = title, content = content, authorUsername = authorUsername, createdAt = LocalDateTime.now())
+        fun create(title: String, content: String, authorUsername: String): Post =
+            Post(title = PostTitle.of(title), content = PostContent.of(content), authorUsername = authorUsername, createdAt = LocalDateTime.now())
 
         fun restore(
             id: Long?,
-            title: PostTitle,
-            content: PostContent,
+            title: String,
+            content: String,
             authorUsername: String,
             createdAt: LocalDateTime,
             updatedAt: LocalDateTime?
-        ): Post = Post(id, title, content, authorUsername, createdAt, updatedAt)
+        ): Post = Post(id, PostTitle.of(title), PostContent.of(content), authorUsername, createdAt, updatedAt)
     }
 }

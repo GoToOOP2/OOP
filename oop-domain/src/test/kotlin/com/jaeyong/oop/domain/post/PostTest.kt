@@ -12,8 +12,8 @@ import java.time.LocalDateTime
 @DisplayName("Post")
 class PostTest {
 
-    private val title = PostTitle.of("테스트 제목")
-    private val content = PostContent.of("테스트 내용")
+    private val title = "테스트 제목"
+    private val content = "테스트 내용"
     private val author = "user1"
 
     @Test
@@ -71,7 +71,7 @@ class PostTest {
         // given
         val sut = Post.restore(1L, title, content, author, LocalDateTime.now(), null)
         // when
-        val updated = sut.update(PostTitle.of("수정된 제목"), PostContent.of("수정된 내용"), author)
+        val updated = sut.update("수정된 제목", "수정된 내용", author)
 
         // then
         assertThat(updated.updatedAt).isNotNull()
@@ -86,7 +86,7 @@ class PostTest {
 
         // when & then
         val ex = assertThrows<BaseException> {
-            sut.update(PostTitle.of("수정"), PostContent.of("수정 내용"), "other")
+            sut.update("수정", "수정 내용", "other")
         }
         assertThat(ex.errorCode).isEqualTo(ErrorCode.POST_ACCESS_DENIED)
     }
