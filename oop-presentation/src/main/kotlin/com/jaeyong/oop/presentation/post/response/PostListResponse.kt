@@ -10,16 +10,12 @@ import java.time.LocalDateTime
  *
  * @property id 게시글 ID
  * @property title 제목
- * @property authorId 작성자 ID
- * @property authorName 작성자 이름
  * @property createdAt 생성 일시
  */
 @ConsistentCopyVisibility
 data class PostListResponse private constructor(
     val id: Long,
     val title: String,
-    val authorId: Long,
-    val authorName: String,
     val createdAt: LocalDateTime
 ) {
     companion object {
@@ -27,6 +23,6 @@ data class PostListResponse private constructor(
          * Application 결과를 응답 DTO로 변환한다.
          */
         fun from(result: GetPostListResult): PostListResponse =
-            PostListResponse(result.id, result.title, result.authorId, result.authorName, result.createdAt)
+            PostListResponse(result.id, result.title, result.createdAt)
     }
 }

@@ -7,16 +7,16 @@ import kotlin.ConsistentCopyVisibility
  *
  * @property title 게시글 제목
  * @property content 게시글 내용
- * @property authorId 작성자 ID
+ * @property userId 작성자 ID
  */
 @ConsistentCopyVisibility
 data class CreatePostCommand private constructor(
     val title: String,
     val content: String,
-    val authorId: Long
+    val userId: Long
 ) {
     companion object {
-        fun of(title: String, content: String, authorId: Long): CreatePostCommand =
-            CreatePostCommand(title, content, authorId)
+        fun of(title: String, content: String, userId: Long): CreatePostCommand =
+            CreatePostCommand(title, content, userId)
     }
 }

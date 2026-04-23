@@ -12,12 +12,9 @@ import com.jaeyong.oop.domain.post.Post
 @ConsistentCopyVisibility
 data class CreatePostResult private constructor(val postId: Long) {
     companion object {
-        fun of(postId: Long): CreatePostResult = CreatePostResult(postId)
-
         /**
          * 저장된 Post 도메인 객체로부터 결과를 생성한다.
          */
-        fun from(post: Post): CreatePostResult =
-            CreatePostResult(requireNotNull(post.id) { "Post ID must not be null after save" }) // 게시판 생성했는데 PK가 생성 안된상황 -> 500 서버오류 (클라이언트 오류가 아님)
+        fun from(post: Post): CreatePostResult = CreatePostResult(post.getId())
     }
 }

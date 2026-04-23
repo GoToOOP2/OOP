@@ -28,18 +28,12 @@ data class GetPostResult private constructor(
     val updatedAt: LocalDateTime
 ) {
     companion object {
-        fun of(
-            id: Long, title: String, content: String,
-            authorId: Long, authorName: String,
-            createdAt: LocalDateTime, updatedAt: LocalDateTime
-        ): GetPostResult = GetPostResult(id, title, content, authorId, authorName, createdAt, updatedAt)
-
         /**
          * Post 도메인 객체와 작성자로부터 결과를 생성한다.
          */
         fun from(post: Post, author: User): GetPostResult =
             GetPostResult(
-                id = requireNotNull(post.id) { "Post ID must not be null" }, // DB 조회된 게시글에 PK가 없는 상황 → 500 서버오류 (클라이언트 오류가 아님)
+                id = post.getId(),
                 title = post.title.value,
                 content = post.content.value,
                 authorId = post.authorId,

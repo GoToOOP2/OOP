@@ -22,9 +22,9 @@ data class UpdatePostRequest(
      * 요청 DTO를 Application 레이어 커맨드로 변환한다.
      *
      * @param postId 수정할 게시글 ID
-     * @param requesterId 인증된 사용자 ID
+     * @param userId 인증된 사용자 ID
      * @return 게시글 수정 커맨드
      */
-    fun toCommand(postId: Long, requesterId: Long): UpdatePostCommand =
-        UpdatePostCommand.of(postId = postId, title = title, content = content, requesterId = requesterId)
+    fun toCommand(postId: Long, userId: Long): UpdatePostCommand =
+        UpdatePostCommand.of(postId = postId, title = title, content = content, userId = userId)
 }

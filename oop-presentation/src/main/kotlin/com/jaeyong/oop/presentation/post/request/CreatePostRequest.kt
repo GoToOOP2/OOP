@@ -24,6 +24,6 @@ data class CreatePostRequest(
      * @param authorId 인증된 사용자 ID
      * @return 게시글 생성 커맨드
      */
-    fun toCommand(authorId: Long): CreatePostCommand =
-        CreatePostCommand.of(title = title, content = content, authorId = authorId)
+    fun toCommand(userId: Long): CreatePostCommand =
+        CreatePostCommand.of(title = title, content = content, userId = userId)
 }
