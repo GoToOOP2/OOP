@@ -2,10 +2,7 @@ package com.jaeyong.oop.presentation.post.api
 
 import com.jaeyong.oop.application.post.common.DeletePostCommand
 import com.jaeyong.oop.application.post.common.GetPostCommand
-import com.jaeyong.oop.application.post.usecase.CreatePostUseCase
-import com.jaeyong.oop.application.post.usecase.DeletePostUseCase
-import com.jaeyong.oop.application.post.usecase.GetPostUseCase
-import com.jaeyong.oop.application.post.usecase.UpdatePostUseCase
+import com.jaeyong.oop.application.post.usecase.PostUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.presentation.auth.CurrentUser
@@ -31,10 +28,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/posts")
 class PostController(
-    private val createPostUseCase: CreatePostUseCase,
-    private val getPostUseCase: GetPostUseCase,
-    private val updatePostUseCase: UpdatePostUseCase,
-    private val deletePostUseCase: DeletePostUseCase
+    private val postUseCase: PostUseCase
 ) {
 
     /**
@@ -55,7 +49,7 @@ class PostController(
         @Valid @RequestBody request: CreatePostRequest
     ): ResponseEntity<ApiResponse<CreatePostResponse>> {
         val authenticatedUserId = userId ?: throw BaseException(ErrorCode.UNAUTHORIZED)
-        val result = createPostUseCase.create(request.toCommand(authenticatedUserId))
+        val result = postUseCase.create(request.toCommand(authenticatedUserId))
         return ApiResponse.success(CreatePostResponse.from(result), HttpStatus.CREATED)
     }
 
@@ -68,7 +62,7 @@ class PostController(
     @SwaggerApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping
     fun getAll(): ResponseEntity<ApiResponse<List<PostListResponse>>> {
-        val responses = getPostUseCase.getAll().map { PostListResponse.from(it) }
+        val responses = postUseCase.getAll().map { PostListResponse.from(it) }
         return ApiResponse.success(responses)
     }
 
@@ -85,7 +79,7 @@ class PostController(
     )
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<ApiResponse<PostDetailResponse>> {
-        val result = getPostUseCase.getById(GetPostCommand.of(id))
+        val result = postUseCase.getById(GetPostCommand.of(id))
         return ApiResponse.success(PostDetailResponse.from(result))
     }
 
@@ -109,7 +103,7 @@ class PostController(
         @Valid @RequestBody request: UpdatePostRequest
     ): ResponseEntity<ApiResponse<PostDetailResponse>> {
         val authenticatedUserId = userId ?: throw BaseException(ErrorCode.UNAUTHORIZED)
-        val result = updatePostUseCase.update(request.toCommand(postId = id, requesterId = authenticatedUserId))
+        val result = postUseCase.update(request.toCommand(postId = id, userId = authenticatedUserId))
         return ApiResponse.success(PostDetailResponse.from(result))
     }
 
@@ -131,7 +125,7 @@ class PostController(
         @CurrentUser userId: Long?
     ): ResponseEntity<ApiResponse<Nothing>> {
         val authenticatedUserId = userId ?: throw BaseException(ErrorCode.UNAUTHORIZED)
-        deletePostUseCase.delete(DeletePostCommand.of(postId = id, requesterId = authenticatedUserId))
+        postUseCase.delete(DeletePostCommand.of(postId = id, userId = authenticatedUserId))
         return ApiResponse.success()
     }
 }

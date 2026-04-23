@@ -9,14 +9,14 @@ import com.jaeyong.oop.application.post.result.CreatePostResult
 import com.jaeyong.oop.application.post.result.GetPostListResult
 import com.jaeyong.oop.application.post.result.GetPostResult
 import com.jaeyong.oop.application.post.result.UpdatePostResult
-import com.jaeyong.oop.application.post.usecase.CreatePostUseCase
-import com.jaeyong.oop.application.post.usecase.DeletePostUseCase
-import com.jaeyong.oop.application.post.usecase.GetPostUseCase
-import com.jaeyong.oop.application.post.usecase.UpdatePostUseCase
+import com.jaeyong.oop.application.post.usecase.PostUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.presentation.auth.CurrentUserArgumentResolver
 import com.jaeyong.oop.presentation.exception.GlobalExceptionHandler
+import com.navercorp.fixturemonkey.FixtureMonkey
+import com.navercorp.fixturemonkey.kotlin.introspector.PrimaryConstructorArbitraryIntrospector
+import com.navercorp.fixturemonkey.kotlin.giveMeKotlinBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -34,7 +34,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
 class PostControllerTest {
@@ -44,22 +43,15 @@ class PostControllerTest {
     private val objectMapper = ObjectMapper()
 
     @Mock
-    private lateinit var createPostUseCase: CreatePostUseCase
+    private lateinit var postUseCase: PostUseCase
 
-    @Mock
-    private lateinit var getPostUseCase: GetPostUseCase
-
-    @Mock
-    private lateinit var updatePostUseCase: UpdatePostUseCase
-
-    @Mock
-    private lateinit var deletePostUseCase: DeletePostUseCase
-
-    private val now = LocalDateTime.of(2026, 4, 16, 0, 0)
+    private val fixtureMonkey = FixtureMonkey.builder()
+        .objectIntrospector(PrimaryConstructorArbitraryIntrospector.INSTANCE)
+        .build()
 
     @BeforeEach
     fun setUp() {
-        sut = PostController(createPostUseCase, getPostUseCase, updatePostUseCase, deletePostUseCase)
+        sut = PostController(postUseCase)
         mockMvc = MockMvcBuilders
             .standaloneSetup(sut)
             .setControllerAdvice(GlobalExceptionHandler())
@@ -71,8 +63,11 @@ class PostControllerTest {
     @DisplayName("1. 정상 게시글 생성 시 201을 반환한다")
     fun `정상 게시글 생성 시 201을 반환한다`() {
         // given
-        given(createPostUseCase.create(CreatePostCommand.of(title = "제목", content = "내용", authorId = 1L)))
-            .willReturn(CreatePostResult.of(1L))
+        val createResult = fixtureMonkey.giveMeKotlinBuilder<CreatePostResult>()
+            .set(CreatePostResult::postId, 1L)
+            .sample()
+        given(postUseCase.create(CreatePostCommand.of(title = "제목", content = "내용", userId = 1L)))
+            .willReturn(createResult)
         val body = mapOf("title" to "제목", "content" to "내용")
 
         // when & then
@@ -107,8 +102,12 @@ class PostControllerTest {
     @DisplayName("3. 게시글 단건 조회 시 200을 반환한다")
     fun `게시글 단건 조회 시 200을 반환한다`() {
         // given
-        given(getPostUseCase.getById(GetPostCommand.of(1L)))
-            .willReturn(GetPostResult.of(id = 1L, title = "제목", content = "내용", authorId = 1L, authorName = "작성자", createdAt = now, updatedAt = now))
+        val getResult = fixtureMonkey.giveMeKotlinBuilder<GetPostResult>()
+            .set(GetPostResult::id, 1L)
+            .set(GetPostResult::title, "제목")
+            .sample()
+        given(postUseCase.getById(GetPostCommand.of(1L)))
+            .willReturn(getResult)
 
         // when & then
         mockMvc.perform(get("/api/posts/1"))
@@ -122,10 +121,12 @@ class PostControllerTest {
     @DisplayName("4. 게시글 목록 조회 시 200을 반환한다")
     fun `게시글 목록 조회 시 200을 반환한다`() {
         // given
-        given(getPostUseCase.getAll())
-            .willReturn(listOf(
-                GetPostListResult.of(id = 1L, title = "제목", authorId = 1L, authorName = "작성자", createdAt = now)
-            ))
+        val listResult = fixtureMonkey.giveMeKotlinBuilder<GetPostListResult>()
+            .set(GetPostListResult::id, 1L)
+            .set(GetPostListResult::title, "제목")
+            .sample()
+        given(postUseCase.getAll())
+            .willReturn(listOf(listResult))
 
         // when & then
         mockMvc.perform(get("/api/posts"))
@@ -139,8 +140,12 @@ class PostControllerTest {
     @DisplayName("5. 정상 게시글 수정 시 200을 반환한다")
     fun `정상 게시글 수정 시 200을 반환한다`() {
         // given
-        given(updatePostUseCase.update(UpdatePostCommand.of(postId = 1L, title = "수정제목", content = "수정내용", requesterId = 1L)))
-            .willReturn(UpdatePostResult.of(id = 1L, title = "수정제목", content = "수정내용", authorId = 1L, authorName = "작성자", createdAt = now, updatedAt = now))
+        val updateResult = fixtureMonkey.giveMeKotlinBuilder<UpdatePostResult>()
+            .set(UpdatePostResult::id, 1L)
+            .set(UpdatePostResult::title, "수정제목")
+            .sample()
+        given(postUseCase.update(UpdatePostCommand.of(postId = 1L, title = "수정제목", content = "수정내용", userId = 1L)))
+            .willReturn(updateResult)
         val body = mapOf("title" to "수정제목", "content" to "수정내용")
 
         // when & then
@@ -175,7 +180,7 @@ class PostControllerTest {
     @DisplayName("7. 정상 게시글 삭제 시 200을 반환한다")
     fun `정상 게시글 삭제 시 200을 반환한다`() {
         // given
-        willDoNothing().given(deletePostUseCase).delete(DeletePostCommand.of(postId = 1L, requesterId = 1L))
+        willDoNothing().given(postUseCase).delete(DeletePostCommand.of(postId = 1L, userId = 1L))
 
         // when & then
         mockMvc.perform(
