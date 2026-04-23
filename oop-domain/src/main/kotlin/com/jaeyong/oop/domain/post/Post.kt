@@ -4,6 +4,7 @@ import kotlin.ConsistentCopyVisibility
 
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
+import com.jaeyong.oop.domain.post.port.PostPort
 import com.jaeyong.oop.domain.post.vo.ContentVO
 import com.jaeyong.oop.domain.post.vo.TitleVO
 import java.time.LocalDateTime
@@ -29,25 +30,25 @@ data class Post private constructor(
      *
      * @param title 수정할 제목
      * @param content 수정할 내용
-     * @param requesterId 요청자 ID
+     * @param userId 요청자 ID
      * @throws BaseException 작성자가 아닌 경우 (ACCESS_DENIED)
      */
-    fun update(title: TitleVO, content: ContentVO, requesterId: Long) {
-        validateAuthor(requesterId)
-        this.title = title
-        this.content = content
+    fun update(title: String, content: String, userId: Long) {
+        validateAuthor(userId)
+        this.title = TitleVO.from(title)
+        this.content = ContentVO.from(content)
         this.updatedAt = LocalDateTime.now()
     }
 
     /**
      * 게시글을 소프트 삭제한다.
      *
-     * @param requesterId 요청자 ID
+     * @param userId 요청자 ID
      * @throws BaseException 작성자가 아닌 경우 (ACCESS_DENIED)
      * @throws BaseException 이미 삭제된 경우 (INVALID_STATE)
      */
-    fun delete(requesterId: Long) {
-        validateAuthor(requesterId)
+    fun delete(userId: Long) {
+        validateAuthor(userId)
         if (deleted) {
             throw BaseException(ErrorCode.INVALID_STATE)
         }
@@ -55,8 +56,10 @@ data class Post private constructor(
         this.updatedAt = LocalDateTime.now()
     }
 
-    private fun validateAuthor(requesterId: Long) {
-        if (authorId != requesterId) {
+    fun getId(): Long = id ?: throw BaseException(ErrorCode.INVALID_STATE)
+
+    private fun validateAuthor(userId: Long) {
+        if (authorId != userId) {
             throw BaseException(ErrorCode.ACCESS_DENIED)
         }
     }
@@ -64,10 +67,12 @@ data class Post private constructor(
     companion object {
 
         /**
-         * 신규 게시글을 생성한다.
+         * 신규 게시글을 생성하고 저장한다.
          */
-        fun create(title: TitleVO, content: ContentVO, authorId: Long): Post =
-            Post(title = title, content = content, authorId = authorId)
+        fun create(title: String, content: String, authorId: Long, postPort: PostPort): Post {
+            val post = Post(title = TitleVO.from(title), content = ContentVO.from(content), authorId = authorId)
+            return postPort.store(post)
+        }
 
         /**
          * DB에서 조회한 데이터로 Post를 복원한다.

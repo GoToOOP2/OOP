@@ -8,31 +8,24 @@ import com.jaeyong.oop.application.post.result.CreatePostResult
 import com.jaeyong.oop.application.post.result.GetPostListResult
 import com.jaeyong.oop.application.post.result.GetPostResult
 import com.jaeyong.oop.application.post.result.UpdatePostResult
-import com.jaeyong.oop.application.post.usecase.CreatePostUseCase
-import com.jaeyong.oop.application.post.usecase.DeletePostUseCase
-import com.jaeyong.oop.application.post.usecase.GetPostUseCase
-import com.jaeyong.oop.application.post.usecase.UpdatePostUseCase
+import com.jaeyong.oop.application.post.usecase.PostUseCase
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.post.Post
 import com.jaeyong.oop.domain.post.port.PostPort
-import com.jaeyong.oop.domain.post.vo.ContentVO
-import com.jaeyong.oop.domain.post.vo.TitleVO
 import com.jaeyong.oop.domain.user.port.UserQueryPort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * Post 도메인의 UseCase 통합 구현체.
- *
- * [CreatePostUseCase], [GetPostUseCase], [UpdatePostUseCase], [DeletePostUseCase]를 모두 구현한다.
+ * Post 도메인의 UseCase 구현체.
  */
 @Service
 @Transactional(readOnly = true)
 class PostService(
     private val postPort: PostPort,
     private val userQueryPort: UserQueryPort
-) : CreatePostUseCase, GetPostUseCase, UpdatePostUseCase, DeletePostUseCase {
+) : PostUseCase {
 
     /**
      * 게시글을 생성하고 저장한다.
@@ -42,12 +35,12 @@ class PostService(
      */
     @Transactional
     override fun create(command: CreatePostCommand): CreatePostResult {
-        val post = Post.create(
-            title = TitleVO.from(command.title),
-            content = ContentVO.from(command.content),
-            authorId = command.authorId
+        val saved = Post.create(
+            title = command.title,
+            content = command.content,
+            authorId = command.userId,
+            postPort = postPort
         )
-        val saved = postPort.save(post)
         return CreatePostResult.from(saved)
     }
 
@@ -59,7 +52,7 @@ class PostService(
      * @throws BaseException 게시글 또는 작성자가 존재하지 않으면 [ErrorCode.NOT_FOUND]
      */
     override fun getById(command: GetPostCommand): GetPostResult {
-        val post = postPort.findByIdAndDeletedFalse(command.postId)
+        val post = postPort.getActiveById(command.postId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
         val author = userQueryPort.findById(post.authorId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
@@ -72,12 +65,7 @@ class PostService(
      * @return 게시글 요약 정보 목록
      */
     override fun getAll(): List<GetPostListResult> {
-        val posts = postPort.findAllByDeletedFalse()
-        val authorIds = posts.map { it.authorId }.distinct()
-        val authorMap = userQueryPort.findByIds(authorIds)
-        return posts.map { post ->
-            GetPostListResult.from(post, authorMap[post.authorId])
-        }
+        return postPort.getAllActive().map { post -> GetPostListResult.from(post) }
     }
 
     /**
@@ -89,16 +77,16 @@ class PostService(
      */
     @Transactional
     override fun update(command: UpdatePostCommand): UpdatePostResult {
-        val post = postPort.findByIdAndDeletedFalse(command.postId)
+        val post = postPort.getActiveById(command.postId)
+            ?: throw BaseException(ErrorCode.NOT_FOUND)
+        val author = userQueryPort.findById(post.authorId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
         post.update(
-            title = TitleVO.from(command.title),
-            content = ContentVO.from(command.content),
-            requesterId = command.requesterId
+            title = command.title,
+            content = command.content,
+            userId = command.userId
         )
-        val saved = postPort.save(post)
-        val author = userQueryPort.findById(saved.authorId)
-            ?: throw BaseException(ErrorCode.NOT_FOUND)
+        val saved = postPort.store(post)
         return UpdatePostResult.from(saved, author)
     }
 
@@ -110,9 +98,9 @@ class PostService(
      */
     @Transactional
     override fun delete(command: DeletePostCommand) {
-        val post = postPort.findByIdAndDeletedFalse(command.postId)
+        val post = postPort.getActiveById(command.postId)
             ?: throw BaseException(ErrorCode.NOT_FOUND)
-        post.delete(command.requesterId)
-        postPort.save(post)
+        post.delete(command.userId)
+        postPort.store(post)
     }
 }

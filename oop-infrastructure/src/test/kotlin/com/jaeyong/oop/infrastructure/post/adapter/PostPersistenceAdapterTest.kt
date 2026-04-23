@@ -26,8 +26,8 @@ class PostPersistenceAdapterTest {
     private lateinit var sut: PostPersistenceAdapter
 
     @Test
-    @DisplayName("1. save 호출 시 저장된 도메인 Post를 반환한다")
-    fun `save 호출 시 저장된 도메인 Post를 반환한다`() {
+    @DisplayName("1. store 호출 시 저장된 도메인 Post를 반환한다")
+    fun `store 호출 시 저장된 도메인 Post를 반환한다`() {
         // given
         val now = LocalDateTime.now()
         val post = Post.create(TitleVO.from("제목"), ContentVO.from("내용"), authorId = 1L)
@@ -35,7 +35,7 @@ class PostPersistenceAdapterTest {
         given(postEntityRepository.save(any())).willReturn(savedEntity)
 
         // when
-        val result = sut.save(post)
+        val result = sut.store(post)
 
         // then
         assertThat(result.id).isEqualTo(10L)
@@ -44,15 +44,15 @@ class PostPersistenceAdapterTest {
     }
 
     @Test
-    @DisplayName("2. findByIdAndDeletedFalse - 존재하는 게시글이면 Post를 반환한다")
-    fun `findByIdAndDeletedFalse - 존재하는 게시글이면 Post를 반환한다`() {
+    @DisplayName("2. getActiveById - 존재하는 게시글이면 Post를 반환한다")
+    fun `getActiveById - 존재하는 게시글이면 Post를 반환한다`() {
         // given
         val now = LocalDateTime.now()
         val entity = PostJpaEntity(id = 1L, title = "제목", content = "내용", authorId = 1L, deleted = false, createdAt = now, updatedAt = now)
-        given(postEntityRepository.findByIdAndDeletedFalse(1L)).willReturn(entity)
+        given(postEntityRepository.getActiveByIdAndDeletedFalse(1L)).willReturn(entity)
 
         // when
-        val result = sut.findByIdAndDeletedFalse(1L)
+        val result = sut.getActiveById(1L)
 
         // then
         assertThat(result).isNotNull
@@ -60,31 +60,31 @@ class PostPersistenceAdapterTest {
     }
 
     @Test
-    @DisplayName("3. findByIdAndDeletedFalse - 없는 게시글이면 null을 반환한다")
-    fun `findByIdAndDeletedFalse - 없는 게시글이면 null을 반환한다`() {
+    @DisplayName("3. getActiveById - 없는 게시글이면 null을 반환한다")
+    fun `getActiveById - 없는 게시글이면 null을 반환한다`() {
         // given
-        given(postEntityRepository.findByIdAndDeletedFalse(999L)).willReturn(null)
+        given(postEntityRepository.getActiveByIdAndDeletedFalse(999L)).willReturn(null)
 
         // when
-        val result = sut.findByIdAndDeletedFalse(999L)
+        val result = sut.getActiveById(999L)
 
         // then
         assertThat(result).isNull()
     }
 
     @Test
-    @DisplayName("4. findAllByDeletedFalse - 게시글이 있으면 List<Post>를 반환한다")
-    fun `findAllByDeletedFalse - 게시글이 있으면 List Post 를 반환한다`() {
+    @DisplayName("4. getAllActive - 게시글이 있으면 List<Post>를 반환한다")
+    fun `getAllActive - 게시글이 있으면 List Post 를 반환한다`() {
         // given
         val now = LocalDateTime.now()
         val entities = listOf(
             PostJpaEntity(id = 1L, title = "제목1", content = "내용1", authorId = 1L, deleted = false, createdAt = now, updatedAt = now),
             PostJpaEntity(id = 2L, title = "제목2", content = "내용2", authorId = 2L, deleted = false, createdAt = now, updatedAt = now)
         )
-        given(postEntityRepository.findAllByDeletedFalse()).willReturn(entities)
+        given(postEntityRepository.getAllActiveByDeletedFalse()).willReturn(entities)
 
         // when
-        val result = sut.findAllByDeletedFalse()
+        val result = sut.getAllActiveActive()
 
         // then
         assertThat(result).hasSize(2)
@@ -93,13 +93,13 @@ class PostPersistenceAdapterTest {
     }
 
     @Test
-    @DisplayName("5. findAllByDeletedFalse - 게시글이 없으면 빈 리스트를 반환한다")
-    fun `findAllByDeletedFalse - 게시글이 없으면 빈 리스트를 반환한다`() {
+    @DisplayName("5. getAllActive - 게시글이 없으면 빈 리스트를 반환한다")
+    fun `getAllActive - 게시글이 없으면 빈 리스트를 반환한다`() {
         // given
-        given(postEntityRepository.findAllByDeletedFalse()).willReturn(emptyList())
+        given(postEntityRepository.getAllActiveByDeletedFalse()).willReturn(emptyList())
 
         // when
-        val result = sut.findAllByDeletedFalse()
+        val result = sut.getAllActiveActive()
 
         // then
         assertThat(result).isEmpty()

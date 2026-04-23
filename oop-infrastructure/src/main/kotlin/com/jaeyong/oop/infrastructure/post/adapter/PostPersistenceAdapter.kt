@@ -20,7 +20,7 @@ class PostPersistenceAdapter(
      * @param post 저장할 게시글 도메인 객체
      * @return 저장된 게시글 도메인 객체
      */
-    override fun save(post: Post): Post =
+    override fun store(post: Post): Post =
         postEntityRepository.save(PostJpaEntity.fromDomain(post)).toDomain()
 
     /**
@@ -29,7 +29,7 @@ class PostPersistenceAdapter(
      * @param id 게시글 ID
      * @return 게시글 도메인 객체, 없으면 null
      */
-    override fun findByIdAndDeletedFalse(id: Long): Post? =
+    override fun getActiveById(id: Long): Post? =
         postEntityRepository.findByIdAndDeletedFalse(id)?.toDomain()
 
     /**
@@ -37,6 +37,6 @@ class PostPersistenceAdapter(
      *
      * @return 게시글 도메인 객체 목록
      */
-    override fun findAllByDeletedFalse(): List<Post> =
+    override fun getAllActive(): List<Post> =
         postEntityRepository.findAllByDeletedFalse().map { it.toDomain() }
 }
