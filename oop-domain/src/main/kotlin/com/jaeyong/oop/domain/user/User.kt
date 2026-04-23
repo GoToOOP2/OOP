@@ -32,6 +32,8 @@ data class User private constructor(
      * @param passwordEncryptor 비밀번호 비교에 사용할 암호화 포트
      * @throws BaseException 비밀번호 불일치 시 (UNAUTHORIZED)
      */
+    fun getId(): Long = id ?: throw BaseException(ErrorCode.INVALID_STATE)
+
     fun authenticate(rawPassword: RawPasswordVO, passwordEncryptor: PasswordEncryptorPort) {
         if (!passwordEncryptor.matches(rawPassword, password)) {
             throw BaseException(ErrorCode.UNAUTHORIZED)

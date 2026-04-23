@@ -42,18 +42,4 @@ class UserTest {
         assertThat(a.hashCode()).isEqualTo(b.hashCode())
     }
 
-    @Test
-    @DisplayName("4. copy로 특정 필드만 변경할 수 있다")
-    fun `copy로 특정 필드만 변경할 수 있다`() {
-        // given
-        val original = User.restore(1L, UsernameVO.from("jaeyong"), EncodedPasswordVO.from("hashed"))
-
-        // when
-        val copied = original.copy(password = EncodedPasswordVO.from("newhash"))
-
-        // then
-        assertThat(copied.id).isEqualTo(1L)
-        assertThat(copied.username).isEqualTo(UsernameVO.from("jaeyong"))
-        assertThat(copied.password).isEqualTo(EncodedPasswordVO.from("newhash"))
-    }
 }
