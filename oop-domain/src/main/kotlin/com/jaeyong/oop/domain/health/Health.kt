@@ -1,5 +1,7 @@
 package com.jaeyong.oop.domain.health
 
+import kotlin.ConsistentCopyVisibility
+
 import java.time.LocalDateTime
 
 /**
@@ -7,6 +9,7 @@ import java.time.LocalDateTime
  *
  * 외부에서 직접 생성 금지 — 반드시 [ok] 또는 [restore] 팩토리 메서드를 통해 생성한다.
  */
+@ConsistentCopyVisibility
 data class Health private constructor(
     val id: Long? = null,
     val status: String,

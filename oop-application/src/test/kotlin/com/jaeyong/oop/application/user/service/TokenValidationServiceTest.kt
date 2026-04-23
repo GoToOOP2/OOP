@@ -2,7 +2,6 @@ package com.jaeyong.oop.application.user.service
 
 import com.jaeyong.oop.application.user.common.TokenValidationCommand
 import com.jaeyong.oop.domain.user.vo.TokenVO
-import com.jaeyong.oop.domain.user.vo.UsernameVO
 import com.jaeyong.oop.domain.user.port.JwtHandlerPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -23,16 +22,16 @@ class TokenValidationServiceTest {
     private lateinit var sut: TokenValidationService
 
     @Test
-    @DisplayName("1. 유효한 토큰이면 username을 반환한다")
-    fun `유효한 토큰이면 username을 반환한다`() {
+    @DisplayName("1. 유효한 토큰이면 userId를 반환한다")
+    fun `유효한 토큰이면 userId를 반환한다`() {
         // given
-        given(jwtHandlerPort.validateAndExtract(TokenVO.from("valid.token"))).willReturn(UsernameVO.from("jaeyong"))
+        given(jwtHandlerPort.validateAndExtract(TokenVO.from("valid.token"))).willReturn(1L)
 
         // when
         val result = sut.validateAndExtract(TokenValidationCommand.of("valid.token"))
 
         // then
-        assertThat(result.username).isEqualTo("jaeyong")
+        assertThat(result.userId).isEqualTo(1L)
     }
 
     @Test
@@ -45,6 +44,6 @@ class TokenValidationServiceTest {
         val result = sut.validateAndExtract(TokenValidationCommand.of("invalid.token"))
 
         // then
-        assertThat(result.username).isNull()
+        assertThat(result.userId).isNull()
     }
 }

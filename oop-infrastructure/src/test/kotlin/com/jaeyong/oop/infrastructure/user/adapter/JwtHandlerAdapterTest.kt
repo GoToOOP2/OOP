@@ -23,11 +23,11 @@ class JwtHandlerAdapterTest {
     }
 
     @Test
-    @DisplayName("1. 발급한 access 토큰에서 username을 추출할 수 있다")
-    fun `발급한 access 토큰에서 username을 추출할 수 있다`() {
-        val token = sut.generateToken(UsernameVO.from("jaeyong"))
-        val username = sut.validateAndExtract(token)
-        assertThat(username).isEqualTo(UsernameVO.from("jaeyong"))
+    @DisplayName("1. 발급한 access 토큰에서 userId를 추출할 수 있다")
+    fun `발급한 access 토큰에서 userId를 추출할 수 있다`() {
+        val token = sut.generateToken(UsernameVO.from("jaeyong"), 1L)
+        val userId = sut.validateAndExtract(token)
+        assertThat(userId).isEqualTo(1L)
     }
 
     @Test
@@ -46,7 +46,7 @@ class JwtHandlerAdapterTest {
                 refreshExpiration = 604800000L
             )
         )
-        val forgedToken = forgedProvider.generateToken(UsernameVO.from("jaeyong"))
+        val forgedToken = forgedProvider.generateToken(UsernameVO.from("jaeyong"), 1L)
         assertThat(sut.validateAndExtract(forgedToken)).isNull()
     }
 
@@ -60,7 +60,7 @@ class JwtHandlerAdapterTest {
                 refreshExpiration = 604800000L
             )
         )
-        val expiredToken = expiredProvider.generateToken(UsernameVO.from("jaeyong"))
+        val expiredToken = expiredProvider.generateToken(UsernameVO.from("jaeyong"), 1L)
         assertThat(sut.validateAndExtract(expiredToken)).isNull()
     }
 
@@ -73,22 +73,22 @@ class JwtHandlerAdapterTest {
     @Test
     @DisplayName("6. refresh 토큰을 validateAndExtract에 사용하면 null을 반환한다")
     fun `refresh 토큰을 validateAndExtract에 사용하면 null을 반환한다`() {
-        val refreshToken = sut.generateRefreshToken(UsernameVO.from("jaeyong"))
+        val refreshToken = sut.generateRefreshToken(UsernameVO.from("jaeyong"), 1L)
         assertThat(sut.validateAndExtract(refreshToken)).isNull()
     }
 
     @Test
-    @DisplayName("7. 발급한 refresh 토큰에서 username을 추출할 수 있다")
-    fun `발급한 refresh 토큰에서 username을 추출할 수 있다`() {
-        val refreshToken = sut.generateRefreshToken(UsernameVO.from("jaeyong"))
-        val username = sut.validateAndExtractRefresh(refreshToken)
-        assertThat(username).isEqualTo(UsernameVO.from("jaeyong"))
+    @DisplayName("7. 발급한 refresh 토큰에서 userId를 추출할 수 있다")
+    fun `발급한 refresh 토큰에서 userId를 추출할 수 있다`() {
+        val refreshToken = sut.generateRefreshToken(UsernameVO.from("jaeyong"), 1L)
+        val userId = sut.validateAndExtractRefresh(refreshToken)
+        assertThat(userId).isEqualTo(1L)
     }
 
     @Test
     @DisplayName("8. access 토큰을 validateAndExtractRefresh에 사용하면 null을 반환한다")
     fun `access 토큰을 validateAndExtractRefresh에 사용하면 null을 반환한다`() {
-        val accessToken = sut.generateToken(UsernameVO.from("jaeyong"))
+        val accessToken = sut.generateToken(UsernameVO.from("jaeyong"), 1L)
         assertThat(sut.validateAndExtractRefresh(accessToken)).isNull()
     }
 
@@ -102,7 +102,7 @@ class JwtHandlerAdapterTest {
                 refreshExpiration = 0L
             )
         )
-        val expiredToken = expiredProvider.generateRefreshToken(UsernameVO.from("jaeyong"))
+        val expiredToken = expiredProvider.generateRefreshToken(UsernameVO.from("jaeyong"), 1L)
         assertThat(sut.validateAndExtractRefresh(expiredToken)).isNull()
     }
 }

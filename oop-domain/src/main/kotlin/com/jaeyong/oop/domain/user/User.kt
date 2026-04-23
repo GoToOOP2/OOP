@@ -1,5 +1,7 @@
 package com.jaeyong.oop.domain.user
 
+import kotlin.ConsistentCopyVisibility
+
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
 import com.jaeyong.oop.domain.user.port.PasswordEncryptorPort
@@ -13,6 +15,7 @@ import com.jaeyong.oop.domain.user.vo.UsernameVO
  *
  * 외부에서 직접 생성 금지 — 반드시 [signUp], [login], [restore] 팩토리 메서드를 통해 생성한다.
  */
+@ConsistentCopyVisibility
 data class User private constructor(
     val id: Long? = null,
     val username: UsernameVO,
@@ -29,6 +32,8 @@ data class User private constructor(
      * @param passwordEncryptor 비밀번호 비교에 사용할 암호화 포트
      * @throws BaseException 비밀번호 불일치 시 (UNAUTHORIZED)
      */
+    fun getId(): Long = id ?: throw BaseException(ErrorCode.INVALID_STATE)
+
     fun authenticate(rawPassword: RawPasswordVO, passwordEncryptor: PasswordEncryptorPort) {
         if (!passwordEncryptor.matches(rawPassword, password)) {
             throw BaseException(ErrorCode.UNAUTHORIZED)

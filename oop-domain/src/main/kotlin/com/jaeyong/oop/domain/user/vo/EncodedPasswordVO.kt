@@ -1,10 +1,13 @@
 package com.jaeyong.oop.domain.user.vo
 
+import kotlin.ConsistentCopyVisibility
+
 /**
  * 암호화된 비밀번호 Value Object.
  *
  * [RawPasswordVO]와 타입을 분리해 암호화 전/후 비밀번호 혼용 실수를 컴파일 타임에 방지한다.
  */
+@ConsistentCopyVisibility
 data class EncodedPasswordVO private constructor(val value: String) {
     companion object {
         /**

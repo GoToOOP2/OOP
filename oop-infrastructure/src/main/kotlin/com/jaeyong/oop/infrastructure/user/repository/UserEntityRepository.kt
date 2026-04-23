@@ -27,4 +27,20 @@ interface UserEntityRepository {
      * @return 존재하면 UserEntity, 없으면 null
      */
     fun findByUsername(username: String): UserEntity?
+
+    /**
+     * id로 UserEntity를 조회한다.
+     *
+     * @param id 조회할 사용자 ID
+     * @return 존재하면 UserEntity, 없으면 null
+     */
+    fun findUserById(id: Long): UserEntity?
+
+    /**
+     * id 목록으로 UserEntity를 일괄 조회한다.
+     *
+     * @param ids 조회할 사용자 ID 목록
+     * @return 조회된 UserEntity 목록
+     */
+    fun findAllByIdIn(ids: List<Long>): List<UserEntity>
 }

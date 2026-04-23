@@ -14,6 +14,9 @@ allprojects {
     repositories {
         mavenCentral()
     }
+
+    // Spring Boot BOM이 Kotlin 버전을 낮게 고정하지 못하도록 오버라이드
+    ext["kotlin.version"] = "2.0.21"
 }
 
 // Spring Boot 의존성 버전 관리 및 공통 라이브러리 추출
@@ -46,9 +49,9 @@ subprojects {
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "21"
+        compilerOptions {
+            freeCompilerArgs.addAll("-Xjsr305=strict")
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
         }
     }
 

@@ -27,8 +27,8 @@ class LoginService(
             userPort = userPort,
             passwordEncryptor = passwordEncryptorPort
         )
-        val token = jwtHandlerPort.generateToken(user.username)
-        val refreshToken = refreshTokenHandlerPort.generateRefreshToken(user.username)
+        val token = jwtHandlerPort.generateToken(user.username, user.getId())
+        val refreshToken = refreshTokenHandlerPort.generateRefreshToken(user.username, user.getId())
         return LoginResult.of(token.value, refreshToken.value)
     }
 }
