@@ -2,6 +2,7 @@ package com.jaeyong.oop.domain.post
 
 import com.jaeyong.oop.common.exception.BaseException
 import com.jaeyong.oop.common.exception.ErrorCode
+import com.jaeyong.oop.domain.post.port.PostPort
 import com.jaeyong.oop.domain.post.vo.ContentVO
 import com.jaeyong.oop.domain.post.vo.TitleVO
 import org.assertj.core.api.Assertions.assertThat
@@ -9,12 +10,21 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.BDDMockito.given
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import java.time.LocalDateTime
 
+@ExtendWith(MockitoExtension::class)
 class PostTest {
 
-    private val title = TitleVO.from("제목")
-    private val content = ContentVO.from("내용")
+    @Mock
+    private lateinit var postPort: PostPort
+
+    private val title = "제목"
+    private val content = "내용"
     private val authorId = 1L
 
     @Nested
@@ -24,13 +34,16 @@ class PostTest {
         @Test
         @DisplayName("1. 게시글이 정상적으로 생성된다")
         fun `게시글이 정상적으로 생성된다`() {
+            // given
+            given(postPort.store(any())).willAnswer { it.getArgument(0) }
+
             // when
-            val post = Post.create(title, content, authorId)
+            val post = Post.create(title, content, authorId, postPort)
 
             // then
             assertThat(post.id).isNull()
-            assertThat(post.title).isEqualTo(title)
-            assertThat(post.content).isEqualTo(content)
+            assertThat(post.title.value).isEqualTo(title)
+            assertThat(post.content.value).isEqualTo(content)
             assertThat(post.authorId).isEqualTo(authorId)
             assertThat(post.deleted).isFalse()
         }
@@ -45,12 +58,14 @@ class PostTest {
         fun `DB 데이터로 게시글이 복원된다`() {
             // given
             val now = LocalDateTime.of(2026, 1, 1, 0, 0)
+            val titleVO = TitleVO.from(title)
+            val contentVO = ContentVO.from(content)
 
             // when
             val post = Post.restore(
                 id = 10L,
-                title = title,
-                content = content,
+                title = titleVO,
+                content = contentVO,
                 authorId = authorId,
                 deleted = false,
                 createdAt = now,
@@ -59,8 +74,8 @@ class PostTest {
 
             // then
             assertThat(post.id).isEqualTo(10L)
-            assertThat(post.title).isEqualTo(title)
-            assertThat(post.content).isEqualTo(content)
+            assertThat(post.title.value).isEqualTo(title)
+            assertThat(post.content.value).isEqualTo(content)
             assertThat(post.authorId).isEqualTo(authorId)
             assertThat(post.deleted).isFalse()
             assertThat(post.createdAt).isEqualTo(now)
@@ -76,23 +91,25 @@ class PostTest {
         @DisplayName("3-1. 작성자가 게시글을 수정할 수 있다")
         fun `작성자가 게시글을 수정할 수 있다`() {
             // given
-            val post = Post.create(title, content, authorId)
-            val newTitle = TitleVO.from("수정된 제목")
-            val newContent = ContentVO.from("수정된 내용")
+            given(postPort.store(any())).willAnswer { it.getArgument(0) }
+            val post = Post.create(title, content, authorId, postPort)
+            val newTitle = "수정된 제목"
+            val newContent = "수정된 내용"
 
             // when
             post.update(newTitle, newContent, authorId)
 
             // then
-            assertThat(post.title).isEqualTo(newTitle)
-            assertThat(post.content).isEqualTo(newContent)
+            assertThat(post.title.value).isEqualTo(newTitle)
+            assertThat(post.content.value).isEqualTo(newContent)
         }
 
         @Test
         @DisplayName("3-2. 작성자가 아니면 수정 시 예외가 발생한다")
         fun `작성자가 아니면 수정 시 예외가 발생한다`() {
             // given
-            val post = Post.create(title, content, authorId)
+            given(postPort.store(any())).willAnswer { it.getArgument(0) }
+            val post = Post.create(title, content, authorId, postPort)
             val otherId = 999L
 
             // when & then
@@ -111,7 +128,8 @@ class PostTest {
         @DisplayName("4-1. 작성자가 게시글을 삭제할 수 있다")
         fun `작성자가 게시글을 삭제할 수 있다`() {
             // given
-            val post = Post.create(title, content, authorId)
+            given(postPort.store(any())).willAnswer { it.getArgument(0) }
+            val post = Post.create(title, content, authorId, postPort)
 
             // when
             post.delete(authorId)
@@ -124,7 +142,8 @@ class PostTest {
         @DisplayName("4-2. 작성자가 아니면 삭제 시 예외가 발생한다")
         fun `작성자가 아니면 삭제 시 예외가 발생한다`() {
             // given
-            val post = Post.create(title, content, authorId)
+            given(postPort.store(any())).willAnswer { it.getArgument(0) }
+            val post = Post.create(title, content, authorId, postPort)
             val otherId = 999L
 
             // when & then
@@ -138,7 +157,8 @@ class PostTest {
         @DisplayName("4-3. 이미 삭제된 게시글을 다시 삭제하면 예외가 발생한다")
         fun `이미 삭제된 게시글을 다시 삭제하면 예외가 발생한다`() {
             // given
-            val post = Post.create(title, content, authorId)
+            given(postPort.store(any())).willAnswer { it.getArgument(0) }
+            val post = Post.create(title, content, authorId, postPort)
             post.delete(authorId)
 
             // when & then
