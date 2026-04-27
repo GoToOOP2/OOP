@@ -15,6 +15,6 @@ class HealthService(
     override fun checkHealth(): HealthCheckResult {
         val health = Health.ok()
         healthRepository.save(health)
-        return HealthCheckResult.of("success")
+        return HealthCheckResult.from("success")
     }
 }

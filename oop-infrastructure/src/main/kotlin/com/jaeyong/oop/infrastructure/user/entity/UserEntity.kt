@@ -24,7 +24,7 @@ class UserEntity(
      *
      * @return 복원된 [User] 도메인 객체
      */
-    fun toDomain(): User = User.restore(id, UsernameVO.from(username), EncodedPasswordVO.from(password))
+    fun toDomain(): User = User.reconstruct(id, UsernameVO.from(username), EncodedPasswordVO.from(password))
 
     companion object {
         /**

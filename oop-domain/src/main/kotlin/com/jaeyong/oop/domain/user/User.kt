@@ -11,7 +11,7 @@ import com.jaeyong.oop.domain.user.vo.UsernameVO
 /**
  * 사용자 도메인 객체.
  *
- * 외부에서 직접 생성 금지 — 반드시 [signUp], [login], [restore] 팩토리 메서드를 통해 생성한다.
+ * 외부에서 직접 생성 금지 — 반드시 [signUp], [login], [reconstruct] 팩토리 메서드를 통해 생성한다.
  */
 data class User private constructor(
     val id: Long? = null,
@@ -38,16 +38,16 @@ data class User private constructor(
     companion object {
 
         /**
-         * DB에서 조회한 데이터로 User를 복원한다.
+         * DB에서 조회한 데이터로 User를 재구성한다.
          *
-         * [signUp]·[login]과 달리 비즈니스 규칙 검증 없이 순수 복원만 수행한다.
+         * [signUp]·[login]과 달리 비즈니스 규칙 검증 없이 순수 재구성만 수행한다.
          * 영속성 계층(Entity → Domain 변환)에서만 사용한다.
          *
          * @param id DB에서 할당된 식별자
          * @param username 사용자명 VO
          * @param password 암호화된 비밀번호 VO
          */
-        fun restore(id: Long?, username: UsernameVO, password: EncodedPasswordVO): User = User(id, username, password)
+        fun reconstruct(id: Long?, username: UsernameVO, password: EncodedPasswordVO): User = User(id, username, password)
 
         /**
          * 회원가입 — 중복 검사 후 비밀번호를 암호화하여 User를 생성한다.

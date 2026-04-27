@@ -62,7 +62,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(
-            post("/api/users/join")
+            post("/users/join")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
         )
@@ -79,7 +79,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(
-            post("/api/users/join")
+            post("/users/join")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
         )
@@ -97,7 +97,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(
-            post("/api/users/login")
+            post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
         )
@@ -115,7 +115,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(
-            post("/api/users/login")
+            post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
         )
@@ -133,7 +133,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(
-            post("/api/users/refresh")
+            post("/users/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
         )
@@ -152,7 +152,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(
-            post("/api/users/refresh")
+            post("/users/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
         )
